@@ -4,13 +4,21 @@
 \alias{PlotAdaptiveIFRPModelScore}
 \title{Plot adaptive IFRP model score}
 \usage{
-PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
+PlotAdaptiveIFRPModelScore(
+  aifrp,
+  penalty_parameters,
+  legend_pos = "bottomright"
+)
 }
 \arguments{
 \item{aifrp}{list containing the output of the function \code{OptimalAdaptiveIFRP}.}
 
 \item{penalty_parameters}{n_parameters-dimensional vector of penalty
 parameter values from smallest to largest.}
+
+\item{legend_pos}{character vector indicating the legend position. Must be
+one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top",
+"topright", "right" and "center" . Default is "bottomright".}
 }
 \description{
 Plots the model score of the adaptive IFRP for each penalty
@@ -26,5 +34,13 @@ returns = intrinsicFRP::returns[,-1]
 penalty_parameters = seq(0., 1., length.out = 100)
 
 # compute optimal adaptive intrinsic factor risk premia and their standard errors
+aifrp = OptimalAdaptiveIFRP(
+returns,
+factors,
+penalty_parameters,
+include_standard_errors = TRUE
+)
+
+PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
 
 }

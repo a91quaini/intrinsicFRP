@@ -12,6 +12,9 @@
 #' @param aifrp list containing the output of the function `OptimalAdaptiveIFRP`.
 #' @param penalty_parameters n_parameters-dimensional vector of penalty
 #' parameter values from smallest to largest.
+#' @param legend_pos character vector indicating the legend position. Must be
+#' one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top",
+#' "topright", "right" and "center" . Default is "bottomright".
 #'
 #' @examples
 #' # import package data on 15 risk factors and 42 test asset excess returns
@@ -21,89 +24,57 @@
 #' penalty_parameters = seq(0., 1., length.out = 100)
 #'
 #' # compute optimal adaptive intrinsic factor risk premia and their standard errors
-# #' aifrp = OptimalAdaptiveIFRP(
-# #' returns,
-# #' factors,
-# #' penalty_parameters,
-# #' include_standard_errors = TRUE
-# #' )
-# #'
-# #' PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
+#' aifrp = OptimalAdaptiveIFRP(
+#' returns,
+#' factors,
+#' penalty_parameters,
+#' include_standard_errors = TRUE
+#' )
+#'
+#' PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
 #'
 #' @export
 PlotAdaptiveIFRPModelScore = function(
   aifrp,
-  penalty_parameters
+  penalty_parameters,
+  legend_pos = "bottomright"
 ) {
 
-  idx_min_score = which.min(aifrp$model_score)
-  sd_score = stats::sd(aifrp$model_score)
-  idx_optimal = which(penalty_parameters == aifrp$penalty_parameter)
-
-  df = data.frame(
-    model_score = aifrp$model_score,
-    penalty_parameters = penalty_parameters
+  optimal_par = aifrp$penalty_parameter
+  optimal_score = aifrp$model_score[penalty_parameters == aifrp$penalty_parameter]
+  plot(
+    penalty_parameters,
+    aifrp$model_score,
+    frame = FALSE,
+    type = "b",
+    pch = 20,
+    lty = 2,
+    #col = "black",
+    xlab = "Penalty parameter",
+    ylab = "Model score",
+    cex = 0.6,
+    cex.lab = 1.3
+  )
+  graphics::points(
+    x = aifrp$penalty_parameter,
+    y = optimal_score,
+    pch = 15,
+    col = "red"
+  )
+  graphics::abline(
+    v = aifrp$penalty_parameter,
+    col = "red",
+    lty = 2
+  )
+  graphics::legend(
+    legend_pos,
+    legend = c("Optimal"),
+    col = "red",
+    pch = 15,
+    cex = 1.1
   )
 
-  ggplot2::ggplot(df, ggplot2::aes(x = .data$penalty_parameters, y = .data$model_score)) +
-    # ggplot2::theme_bw() +
-    ggplot2::theme(
-      text=ggplot2::element_text(size=22),
-      panel.background = ggplot2::element_rect(fill = "white"),
-      panel.grid.major.y = ggplot2::element_line(
-        color="gray", linewidth =0.25
-      )
-    ) +
-    ggplot2::xlab("Penalty parameter") +
-    ggplot2::ylab("Model score") +
-    ggplot2::geom_line() +
-    ggplot2::geom_point(
-      ggplot2::aes(
-        x = .data$penalty_parameters[idx_min_score],
-        y = .data$model_score[idx_min_score]
-      ),
-      color="blue",
-      size = 2.5
-    ) +
-    ggplot2::geom_label(
-      label = "Minimum",
-      x = penalty_parameters[idx_min_score],
-      y = aifrp$model_score[idx_min_score],
-      hjust = 0, vjust = -1,
-      color = "blue"
-    ) +
-    ggplot2::geom_hline(
-      yintercept = aifrp$model_score[idx_min_score],
-      linetype = "dashed",
-      color = "blue"
-    ) +
-    ggplot2::geom_point(ggplot2::aes(
-      x = aifrp$penalty_parameter,
-      y = .data$model_score[idx_optimal]),
-      color="purple",
-      size = 2.5
-    ) +
-    ggplot2::geom_label(
-      label = "Optimal",
-      x = aifrp$penalty_parameter,
-      y = aifrp$model_score[idx_optimal],
-      hjust = 0, vjust = 2,
-      color = "purple"
-    ) +
-    ggplot2::geom_hline(
-      yintercept = aifrp$model_score[idx_optimal],
-      linetype = "dashed",
-      color = "purple"
-    )
-
-
 }
-
-# PlotAdaptiveIFRPModelScore1 = function(aifrp, penalty_parameters) {
-#
-#   plot(penalty_parameters, aifrp$model_score)
-#
-# }
 
 ## Check returns and factors
 # Checks that the main data arguments, namely returns and factors, are

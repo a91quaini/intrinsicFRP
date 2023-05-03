@@ -52,17 +52,19 @@ aifrp = OptimalAdaptiveIFRP(
 # compute the GLS factor risk premia of Kan Robotti and Shanken (2013) and their
 # standard errors
 krs_frp = FRP(returns, factors, include_standard_errors = TRUE)
+
+PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
 ```
 
 Output:
 
-<!--<p float="left">
-<img src="inst/examples/risk_premia.svg" width="800" />
-</p>-->
+<p float="left">
+<img src="inst/examples/gcv_score.png" width="600" />
+</p>
 
 ## Functions
 
-For usage details, type ?FunctionName in the R console, e.g.:
+For usage details, type `?FunctionName` in the R console, e.g.:
 
 ```R
 ?IFRP
