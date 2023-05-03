@@ -1,0 +1,27 @@
+{
+    "id": "ECC75DA3",
+    "path": "~/Documents/codes/intrinsicFRP/src/tuning_adaptive_ifrp.h",
+    "project_path": "src/tuning_adaptive_ifrp.h",
+    "type": "h",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1683034505338.0,
+    "source_on_save": false,
+    "relative_order": 9,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "52,23",
+        "scrollLine": "45",
+        "marks": "<:45,0\n>:57,1"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683048628,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683048628442,
+    "read_only": false,
+    "read_only_alternatives": []
+}

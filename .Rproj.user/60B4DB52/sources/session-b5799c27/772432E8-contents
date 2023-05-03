@@ -1,0 +1,23 @@
+factors = intrinsicFRP::factors[,-1]
+returns = intrinsicFRP::returns[,-1]
+
+penalty_parameters = seq(0., 1., length.out = 100)
+
+# compute optimal adaptive intrinsic factor risk premia and their standard errors
+aifrp = OptimalAdaptiveIFRP(
+returns,
+factors,
+penalty_parameters,
+include_standard_errors = TRUE
+)
+
+weighting_type = c('c', 'b', 'a', 'n')
+relaxed = c(TRUE, FALSE)
+
+AdaptiveIFRP(
+  returns,
+  factors,
+  penalty_parameters,
+  weighting_type = weighting_type[4],
+  relaxed = relaxed[1]
+)

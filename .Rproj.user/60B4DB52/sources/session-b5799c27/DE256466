@@ -1,0 +1,27 @@
+{
+    "id": "DE256466",
+    "path": "~/Documents/codes/intrinsicFRP/tests/testthat/test-adaptive_irfp.R",
+    "project_path": "tests/testthat/test-adaptive_irfp.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1683111494812.0,
+    "source_on_save": false,
+    "relative_order": 11,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "392,2",
+        "scrollLine": "378",
+        "marks": "<:354,9\n>:354,33"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683112891,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683112891157,
+    "read_only": false,
+    "read_only_alternatives": []
+}

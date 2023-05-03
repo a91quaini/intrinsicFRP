@@ -1,0 +1,26 @@
+{
+    "id": "7A05E75B",
+    "path": "~/Documents/codes/intrinsicFRP/R/frp.R",
+    "project_path": "R/frp.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1683111340974.0,
+    "source_on_save": false,
+    "relative_order": 10,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "11,55",
+        "scrollLine": "5"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1683111364,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1683111364846,
+    "read_only": false,
+    "read_only_alternatives": []
+}
