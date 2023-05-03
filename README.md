@@ -2,8 +2,8 @@
 
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-<!--[![codecov](https://codecov.io/gh/a91quaini/adaptiveIFRP/branch/main/graph/badge.svg?token=0F8R40B0FP)](https://codecov.io/gh/a91quaini/adaptiveIFRP)-->
 [![R-CMD-check](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/a91quaini/adaptiveIFRP/branch/main/graph/badge.svg?token=0F8R40B0FP)](https://codecov.io/gh/a91quaini/intrinsicFRP)
 <!-- badges: end -->
 
 Author: Alberto Quaini
