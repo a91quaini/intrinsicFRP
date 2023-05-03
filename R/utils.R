@@ -99,11 +99,11 @@ PlotAdaptiveIFRPModelScore = function(
 
 }
 
-PlotAdaptiveIFRPModelScore1 = function(aifrp, penalty_parameters) {
-
-  plot(penalty_parameters, aifrp$model_score)
-
-}
+# PlotAdaptiveIFRPModelScore1 = function(aifrp, penalty_parameters) {
+#
+#   plot(penalty_parameters, aifrp$model_score)
+#
+# }
 
 ## Check returns and factors
 # Checks that the main data arguments, namely returns and factors, are

@@ -1,5 +1,6 @@
 /Users/albertoquaini/Documents/codes/intrinsicFRP/.Rbuildignore="F5179801"
 /Users/albertoquaini/Documents/codes/intrinsicFRP/.github/.gitignore="579C7838"
+/Users/albertoquaini/Documents/codes/intrinsicFRP/.github/workflows/test-coverage.yaml="B5EC6D4E"
 /Users/albertoquaini/Documents/codes/intrinsicFRP/.gitignore="2F11CBC1"
 /Users/albertoquaini/Documents/codes/intrinsicFRP/DESCRIPTION="34482A10"
 /Users/albertoquaini/Documents/codes/intrinsicFRP/R/RcppExports.R="5D9EE9A6"

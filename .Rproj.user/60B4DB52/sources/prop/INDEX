@@ -1,5 +1,6 @@
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2F.Rbuildignore="08AB11DF"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2F.github%2F.gitignore="E2715DFC"
+~%2FDocuments%2Fcodes%2FintrinsicFRP%2F.github%2Fworkflows%2Ftest-coverage.yaml="A000C37D"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2F.gitignore="BCBFCE04"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2FDESCRIPTION="8E1265E9"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2FR%2FRcppExports.R="4B0F2198"
@@ -21,3 +22,4 @@
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2Fsrc%2Ftuning_adaptive_ifrp.cpp="EE378629"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2Fsrc%2Ftuning_adaptive_ifrp.h="C0C44FEF"
 ~%2FDocuments%2Fcodes%2FintrinsicFRP%2Ftests%2Ftestthat%2Ftest-adaptive_irfp.R="EFEED540"
+~%2FDocuments%2Fcodes%2FintrinsicFRP%2Ftests%2Ftestthat%2Ftest-ifrp.R="73593FF4"
