@@ -8,7 +8,7 @@ AdaptiveIFRP(
   returns,
   factors,
   penalty_parameters,
-  weighting_type = "c",
+  weights = rep(1, ncol(factors)),
   relaxed = FALSE,
   check_arguments = TRUE
 )
@@ -22,11 +22,11 @@ excess returns.}
 \item{penalty_parameters}{\code{n_parameters}-dimensional vector of penalty
 parameter values from smallest to largest.}
 
-\item{weighting_type}{character specifying the type of adaptive weights:
-based on the correlation between factors and returns \code{'c'}; based on the
-regression coefficients of returns on factors \code{'b'}; based on the first-step
-intrinsic risk premia estimator \code{'a'}; otherwise a vector of ones (any other
-character). Default is \code{'c'}.}
+\item{weights}{\code{n_factors}-dimensional vector of weights determining a
+separate penalty parameter for each risk premium, given by vector
+\code{penalty_parameter * weights}.
+Default is a vector of ones, i.e., the same penalty parameter
+\code{penalty_parameter} is applied to each risk premium.}
 
 \item{relaxed}{boolean \code{TRUE} for re-fitting the model without shrinkage
 post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
@@ -39,8 +39,8 @@ post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
 intrinsic factor risk premia.
 }
 \description{
-Computes adaptive intrinsic factor risk premia for various
-penalty parameter values.
+Computes adaptive intrinsic factor risk premia with user-defined
+weights for various penalty parameter values.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns
@@ -54,7 +54,8 @@ penalty_parameters = seq(0., 1., length.out = 100)
 aifrp = AdaptiveIFRP(
 returns,
 factors,
-penalty_parameters
+penalty_parameters,
+weights
 )
 
 }

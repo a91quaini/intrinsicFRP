@@ -204,19 +204,19 @@ OptimalAdaptiveIFRP = function(
 #' Compute adaptive intrinsic factor risk premia
 #'
 #' @name AdaptiveIFRP
-#' @description Computes adaptive intrinsic factor risk premia for various
-#' penalty parameter values.
+#' @description Computes adaptive intrinsic factor risk premia with user-defined
+#' weights for various penalty parameter values.
 #'
 #' @param returns `n_observations x n_returns`-dimensional matrix of test asset
 #' excess returns.
 #' @param factors `n_observations x n_factors`-dimensional matrix of factors.
 #' @param penalty_parameters `n_parameters`-dimensional vector of penalty
 #' parameter values from smallest to largest.
-#' @param weighting_type character specifying the type of adaptive weights:
-#' based on the correlation between factors and returns `'c'`; based on the
-#' regression coefficients of returns on factors `'b'`; based on the first-step
-#' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
-#' character). Default is `'c'`.
+#' @param weights `n_factors`-dimensional vector of weights determining a
+#' separate penalty parameter for each risk premium, given by vector
+#' `penalty_parameter * weights`.
+#' Default is a vector of ones, i.e., the same penalty parameter
+#' `penalty_parameter` is applied to each risk premium.
 #' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
 #' post selection; `FALSE` otherwise. Default is `FALSE`.
 #' @param check_arguments boolean `TRUE` if you want to check function arguments;
@@ -237,7 +237,8 @@ OptimalAdaptiveIFRP = function(
 #' aifrp = AdaptiveIFRP(
 #' returns,
 #' factors,
-#' penalty_parameters
+#' penalty_parameters,
+#' weights
 #' )
 #'
 #' @export
@@ -245,7 +246,7 @@ AdaptiveIFRP = function(
   returns,
   factors,
   penalty_parameters,
-  weighting_type = 'c',
+  weights = rep(1., ncol(factors)),
   relaxed = FALSE,
   check_arguments = TRUE
 ) {
@@ -256,7 +257,8 @@ AdaptiveIFRP = function(
     CheckData(returns, factors)
     stopifnot("`penalty_parameters` contains non-numeric values" = is.numeric(penalty_parameters))
     stopifnot("`penalty_parameters` contains missing values (NA/NaN)" = !anyNA(penalty_parameters))
-    stopifnot("`weighting_type` must be a character value" = is.character(weighting_type))
+    stopifnot("`weights` contains non-numeric values" = is.numeric(weights))
+    stopifnot("`weights` contains missing values (NA/NaN)" = !anyNA(weights))
     stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
 
   }
@@ -269,12 +271,6 @@ AdaptiveIFRP = function(
     covariance_factors_returns,
     variance_returns,
     mean_returns
-  )
-
-  weights = .Call(`_intrinsicFRP_AdaptiveWeightsCpp`,
-    returns,
-    factors,
-    weighting_type
   )
 
   if (relaxed) {

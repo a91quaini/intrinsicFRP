@@ -116,10 +116,13 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
       check_arguments = "r"
     ))
 
+  weights =  intrinsicFRP:::AdaptiveWeightsCpp(returns, factors, 'c')
+
   aifrp0 = AdaptiveIFRP(
     returns,
     factors,
-    penalty_parameters = 0
+    penalty_parameters = 0,
+    weights
   )
 
   expect_equal(aifrp0, ifrp$risk_premia)
@@ -127,13 +130,15 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
   aifrp1 = AdaptiveIFRP(
     returns,
     factors,
-    penalty_parameters = .1
+    penalty_parameters = .1,
+    weights
   )
 
   aifrpm =  AdaptiveIFRP(
     returns,
     factors,
-    penalty_parameters
+    penalty_parameters,
+    weights
   )
 
   expect_length(aifrp0, n_factors)
@@ -354,12 +359,16 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
   for (weighting_type in c('c', 'b', 'a', 'n')) {
     for (relaxed in c(TRUE, FALSE)) {
 
+      weights = intrinsicFRP:::AdaptiveWeightsCpp(
+        returns, factors, weighting_type
+      )
+
       expect_no_error(
         AdaptiveIFRP(
           returns,
           factors,
           penalty_parameters,
-          weighting_type = weighting_type,
+          weights,
           relaxed = relaxed
         )
       )
@@ -369,7 +378,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
           returns,
           factors,
           penalty_parameters = 0.,
-          weighting_type = weighting_type,
+          weights,
           relaxed = relaxed
         ),
         aifrp0
@@ -380,7 +389,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
           returns,
           factors,
           penalty_parameters = 1e7,
-          weighting_type = weighting_type,
+          weights,
           relaxed = relaxed
         ),
         matrix(0., n_factors, 1)

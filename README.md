@@ -118,8 +118,8 @@ For usage details, type `?FunctionName` in the R console, e.g.:
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
   relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
-- **AdaptiveIFRP**: Computes adaptive intrinsic factor risk premia for various
-  penalty parameter values.
+- **AdaptiveIFRP**: Computes adaptive intrinsic factor risk premia with 
+  user-defined weights for various penalty parameter values.
 - **FRP**: Computes Fama-MachBeth or misspecification-robust factor risk
   premia of Kan Robotti Shanken (2013) from data on factors and test
   asset excess returns. Optionally computes the 
