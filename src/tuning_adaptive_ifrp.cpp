@@ -22,7 +22,6 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
     1. / n_observations :
     std::log(n_observations) / n_observations;
 
-  // use pragma omp? vectorise using .each_col()?
   for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
 
     const arma::uvec idx_selected = arma::find(aifrp.col(par));
@@ -80,7 +79,6 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
     1. / n_observations :
     std::log(n_observations) / n_observations;
 
-  // use pragma omp? vectorise using .each_col()?
   for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
 
     const arma::uvec idx_selected = arma::find(aifrp.col(par));

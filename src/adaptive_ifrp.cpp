@@ -19,19 +19,17 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const bool relaxed
 ) {
 
-  const arma::vec weights = AdaptiveWeightsCpp(
-    returns,
-    factors,
-    weighting_type
-  );
-
   arma::mat aifrp = AdaptiveIFRPCpp(
       IFRPCpp(
         covariance_factors_returns,
         variance_returns,
         mean_returns
       ),
-      weights,
+      AdaptiveWeightsCpp(
+        returns,
+        factors,
+        weighting_type
+      ),
       penalty_parameters
     );
 
