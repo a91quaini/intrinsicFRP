@@ -1,12 +1,13 @@
-# intrinsicFRP
+---
+title: "intrinsicFRP: intrinsic factor risk premia"
+author:   Alberto Quaini
+---
 
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![R-CMD-check](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/a91quaini/intrinsicFRP/branch/main/graph/badge.svg?token=0F8R40B0FP)](https://app.codecov.io/gh/a91quaini/intrinsicFRP)
 <!-- badges: end -->
-
-Author: Alberto Quaini
 
 Efficient implementation of intrinsic factor risk premia and their
 “adaptive” version based on the methods developed in Quaini, Trojani and
