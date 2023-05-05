@@ -3,11 +3,11 @@
 \docType{data}
 \name{factors}
 \alias{factors}
-\title{Factors - monthly observations from 01/1970 to 12/2021}
+\title{Factors - monthly observations from \code{01/1970} to \code{12/2021}}
 \format{
 \subsection{\code{factors}}{
 
-A data frame with 624 rows and 7 columns:
+A data frame with \code{624} rows and \code{7} columns:
 \describe{
 \item{Date}{Date in yyyymm format}
 \item{...}{Factor observations}
@@ -21,7 +21,7 @@ A data frame with 624 rows and 7 columns:
 factors
 }
 \description{
-Monthly observations from 01/1970 to 12/2021 of
-the Fama-French 5 factors the momentum factor.
+Monthly observations from \code{01/1970} to \code{12/2021} of
+the Fama-French \code{5} factors the momentum factor.
 }
 \keyword{datasets}

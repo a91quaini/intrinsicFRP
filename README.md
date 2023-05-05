@@ -107,7 +107,7 @@ For usage details, type `?FunctionName` in the R console, e.g.:
   and test asset excess returns. Optionally computes the 
   correspodning heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
-  relevant lags, i.e., n_lags = 4 * (n_observations/100)^(2/9).
+  relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 - **OptimalAdaptiveIFRP**: Computes optimal adaptive intrinsic factor risk 
   premia based on pre-computed intrinsic factor risk premia and adaptive penalty 
   weights for various penalty parameter values. Tuning is performed via
@@ -117,7 +117,7 @@ For usage details, type `?FunctionName` in the R console, e.g.:
   first-step intrinsic risk premia estimator. Optionally computes the 
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
-  relevant lags, i.e., n_lags = 4 * (n_observations/100)^(2/9).
+  relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 - **AdaptiveIFRP**: Computes adaptive intrinsic factor risk premia for various
   penalty parameter values.
 - **FRP**: Computes Fama-MachBeth or misspecification-robust factor risk
@@ -125,7 +125,7 @@ For usage details, type `?FunctionName` in the R console, e.g.:
   asset excess returns. Optionally computes the 
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
-  relevant lags, i.e., n_lags = 4 * (n_observations/100)^(2/9).
+  relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 
 ## References
 

@@ -24,66 +24,68 @@ OptimalAdaptiveIFRP(
 )
 }
 \arguments{
-\item{returns}{(n_observations x n_returns)-dimensional matrix of test asset
+\item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
 excess returns.}
 
-\item{factors}{(n_observations x n_factors)-dimensional matrix of factors.}
+\item{factors}{\verb{n_observations x n_factors}-dimensional matrix of factors.}
 
-\item{penalty_parameters}{(n_parameters)-dimensional vector of penalty
+\item{penalty_parameters}{\code{n_parameters}-dimensional vector of penalty
 parameter values from smallest to largest.}
 
 \item{weighting_type}{character specifying the type of adaptive weights:
-based on the correlation between factors and returns 'c'; based on the
-regression coefficients of returns on factors 'b'; based on the first-step
-intrinsic risk premia estimator 'a'; otherwise a vector of ones (any other
-character). Default is 'c'.}
+based on the correlation between factors and returns \code{'c'}; based on the
+regression coefficients of returns on factors \code{'b'}; based on the first-step
+intrinsic risk premia estimator \code{'a'}; otherwise a vector of ones (any other
+character). Default is \code{'c'}.}
 
 \item{tuning_type}{character indicating the parameter tuning type: 'g' for
-generalized cross validation; 'c' for cross validation; 'r' for rolling
-validation. Default is 'g'.}
+generalized cross validation; \code{'c'} for cross validation; \code{'r'} for rolling
+validation. Default is \code{'g'}.}
 
-\item{include_standard_errors}{boolean TRUE if you want to compute the
-adaptive intrinsic factor risk premia HAC standard errors; FALSE otherwise.
-Default is FALSE.}
+\item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
+adaptive intrinsic factor risk premia HAC standard errors; \code{FALSE} otherwise.
+Default is \code{FALSE}.}
 
-\item{one_stddev_rule}{boolean TRUE for picking the most parsimonious model
+\item{one_stddev_rule}{boolean \code{TRUE} for picking the most parsimonious model
 whose score is not higher than one standard error above the score of the
-best model; FALSE for picking the best model. Default is FALSE.}
+best model; \code{FALSE} for picking the best model. Default is \code{FALSE}.}
 
-\item{gcv_vr_weighting}{boolean TRUE for scaling pricing errors by
-the inverse variance matrix of asset excess returns; False otherwise.
-Default is FALSE.}
+\item{gcv_vr_weighting}{boolean \code{TRUE} for scaling pricing errors by
+the inverse variance matrix of asset excess returns; \code{FALSE} otherwise.
+Default is \code{FALSE.}}
 
-\item{gcv_aic_scaling}{(only relevant for tuning_type ='g')
-boolean TRUE for AIC scaling (1 / n_observations); FALSE for BIC scaling
-(log(n_observations) / n_observations). Default is TRUE.}
+\item{gcv_aic_scaling}{(only relevant for \code{tuning_type ='g'})
+boolean \code{TRUE} for AIC scaling (\code{1 / n_observations}); \code{FALSE} for BIC scaling
+(\code{log(n_observations) / n_observations}). Default is \code{TRUE.}}
 
-\item{n_folds}{(only relevant for tuning_type ='c') integer number of k-fold
-for cross validation. Default is 5.}
+\item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
+for cross validation. Default is \code{5}.}
 
-\item{n_train_observations}{(only relevant for tuning_type ='r') number of
-observations in the rolling training set. Default is 120.}
+\item{n_train_observations}{(only relevant for \code{tuning_type ='r'}) number of
+observations in the rolling training set. Default is \code{120}.}
 
-\item{n_test_observations}{(only relevant for tuning_type ='r') number of
-observations in the test set. Default is 12.}
+\item{n_test_observations}{(only relevant for \code{tuning_type ='r'}) number of
+observations in the test set. Default is \code{12}.}
 
-\item{roll_shift}{(only relevant for tuning_type ='r') number of observation
-shift when moving from the rolling window to the next one. Default is 12.}
+\item{roll_shift}{(only relevant for \code{tuning_type ='r'}) number of observation
+shift when moving from the rolling window to the next one. Default is \code{12}.}
 
-\item{relaxed}{boolean TRUE for re-fitting the model without shrinkage
-post selection; FALSE otherwise. Default is FALSE.}
+\item{relaxed}{boolean \code{TRUE} for re-fitting the model without shrinkage
+post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
 
-\item{plot_score}{boolean TRUE for plotting the model score; FALSE otherwise.
-Default is TRUE.}
+\item{plot_score}{boolean \code{TRUE} for plotting the model score; \code{FALSE} otherwise.
+Default is \code{TRUE}.}
 
-\item{check_arguments}{boolean TRUE if you want to check function arguments;
-FALSE otherwise. Default is TRUE.}
+\item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
+\code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-a list containing the n_factors-dimensional vector of adaptive
-intrinsic factor risk premia in "risk_premia"; the optimal penalty
-parameter value in "penalty_parameter"; the model score for each penalty
-parameter value.
+a list containing the \code{n_factors}-dimensional vector of adaptive
+intrinsic factor risk premia in \code{"risk_premia"}; the optimal penalty
+parameter value in \code{"penalty_parameter"}; the model score for each penalty
+parameter value in \code{"model_score"};  if \code{include_standard_errors=TRUE}, then
+it further includes \code{n_factors}-dimensional vector of intrinsic factor risk
+premia standard errors in \code{"standard_errors"}.
 }
 \description{
 Computes optimal adaptive intrinsic factor risk premia based on
@@ -95,7 +97,7 @@ factors and returns, on the regression coefficients of returns on factors
 or on the first-step intrinsic risk premia estimator. Optionally computes
 the corresponding heteroskedasticity and autocorrelation robust standard
 errors using the Newey-West (1994) plug-in procedure to select the number
-of relevant lags, i.e., n_lags = 4 * (n_observations/100)^(2/9).
+of relevant lags, i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns

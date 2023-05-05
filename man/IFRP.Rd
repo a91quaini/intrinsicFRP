@@ -7,30 +7,30 @@
 IFRP(returns, factors, include_standard_errors = FALSE, check_arguments = TRUE)
 }
 \arguments{
-\item{returns}{(n_observations x n_returns)-dimensional matrix of test asset
+\item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
 excess returns.}
 
-\item{factors}{(n_observations x n_factors)-dimensional matrix of factors.}
+\item{factors}{\verb{n_observations x n_factors}-dimensional matrix of factors.}
 
-\item{include_standard_errors}{boolean TRUE if you want to compute the
-intrinsic factor risk premia HAC standard errors; FALSE otherwise. Default
-is FALSE.}
+\item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
+intrinsic factor risk premia HAC standard errors; \code{FALSE} otherwise. Default
+is \code{FALSE}.}
 
-\item{check_arguments}{boolean TRUE if you want to check function arguments;
-FALSE otherwise. Default is TRUE.}
+\item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
+\code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-a list containing n_factors-dimensional vector of intrinsic factor
-risk premia in "risk_premia"; if include_standard_errors is true, then
-it further includes n_factors-dimensional vector of intrinsic factor risk
-premia standard errors in "standard_errors".
+a list containing \code{n_factors}-dimensional vector of intrinsic factor
+risk premia in \code{"risk_premia"}; if \code{include_standard_errors=TRUE}, then
+it further includes \code{n_factors}-dimensional vector of intrinsic factor risk
+premia standard errors in \code{"standard_errors"}.
 }
 \description{
 Computes intrinsic factor risk premia from data on factors and
 test asset excess returns. Optionally computes the corresponding
 heteroskedasticity and autocorrelation robust standard errors using the
 Newey-West (1994) plug-in procedure to select the number of relevant lags,
-i.e., n_lags = 4 * (n_observations/100)^(2/9).
+i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns

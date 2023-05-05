@@ -3,11 +3,11 @@
 \docType{data}
 \name{returns}
 \alias{returns}
-\title{Test Asset Excess Returns - monthly observations from 01/1970 to 12/2021}
+\title{Test Asset Excess Returns - monthly observations from \code{01/1970} to \code{12/2021}}
 \format{
 \subsection{\code{returns}}{
 
-A data frame with 624 rows and 26 columns:
+A data frame with \code{624} rows and \code{43} columns:
 \describe{
 \item{Date}{Date in yyyymm format}
 \item{...}{Asset excess returns}
@@ -21,7 +21,7 @@ A data frame with 624 rows and 26 columns:
 returns
 }
 \description{
-Monthly excess returns on the 25 Size/Book-to-Market double sorted portfolios
-from 01/1970 to 12/2021.
+Monthly excess returns on the \code{25} Size/Book-to-Market double sorted portfolios
+and the \code{17} industry portfolios from \code{01/1970} to \code{12/2021}.
 }
 \keyword{datasets}

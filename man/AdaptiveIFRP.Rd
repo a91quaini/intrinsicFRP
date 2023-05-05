@@ -14,28 +14,28 @@ AdaptiveIFRP(
 )
 }
 \arguments{
-\item{returns}{(n_observations x n_returns)-dimensional matrix of test asset
+\item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
 excess returns.}
 
-\item{factors}{(n_observations x n_factors)-dimensional matrix of factors.}
+\item{factors}{\verb{n_observations x n_factors}-dimensional matrix of factors.}
 
-\item{penalty_parameters}{(n_parameters)-dimensional vector of penalty
+\item{penalty_parameters}{\code{n_parameters}-dimensional vector of penalty
 parameter values from smallest to largest.}
 
 \item{weighting_type}{character specifying the type of adaptive weights:
-based on the correlation between factors and returns 'c'; based on the
-regression coefficients of returns on factors 'b'; based on the first-step
-intrinsic risk premia estimator 'a'; otherwise a vector of ones (any other
-character). Default is 'c'.}
+based on the correlation between factors and returns \code{'c'}; based on the
+regression coefficients of returns on factors \code{'b'}; based on the first-step
+intrinsic risk premia estimator \code{'a'}; otherwise a vector of ones (any other
+character). Default is \code{'c'}.}
 
-\item{relaxed}{boolean TRUE for re-fitting the model without shrinkage
-post selection; FALSE otherwise. Default is FALSE.}
+\item{relaxed}{boolean \code{TRUE} for re-fitting the model without shrinkage
+post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
 
-\item{check_arguments}{boolean TRUE if you want to check function arguments;
-FALSE otherwise. Default is TRUE.}
+\item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
+\code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-(n_factors x n_parameters)-dimensional matrix of adaptive
+\verb{n_factors x n_parameters}-dimensional matrix of adaptive
 intrinsic factor risk premia.
 }
 \description{
