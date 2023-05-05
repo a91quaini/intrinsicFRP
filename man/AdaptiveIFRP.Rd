@@ -39,9 +39,8 @@ FALSE otherwise. Default is TRUE.}
 intrinsic factor risk premia.
 }
 \description{
-Computes adaptive intrinsic factor risk premia based on
-pre-computed intrinsic factor risk premia and adaptive penalty weights for
-various penalty parameter values.
+Computes adaptive intrinsic factor risk premia for various
+penalty parameter values.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns

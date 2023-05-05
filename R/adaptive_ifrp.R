@@ -202,9 +202,8 @@ OptimalAdaptiveIFRP = function(
 #' Compute adaptive intrinsic factor risk premia
 #'
 #' @name AdaptiveIFRP
-#' @description Computes adaptive intrinsic factor risk premia based on
-#' pre-computed intrinsic factor risk premia and adaptive penalty weights for
-#' various penalty parameter values.
+#' @description Computes adaptive intrinsic factor risk premia for various
+#' penalty parameter values.
 #'
 #' @param returns (n_observations x n_returns)-dimensional matrix of test asset
 #' excess returns.
