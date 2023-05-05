@@ -21,7 +21,8 @@ LinkingTo:
     RcppArmadillo
 Imports: 
     graphics,
-    Rcpp
+    Rcpp,
+    stats
 Depends: 
     R (>= 2.10)
 LazyData: true

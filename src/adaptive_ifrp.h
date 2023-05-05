@@ -39,7 +39,7 @@
 // character). Default is 'c'.
 // @param gcv_vr_weighting boolean TRUE for scaling pricing errors by
 // the inverse variance matrix of asset excess returns; False otherwise.
-// Default is TRUE.
+// Default is FALSE.
 // @param gcv_aic_scaling boolean TRUE for AIC scaling
 // (1. / n_observations); FALSE for BIC scaling
 // (log(n_observations) / n_observations). Default is TRUE.
@@ -63,9 +63,9 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const arma::vec& mean_returns,
   const arma::vec& penalty_parameters,
   const char weighting_type = 'c',
-  const bool gcv_vr_weighting = true,
+  const bool gcv_vr_weighting = false,
   const bool gcv_aic_scaling = true,
-  const bool one_stddev_rule = true,
+  const bool one_stddev_rule = false,
   const bool relaxed = false
 );
 
@@ -95,7 +95,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 // @param n_folds integer number of k-fold for cross validation. Default is 5.
 // @param one_stddev_rule boolean TRUE for picking the most parsimonious model
 // whose score is not higher than one standard error above the score of the
-// best model; FALSE for picking the best model. Default is TRUE.
+// best model; FALSE for picking the best model. Default is FALSE.
 // @param relaxed boolean TRUE for fitting the intrinsic risk premia
 // estimate post adaptive shrinkage and selection; FALSE otherwise. Default
 // is FALSE.
@@ -114,7 +114,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
   const arma::vec& penalty_parameters,
   const char weighting_type = 'c',
   const unsigned int n_folds = 5,
-  const bool one_stddev_rule = true,
+  const bool one_stddev_rule = false,
   const bool relaxed = false
 );
 
@@ -149,7 +149,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
 // window to the next one. Default is 12.
 // @param one_stddev_rule boolean TRUE for picking the most parsimonious model
 // whose score is not higher than one standard error above the score of the
-// best model; FALSE for picking the best model. Default is TRUE.
+// best model; FALSE for picking the best model. Default is FALSE.
 // @param relaxed boolean TRUE for re-fitting the model without shrinkage
 // post selection; FALSE otherwise. Default is FALSE.
 //
@@ -169,7 +169,7 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
   const unsigned int n_train_observations = 120,
   const unsigned int n_test_observations = 12,
   const unsigned int roll_shift = 12,
-  const bool one_stddev_rule = true,
+  const bool one_stddev_rule = false,
   const bool relaxed = false
 );
 

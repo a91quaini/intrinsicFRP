@@ -36,10 +36,10 @@
 #' Default is FALSE.
 #' @param one_stddev_rule boolean TRUE for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
-#' best model; FALSE for picking the best model. Default is TRUE.
+#' best model; FALSE for picking the best model. Default is FALSE.
 #' @param gcv_vr_weighting boolean TRUE for scaling pricing errors by
 #' the inverse variance matrix of asset excess returns; False otherwise.
-#' Default is TRUE.
+#' Default is FALSE.
 #' @param gcv_aic_scaling (only relevant for tuning_type ='g')
 #' boolean TRUE for AIC scaling (1 / n_observations); FALSE for BIC scaling
 #' (log(n_observations) / n_observations). Default is TRUE.
@@ -53,6 +53,8 @@
 #' shift when moving from the rolling window to the next one. Default is 12.
 #' @param relaxed boolean TRUE for re-fitting the model without shrinkage
 #' post selection; FALSE otherwise. Default is FALSE.
+#' @param plot_score boolean TRUE for plotting the model score; FALSE otherwise.
+#' Default is TRUE.
 #' @param check_arguments boolean TRUE if you want to check function arguments;
 #' FALSE otherwise. Default is TRUE.
 #'
@@ -84,14 +86,15 @@ OptimalAdaptiveIFRP = function(
   weighting_type = 'c',
   tuning_type = 'g',
   include_standard_errors = FALSE,
-  one_stddev_rule = TRUE,
-  gcv_vr_weighting = TRUE,
+  one_stddev_rule = FALSE,
+  gcv_vr_weighting = FALSE,
   gcv_aic_scaling = TRUE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
   roll_shift = 12,
   relaxed = FALSE,
+  plot_score = TRUE,
   check_arguments = TRUE
 ) {
 
@@ -112,6 +115,7 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
     stopifnot("`roll_shift` should be between 1 and n_test_observations" = roll_shift >= 1 || roll_shift < n_test_observations)
     stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
+    stopifnot("`plot_score` must be boolean" = is.logical(plot_score))
 
   }
 
@@ -188,6 +192,8 @@ OptimalAdaptiveIFRP = function(
     )
 
   }
+
+  if (plot_score) {PlotAdaptiveIFRPModelScore(output, penalty_parameters)}
 
   return(output)
 
