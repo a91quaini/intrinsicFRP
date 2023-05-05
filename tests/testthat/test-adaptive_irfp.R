@@ -388,8 +388,4 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
 
   }}
 
-  expect_no_error(
-    PlotAdaptiveIFRPModelScore(adaptive_ifrp, penalty_parameters)
-  )
-
 })

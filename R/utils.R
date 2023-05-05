@@ -1,39 +1,21 @@
 # Author: Alberto Quaini
 
 
-#' Plot adaptive IFRP model score
-#'
-#' @name PlotAdaptiveIFRPModelScore
-#' @description Plots the model score of the adaptive IFRP for each penalty
-#' parameter value, highlighting the minimum attained model score and the
-#' optimal one (which differs from the minimum in case the optimal parameter
-#' was computed with the `one_stddev_rule` option TRUE).
-#'
-#' @param aifrp list containing the output of the function `OptimalAdaptiveIFRP`.
-#' @param penalty_parameters n_parameters-dimensional vector of penalty
-#' parameter values from smallest to largest.
-#' @param legend_pos character vector indicating the legend position. Must be
-#' one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top",
-#' "topright", "right" and "center" . Default is "bottomright".
-#'
-#' @examples
-#' # import package data on 15 risk factors and 42 test asset excess returns
-#' factors = intrinsicFRP::factors[,-1]
-#' returns = intrinsicFRP::returns[,-1]
-#'
-#' penalty_parameters = seq(0., 1., length.out = 100)
-#'
-#' # compute optimal adaptive intrinsic factor risk premia and their standard errors
-#' aifrp = OptimalAdaptiveIFRP(
-#' returns,
-#' factors,
-#' penalty_parameters,
-#' include_standard_errors = TRUE
-#' )
-#'
-#' PlotAdaptiveIFRPModelScore(aifrp, penalty_parameters)
-#'
-#' @export
+# Plot adaptive IFRP model score
+#
+# @name PlotAdaptiveIFRPModelScore
+# @description Plots the model score of the adaptive IFRP for each penalty
+# parameter value, highlighting the minimum attained model score and the
+# optimal one (which differs from the minimum in case the optimal parameter
+# was computed with the `one_stddev_rule` option TRUE).
+#
+# @param aifrp list containing the output of the function `OptimalAdaptiveIFRP`.
+# @param penalty_parameters n_parameters-dimensional vector of penalty
+# parameter values from smallest to largest.
+# @param legend_pos character vector indicating the legend position. Must be
+# one of "bottomright", "bottom", "bottomleft", "left", "topleft", "top",
+# "topright", "right" and "center" . Default is "bottomright".
+#
 PlotAdaptiveIFRPModelScore = function(
   aifrp,
   penalty_parameters,
