@@ -10,7 +10,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1251-0599"))
 Description: Efficient implementation of intrinsic factor risk premia and their 
     "adaptive" version based on the methods developed in Quaini Trojani Yuan 
-    2023 "Intrinsic Factor Risk Premia and Testing of Asset Pricing Models". 
+    2023 "Intrinsic Factor Risk Premia and Tests of Asset Pricing Models". 
 License: GPL (>= 3)
 URL: https://github.com/a91quaini/intrinsicFRP
 BugReports: https://github.com/a91quaini/intrinsicFRP/issues
