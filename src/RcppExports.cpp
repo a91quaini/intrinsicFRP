@@ -102,19 +102,19 @@ BEGIN_RCPP
 END_RCPP
 }
 // StandardErrorsAdaptiveIFRPCpp
-arma::vec StandardErrorsAdaptiveIFRPCpp(const arma::vec& adaptive_ifrp, const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& mean_factors);
-RcppExport SEXP _intrinsicFRP_StandardErrorsAdaptiveIFRPCpp(SEXP adaptive_ifrpSEXP, SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP mean_factorsSEXP) {
+arma::vec StandardErrorsAdaptiveIFRPCpp(const arma::vec& aifrp, const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& mean_factors);
+RcppExport SEXP _intrinsicFRP_StandardErrorsAdaptiveIFRPCpp(SEXP aifrpSEXP, SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP mean_factorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type adaptive_ifrp(adaptive_ifrpSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type aifrp(aifrpSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type covariance_factors_returns(covariance_factors_returnsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type variance_returns(variance_returnsSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mean_returns(mean_returnsSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type mean_factors(mean_factorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(StandardErrorsAdaptiveIFRPCpp(adaptive_ifrp, returns, factors, covariance_factors_returns, variance_returns, mean_returns, mean_factors));
+    rcpp_result_gen = Rcpp::wrap(StandardErrorsAdaptiveIFRPCpp(aifrp, returns, factors, covariance_factors_returns, variance_returns, mean_returns, mean_factors));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -307,7 +307,7 @@ arma::vec RelaxedAdaptiveIFRPCpp(
 ///// StandardErrorsAdaptiveIFRPCpp /////
 
 arma::vec StandardErrorsAdaptiveIFRPCpp(
-  const arma::vec& adaptive_ifrp,
+  const arma::vec& aifrp,
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -316,7 +316,7 @@ arma::vec StandardErrorsAdaptiveIFRPCpp(
   const arma::vec& mean_factors
 ) {
 
-  const arma::uvec idx_selected_rp = arma::find(adaptive_ifrp);
+  const arma::uvec idx_selected_rp = arma::find(aifrp);
 
   if (! idx_selected_rp.n_elem) {return arma::zeros(mean_factors.n_elem);}
 

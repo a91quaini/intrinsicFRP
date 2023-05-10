@@ -52,11 +52,11 @@ best model; \code{FALSE} for picking the best model. Default is \code{FALSE}.}
 
 \item{gcv_vr_weighting}{boolean \code{TRUE} for scaling pricing errors by
 the inverse variance matrix of asset excess returns; \code{FALSE} otherwise.
-Default is \code{FALSE.}}
+Default is \code{FALSE}.}
 
 \item{gcv_aic_scaling}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for AIC scaling (\code{1 / n_observations}); \code{FALSE} for BIC scaling
-(\code{log(n_observations) / n_observations}). Default is \code{TRUE.}}
+(\code{log(n_observations) / n_observations}). Default is \code{TRUE}.}
 
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
 for cross validation. Default is \code{5}.}

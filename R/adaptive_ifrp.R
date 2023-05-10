@@ -39,10 +39,10 @@
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
 #' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
 #' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
-#' Default is `FALSE.`
+#' Default is `FALSE`.
 #' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
-#' (`log(n_observations) / n_observations`). Default is `TRUE.`
+#' (`log(n_observations) / n_observations`). Default is `TRUE`.
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
 #' @param n_train_observations (only relevant for `tuning_type ='r'`) number of

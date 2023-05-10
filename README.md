@@ -16,7 +16,7 @@ Models”.
 
 ## Installation
 
-### Building from CRAN (aspirational)
+<!--### Building from CRAN (aspirational)
 
 Package `intrinsicFRP` is on CRAN (The Comprehensive R Archive Network),
 hence the latest release can be easily installed from the `R` command
@@ -24,7 +24,7 @@ line via
 
 ```R
 install.packages("intrinsicFRP")
-```
+```-->
 
 ### Building from source
 
@@ -33,8 +33,8 @@ GitHub, you can pull this repository and install it from the `R` command
 line via
 
 ```R
-## if you already have package `devtools` installed, you can skip the next line
-# install.packages("devtools")
+# if you already have package `devtools` installed, you can skip the next line
+install.packages("devtools")
 devtools::install_github("a91quaini/intrinsicFRP")
 ```
 
@@ -63,12 +63,18 @@ Windows](https://cran.r-project.org/bin/windows/Rtools/).
   relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 - `AdaptiveIFRP()`: Computes adaptive intrinsic factor risk premia with 
   user-defined weights for various penalty parameter values.
-- `FRP()`: Computes Fama-MachBeth or misspecification-robust factor risk
+- `FRP()`: Computes Fama MachBeth (1973) or misspecification-robust factor risk
   premia of Kan Robotti Shanken (2013) from data on factors and test
   asset excess returns. Optionally computes the 
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
   relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+  
+For usage details, type `?FunctionName` in the R console, e.g.:
+
+```R
+?IFRP
+```
 
 ## Example
 
@@ -141,17 +147,11 @@ Compare risk premia estimates of KRS, IFRP and adaptive IFRP (A-IFRP):
 <img src="inst/examples/risk_premia.png" width="600" />
 </p>
 
-## Functions
-
-For usage details, type `?FunctionName` in the R console, e.g.:
-
-```R
-?IFRP
-```
-
 ## References
 
 Quaini, A., Trojani, F. and Yuan, M., 2023. Intrinsic Factor Risk Premia
-and Testing of Asset Pricing Models. Working paper.
+and Tests of Asset Pricing Models. Working paper.
 
 Kan, R., Robotti, C. and Shanken, J., 2013. Pricing model performance and the two‐pass cross‐sectional regression methodology. The Journal of Finance, 68(6), pp.2617-2649.
+
+Fama, E.F. and MacBeth, J.D., 1973. Risk, return, and equilibrium: Empirical tests. Journal of political economy, 81(3), pp.607-636.

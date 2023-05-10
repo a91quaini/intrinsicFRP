@@ -36,7 +36,7 @@ it further includes \code{n_factors}-dimensional vector of factor risk
 premia standard errors in \code{"standard_errors"}.
 }
 \description{
-Computes Fama-MacBeth or misspecification-robust factor
+Computes Fama MachBeth (1973) or misspecification-robust factor
 risk premia of Kan Robotti Shanken (2013) from data on factors and test
 asset excess returns. Optionally computes the corresponding
 heteroskedasticity and autocorrelation robust standard errors using the

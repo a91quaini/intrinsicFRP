@@ -7,7 +7,7 @@
 #' Compute factor risk premia from data
 #'
 #' @name FRP
-#' @description Computes Fama-MacBeth or misspecification-robust factor
+#' @description Computes Fama MachBeth (1973) or misspecification-robust factor
 #' risk premia of Kan Robotti Shanken (2013) from data on factors and test
 #' asset excess returns. Optionally computes the corresponding
 #' heteroskedasticity and autocorrelation robust standard errors using the
