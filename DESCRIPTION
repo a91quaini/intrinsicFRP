@@ -1,6 +1,6 @@
 Package: intrinsicFRP
 Title: Adaptive Estimation of Intrinsic Factor Risk Premia
-Version: 0.0.1
+Version: 1.0.0
 Date: 2023-04-09
 Maintainer: Alberto Quaini <alberto91quaini@gmail.com>
 Authors@R: 
