@@ -12,7 +12,11 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
   mean_returns = colMeans(returns)
   mean_factors = colMeans(factors)
 
-  penalty_parameters = c(seq(0., 0.1, 1e3), seq(0.1, 1e3, length.out = 1e1))
+  penalty_parameters = c(
+    0.,
+    exp(seq(from=log(1.0e-8), to=log(1e-2), length.out=100)),
+    seq(1e-2, 1e2, 100)
+  )
 
   ifrp = IFRP(returns, factors, include_standard_errors = TRUE)
 
