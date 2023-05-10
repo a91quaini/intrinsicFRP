@@ -89,7 +89,7 @@ premia standard errors in \code{"standard_errors"}.
 }
 \description{
 Computes optimal adaptive intrinsic factor risk premia based on
-pre-computed intrinsic factor risk premia and adaptive penalty weights for
+pre-computed intrinsic factor risk premia for
 various penalty parameter values. Tuning is performed via
 Generalized Cross Validation (GCV), Cross Validation (CV) or Rolling
 Validation (RV). Adaptive weights can be based on the correlation between
