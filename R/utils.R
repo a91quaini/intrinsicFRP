@@ -22,8 +22,8 @@ PlotAdaptiveIFRPModelScore = function(
   legend_pos = "bottomright"
 ) {
 
-  optimal_par = aifrp$penalty_parameter
   optimal_score = aifrp$model_score[penalty_parameters == aifrp$penalty_parameter]
+
   plot(
     penalty_parameters,
     aifrp$model_score,
@@ -37,17 +37,20 @@ PlotAdaptiveIFRPModelScore = function(
     cex = 0.6,
     cex.lab = 1.3
   )
+
   graphics::points(
     x = aifrp$penalty_parameter,
     y = optimal_score,
     pch = 15,
     col = "red"
   )
+
   graphics::abline(
     v = aifrp$penalty_parameter,
     col = "red",
     lty = 2
   )
+
   graphics::legend(
     legend_pos,
     legend = c("Optimal"),

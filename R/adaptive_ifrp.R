@@ -118,6 +118,7 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`roll_shift` should be between 1 and n_test_observations" = roll_shift >= 1 || roll_shift < n_test_observations)
     stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
     stopifnot("`plot_score` must be boolean" = is.logical(plot_score))
+    penalty_parameters = sort(penalty_parameters)
 
   }
 
