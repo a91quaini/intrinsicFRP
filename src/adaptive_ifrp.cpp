@@ -67,10 +67,9 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     );
 
   const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::max(
-      arma::find(arma::sort(model_score) <=
-        arma::min(model_score) + arma::stddev(model_score))
-    ) :
+    arma::max(arma::find(
+        model_score <= arma::min(model_score) + arma::stddev(model_score)
+    )) :
     model_score.index_min();
 
   return Rcpp::List::create(
@@ -107,10 +106,9 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
   );
 
   const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::max(
-      arma::find(arma::sort(model_score) <=
-        arma::min(model_score) + arma::stddev(model_score))
-    ) :
+    arma::max(arma::find(
+        model_score <= arma::min(model_score) + arma::stddev(model_score)
+    )) :
     model_score.index_min();
 
   if (relaxed) {
@@ -192,10 +190,9 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
   );
 
   const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::max(
-      arma::find(arma::sort(model_score) <=
-        arma::min(model_score) + arma::stddev(model_score))
-    ) :
+    arma::max(arma::find(
+      model_score <= arma::min(model_score) + arma::stddev(model_score)
+    )) :
     model_score.index_min();
 
   if (relaxed) {

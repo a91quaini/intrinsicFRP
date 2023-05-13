@@ -1,16 +1,21 @@
 Package: intrinsicFRP
 Title: Adaptive Estimation of Intrinsic Factor Risk Premia
-Version: 1.0.0
-Date: 2023-04-09
+Version: 0.1.0
+Date: 2023-05-12
 Maintainer: Alberto Quaini <alberto91quaini@gmail.com>
 Authors@R: 
     person(given = "Alberto", family = "Quaini", 
            email = "alberto91quaini@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-1251-0599"))
-Description: Efficient implementation of intrinsic factor risk premia and their 
-    "adaptive" version based on the methods developed in Quaini Trojani Yuan 
-    2023 "Intrinsic Factor Risk Premia and Tests of Asset Pricing Models". 
+Description: Efficient computation of intrinsic and adaptive intrinsic factor 
+    risk premia and their standard errors. Intrinsic factor risk premia are
+    defined as the negative factor covariance with the SDF projection on 
+    test asset returns. As opposed to benchmark notions of factor risk premia,
+    they are well-defined even in presence of useless and weak factors, they do
+    not depend on the degree of misspecification of the factor model, and are
+    one-to-one linked to two-pass mimicking factor risk premia coefficients,
+    whenever the latter are also well-defined.
 License: GPL (>= 3)
 URL: https://github.com/a91quaini/intrinsicFRP
 BugReports: https://github.com/a91quaini/intrinsicFRP/issues
