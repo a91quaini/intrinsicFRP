@@ -66,13 +66,31 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
       gcv_aic_scaling
     );
 
-  const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::index_max(
-      model_score(arma::find(
-          model_score <= arma::min(model_score) + arma::stddev(model_score)
-      ))
-    ) :
-    model_score.index_min();
+  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
+  // arma::index_max(
+  //   model_score(arma::find(
+  //       model_score <= arma::min(model_score) + arma::stddev(model_score)
+  //   ))
+  // ) :
+  //   model_score.index_min();
+
+  unsigned int idx_optimal_parameter = model_score.index_min();
+
+  if (one_stddev_rule) {
+
+    const arma::vec model_score_right_of_min = model_score(
+      arma::span(idx_optimal_parameter, model_score.n_elem - 1)
+    );
+
+    const unsigned int idx_optimal_score = arma::index_max(
+      model_score_right_of_min(arma::find(
+        model_score_right_of_min <= arma::min(model_score) +
+          arma::stddev(model_score)
+    )));
+
+    idx_optimal_parameter += idx_optimal_score;
+
+  }
 
   return Rcpp::List::create(
     Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
@@ -107,13 +125,31 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
     relaxed
   );
 
-  const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::index_max(
-      model_score(arma::find(
-          model_score <= arma::min(model_score) + arma::stddev(model_score)
-      ))
-    ) :
-    model_score.index_min();
+  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
+  //   arma::index_max(
+  //     model_score(arma::find(
+  //         model_score <= arma::min(model_score) + arma::stddev(model_score)
+  //     ))
+  //   ) :
+  //   model_score.index_min();
+
+  unsigned int idx_optimal_parameter = model_score.index_min();
+
+  if (one_stddev_rule) {
+
+    const arma::vec model_score_right_of_min = model_score(
+      arma::span(idx_optimal_parameter, model_score.n_elem - 1)
+    );
+
+    const unsigned int idx_optimal_score = arma::index_max(
+      model_score_right_of_min(arma::find(
+          model_score_right_of_min <= arma::min(model_score) +
+            arma::stddev(model_score)
+      )));
+
+    idx_optimal_parameter += idx_optimal_score;
+
+  }
 
   if (relaxed) {
 
@@ -193,13 +229,31 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
     relaxed
   );
 
-  const unsigned int idx_optimal_parameter = one_stddev_rule ?
-    arma::index_max(
-      model_score(arma::find(
-          model_score <= arma::min(model_score) + arma::stddev(model_score)
-      ))
-    ) :
-    model_score.index_min();
+  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
+  //   arma::index_max(
+  //     model_score(arma::find(
+  //         model_score <= arma::min(model_score) + arma::stddev(model_score)
+  //     ))
+  //   ) :
+  //   model_score.index_min();
+
+  unsigned int idx_optimal_parameter = model_score.index_min();
+
+  if (one_stddev_rule) {
+
+    const arma::vec model_score_right_of_min = model_score(
+      arma::span(idx_optimal_parameter, model_score.n_elem - 1)
+    );
+
+    const unsigned int idx_optimal_score = arma::index_max(
+      model_score_right_of_min(arma::find(
+          model_score_right_of_min <= arma::min(model_score) +
+            arma::stddev(model_score)
+      )));
+
+    idx_optimal_parameter += idx_optimal_score;
+
+  }
 
   if (relaxed) {
 
