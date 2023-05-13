@@ -71,7 +71,9 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
   const bool gcv_aic_scaling
 ) {
 
-  const double score_no_model = arma::dot(mean_returns, mean_returns);
+  const double score_no_model = arma::dot(mean_returns, arma::solve(
+    variance_returns, mean_returns, arma::solve_opts::likely_sympd
+  ));
 
   arma::vec model_score(aifrp.n_cols, arma::fill::value(score_no_model));
 
@@ -108,8 +110,7 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
     );
 
     model_score(par) = arma::dot(pricing_errors, arma::solve(
-      variance_returns, pricing_errors,
-      arma::solve_opts::likely_sympd
+      variance_returns, pricing_errors, arma::solve_opts::likely_sympd
     )) / (denominator * denominator);
 
   }

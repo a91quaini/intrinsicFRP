@@ -51,7 +51,7 @@ PlotAdaptiveIFRPModelScore = function(
   )
 
   graphics::legend(
-    "topleft",
+    "topright",
     legend = c("Optimal"),
     col = "red",
     pch = 15,
