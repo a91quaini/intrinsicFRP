@@ -18,8 +18,7 @@
 #
 PlotAdaptiveIFRPModelScore = function(
   aifrp,
-  penalty_parameters,
-  legend_pos = "bottomright"
+  penalty_parameters
 ) {
 
   optimal_score = aifrp$model_score[penalty_parameters == aifrp$penalty_parameter]
@@ -52,7 +51,7 @@ PlotAdaptiveIFRPModelScore = function(
   )
 
   graphics::legend(
-    legend_pos,
+    "topleft",
     legend = c("Optimal"),
     col = "red",
     pch = 15,
