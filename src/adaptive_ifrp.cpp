@@ -89,6 +89,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     )));
 
     idx_optimal_parameter += idx_optimal_score;
+    idx_optimal_parameter = model_score.n_elem - 1;
 
   }
 
