@@ -2,6 +2,7 @@
 # intrinsicFRP: intrinsic factor risk premia
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/intrinsicFRP)](https://CRAN.R-project.org/package=intrinsicFRP)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![R-CMD-check](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/a91quaini/intrinsicFRP/branch/main/graph/badge.svg?token=0F8R40B0FP)](https://app.codecov.io/gh/a91quaini/intrinsicFRP)
