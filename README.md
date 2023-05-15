@@ -17,7 +17,7 @@ Models”.
 
 ## Installation
 
-<!--### Building from CRAN (aspirational)
+### Building from CRAN
 
 Package `intrinsicFRP` is on CRAN (The Comprehensive R Archive Network),
 hence the latest release can be easily installed from the `R` command
@@ -25,7 +25,7 @@ line via
 
 ```R
 install.packages("intrinsicFRP")
-```-->
+```
 
 ### Building from source
 
