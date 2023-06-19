@@ -5,13 +5,13 @@
 
 // For internal use
 // Computes the minimum singular value of a matrix
-double MinSingularValue(const arma::mat matrix);
+double MinimumSingularValueCpp(const arma::mat matrix);
 
 // For internal use
 // Computes the Chen fang 2019 rank statistic and p-value of the
 // (n_returns x n_factors)-dimensional matrix of regression loadings of
 // test asset excess returns on risk factors.
-arma::vec2 BetaRankChenFang2019StatisticAndPvalue(
+arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,

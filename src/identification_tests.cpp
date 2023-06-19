@@ -2,7 +2,7 @@
 
 #include "identification_tests.h"
 
-double MinSingularValue(const arma::mat matrix){
+double MinimumSingularValueCpp(const arma::mat matrix){
 
   arma::vec sv = arma::svd(matrix);
 
@@ -10,7 +10,7 @@ double MinSingularValue(const arma::mat matrix){
 
 }
 
-arma::vec2 BetaRankChenFang2019StatisticAndPvalue(
+arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,

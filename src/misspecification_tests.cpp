@@ -2,7 +2,36 @@
 
 #include "misspecification_tests.h"
 
-arma::vec2 HJMisspecificationStatisticAndPvalue(
+double HJDistanceCpp(
+    const arma::mat& beta,
+    const arma::mat& variance_returns,
+    const arma::vec& mean_returns
+) {
+
+  const arma::mat variance_returns_inverse_beta = arma::solve(
+    variance_returns, beta, arma::solve_opts::likely_sympd
+  );
+
+  const arma::vec krs_rp = arma::solve(
+    beta.t() * variance_returns_inverse_beta,
+    variance_returns_inverse_beta.t(),
+    arma::solve_opts::likely_sympd
+  ) * mean_returns;
+
+  const arma::vec pricing_error = mean_returns - beta * krs_rp;
+
+  const arma::vec variance_returns_inverse_pricing_error = arma::solve(
+    variance_returns, pricing_error, arma::solve_opts::likely_sympd
+  );
+
+  return arma::dot(
+    pricing_error,
+    variance_returns_inverse_pricing_error
+  );
+
+}
+
+arma::vec2 HJMisspecificationStatisticAndPvalueCpp(
     const arma::mat& returns,
     const arma::mat& factors,
     const arma::mat& beta,
@@ -39,7 +68,7 @@ arma::vec2 HJMisspecificationStatisticAndPvalue(
 
   const arma::vec q = 2. * u % y - arma::square(u) + hj_distance;
 
-  const double variance_q = ComputeScalarVarianceNeweyWest(q);
+  const double variance_q = NeweyWestVarianceOfScalarSeriesCpp(q);
 
   arma::vec2 results;
 
