@@ -295,6 +295,56 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
 
 }
 
+/////////////////////////////////////////////////////
+///// OptimalAdaptiveIFRPIdentificationScoreCpp /////
+
+Rcpp::List OptimalAdaptiveIFRPIdentificationScoreCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const arma::mat& covariance_factors_returns,
+  const arma::mat& variance_returns,
+  const arma::vec& mean_returns,
+  const arma::vec& penalty_parameters,
+  const char weighting_type,
+  const int sv_threshold_type,
+  const unsigned int n_bootstrap,
+  const double test_size
+) {
+
+  arma::mat aifrp = AdaptiveIFRPCpp(
+    IFRPCpp(
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns
+    ),
+    AdaptiveWeightsCpp(
+      returns,
+      factors,
+      weighting_type
+    ),
+    penalty_parameters
+  );
+
+  const arma::vec model_score = IdentificationScoreAdaptiveIFRPCpp(
+    aifrp,
+    returns,
+    factors,
+    covariance_factors_returns,
+    sv_threshold_type,
+    n_bootstrap,
+    test_size
+  );
+
+  unsigned int idx_optimal_parameter = model_score.index_min();
+
+  return Rcpp::List::create(
+    Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
+    Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
+    Rcpp::Named("model_score") = model_score
+  );
+
+}
+
 ///////////////////////////
 ///// AdaptiveIFRPCpp /////
 

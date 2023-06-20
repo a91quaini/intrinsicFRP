@@ -305,6 +305,65 @@ arma::vec RVScoreAdaptiveIFRPCpp(
 
 }
 
+/////////////////////////////////////////////
+///// IdentificationScoreAdaptiveIFRPCpp /////
+
+arma::vec IdentificationScoreAdaptiveIFRPCpp(
+  const arma::mat& aifrp,
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const arma::mat& covariance_factors_returns,
+  const int sv_threshold_type,
+  const unsigned int n_bootstrap,
+  const double test_size
+) {
+
+  // initialize model score to 1 -> no identification
+  arma::vec model_score(aifrp.n_cols, arma::fill::ones);
+  arma::uvec idx_selected_lag;
+
+  for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
+
+    const arma::uvec idx_selected = arma::find(aifrp.col(par));
+
+    // if there are no selected factor, move to the next iteration
+    if (! idx_selected.n_elem) continue;
+
+    // if current selected factors are the same as the ones of the
+    // previous iteration, move to the next iteration
+    if (idx_selected.n_elem == idx_selected_lag.n_elem) {
+      if (arma::all(idx_selected == idx_selected_lag)) continue;
+    }
+
+    const arma::vec2 output = BetaRankChenFang2019StatisticAndPvalueCpp(
+      returns,
+      factors.cols(idx_selected),
+      arma::solve(
+        arma::cov(factors.cols(idx_selected)),
+        covariance_factors_returns.rows(idx_selected),
+        arma::solve_opts::likely_sympd
+      ).t(),
+      sv_threshold_type,
+      n_bootstrap
+    );
+
+    // if the p-value of the Chen Fang 2019 rank test is below the test size
+    // set the current and subsequent models as identified, i.e.,
+    // model score = 0. Otherwise, leave the model as mis-identified, i.e.,
+    // model score = 1.
+    if (output(1) < test_size) {
+      model_score(arma::span(par,  aifrp.n_cols - 1)) = 0;
+      break;
+    }
+
+    idx_selected_lag = idx_selected;
+
+  }
+
+  return model_score;
+
+}
+
 /////////////////////////////////////
 ///// ComputePredictionErrorCpp /////
 

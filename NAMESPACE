@@ -3,6 +3,8 @@
 export(AdaptiveIFRP)
 export(FRP)
 export(IFRP)
+export(OptimalAdaptiveFRP)
 export(OptimalAdaptiveIFRP)
+export(OptimalAdaptiveIFRPIdentificationScoreCpp)
 importFrom(Rcpp,sourceCpp)
 useDynLib(intrinsicFRP, .registration = TRUE)

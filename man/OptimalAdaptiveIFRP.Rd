@@ -40,7 +40,7 @@ character). Default is \code{'c'}.}
 
 \item{tuning_type}{character indicating the parameter tuning type: 'g' for
 generalized cross validation; \code{'c'} for cross validation; \code{'r'} for rolling
-validation. Default is \code{'g'}.}
+validation; \code{'i'} for identification. Default is \code{'g'}.}
 
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
 adaptive intrinsic factor risk premia HAC standard errors; \code{FALSE} otherwise.

@@ -30,7 +30,7 @@
 #' character). Default is `'c'`.
 #' @param tuning_type character indicating the parameter tuning type: 'g' for
 #' generalized cross validation; `'c'` for cross validation; `'r'` for rolling
-#' validation. Default is `'g'`.
+#' validation; `'i'` for identification. Default is `'g'`.
 #' @param include_standard_errors boolean `TRUE` if you want to compute the
 #' adaptive intrinsic factor risk premia HAC standard errors; `FALSE` otherwise.
 #' Default is `FALSE`.
@@ -176,6 +176,23 @@ OptimalAdaptiveIFRP = function(
         roll_shift,
         one_stddev_rule,
         relaxed
+      )
+
+    },
+
+    'i' = {
+
+      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp`,
+        returns,
+        factors,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        penalty_parameters,
+        weighting_type,
+        0,
+        1000,
+        0.01
       )
 
     },

@@ -12,6 +12,7 @@
 // factor risk premia for each penalty parameter value.
 arma::vec MisspecificationIdentificationScoreAdaptiveFRPCpp(
   const arma::mat& aifrp,
+  const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns

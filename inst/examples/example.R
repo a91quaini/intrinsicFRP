@@ -14,7 +14,7 @@ ifrp = IFRP(returns, factors, include_standard_errors = TRUE)
 krs_frp = FRP(returns, factors, include_standard_errors = TRUE)
 
 # set penalty parameters
-penalty_parameters = seq(1e-4, 1e-2, length.out = 1000)
+penalty_parameters = seq(1e-4, 1e-1, length.out = 1000)
 
 # compute optimal adaptive intrinsic factor risk premia and their standard
 # errors
@@ -22,7 +22,14 @@ aifrp = OptimalAdaptiveIFRP(
   returns,
   factors,
   penalty_parameters,
-  include_standard_errors = TRUE,
+  include_standard_errors = FALSE,
+)
+
+afrp = OptimalAdaptiveFRP(
+  returns,
+  factors,
+  penalty_parameters,
+  include_standard_errors = TRUE
 )
 
 # create dataframe
