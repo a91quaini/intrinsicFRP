@@ -223,7 +223,6 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
 //'
 //' @noRd
 //'
-//' @export
 // [[Rcpp::export]]
 Rcpp::List OptimalAdaptiveIFRPIdentificationScoreCpp(
   const arma::mat& returns,

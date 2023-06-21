@@ -4,7 +4,6 @@
 #define TUNING_ADAPTIVE_FRP_H
 
 #include <RcppArmadillo.h>
-#include "identification_tests.h"
 #include "misspecification_tests.h"
 
 // Function for internal use

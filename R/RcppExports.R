@@ -248,7 +248,6 @@ OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_return
 #'
 #' @noRd
 #'
-#' @export
 OptimalAdaptiveIFRPIdentificationScoreCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', sv_threshold_type = 0L, n_bootstrap = 1000L, test_size = 0.01) {
     .Call(`_intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, sv_threshold_type, n_bootstrap, test_size)
 }

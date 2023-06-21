@@ -42,11 +42,13 @@ arma::vec MisspecificationIdentificationScoreAdaptiveFRPCpp(
       arma::solve_opts::likely_sympd
     ).t();
 
+    arma::vec singular_value = arma::svd(beta_selected);
+
     model_score(par) = HJDistanceCpp(
       beta_selected,
       variance_returns,
       mean_returns
-    ) / MinimumSingularValueCpp(beta_selected);
+    ) / singular_value(singular_value.n_elem - 1);
 
     idx_selected_lag = idx_selected;
 
@@ -55,5 +57,3 @@ arma::vec MisspecificationIdentificationScoreAdaptiveFRPCpp(
   return model_score;
 
 }
-
-

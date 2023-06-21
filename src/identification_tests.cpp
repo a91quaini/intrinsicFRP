@@ -2,14 +2,6 @@
 
 #include "identification_tests.h"
 
-double MinimumSingularValueCpp(const arma::mat matrix){
-
-  arma::vec sv = arma::svd(matrix);
-
-  return sv(sv.n_elem - 1);
-
-}
-
 arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
