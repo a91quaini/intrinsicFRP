@@ -27,7 +27,7 @@ arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
 
   const double sv_threshold = sv_threshold_type == 0 ?
     std::pow(n_observations, -1./4.) :
-    std::pow(n_observations, -1./3.);
+    std::pow(n_observations, -1./5.);
 
   const unsigned int rank_estimate = arma::sum(sv >= sv_threshold);
 

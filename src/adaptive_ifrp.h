@@ -73,6 +73,61 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const bool relaxed = false
 );
 
+//' Compute optimal adaptive intrinsic factor risk premia under identified
+//' generalized cross validation
+//'
+//' @name OptimalAdaptiveIFRPGCVCpp
+//' @description Computes optimal adaptive intrinsic factor risk premia based
+//' on moments extracted from factors and test asset excess returns and adaptive
+//' weights over various penalty parameter values. Tuning is performed via
+//' Identified Generalized Cross Validation (GCV):
+//' (`GCV * (1+p)^2`) where `GCV` is the GCV criterion and `p` is the p-value of
+//' the Chen Fang 2019 rank-test. Adaptive weights can be based on the
+//' correlation between factors and returns, on the regression coefficients of
+//' returns on factors or on the first-step intrinsic risk premia estimator.
+//'
+//' @param returns `n_observations x n_returns`-dimensional matrix of test asset
+//' excess returns.
+//' @param factors `n_observations x n_factors`-dimensional matrix of factors.
+//' @param covariance_factors_returns `n_factors x n_returns`-dimensional
+//' covariance matrix between factors and test asset excess returns.
+//' @param variance_returns `n_returns x n_returns`-dimensional covariance
+//' matrix of test asset excess returns.
+//' @param mean_returns `n_returns`-dimensional mean vector of test asset excess
+//' returns.
+//' @param penalty_parameters `n_parameters`-dimensional vector of penalty
+//' parameter values from smallest to largest.
+//' @param weighting_type character specifying the type of adaptive weights:
+//' based on the correlation between factors and returns `'c'`; based on the
+//' regression coefficients of returns on factors `'b'`; based on the first-step
+//' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
+//' character). Default is `'c'`.
+//' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
+//' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
+//' (`log(n_observations) / n_observations`). Default is `TRUE`.
+//' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
+//' whose score is not higher than one standard error above the score of the
+//' best model; `FALSE` for picking the best model. Default is `FALSE`.
+//'
+//' @return a list containing the `n_factors`-dimensional vector of adaptive
+//' intrinsic factor risk premia in `"risk_premia"`, and the optimal penalty
+//' parameter value in `"penalty_parameter"`.
+//'
+//' @noRd
+//'
+// [[Rcpp::export]]
+Rcpp::List OptimalAdaptiveIFRPIGCVCpp(
+   const arma::mat& returns,
+   const arma::mat& factors,
+   const arma::mat& covariance_factors_returns,
+   const arma::mat& variance_returns,
+   const arma::vec& mean_returns,
+   const arma::vec& penalty_parameters,
+   const char weighting_type = 'c',
+   const bool gcv_aic_scaling = true,
+   const bool one_stddev_rule = false
+);
+
 //' Compute optimal adaptive intrinsic factor risk premia under cross validation
 //'
 //' @name OptimalAdaptiveIFRPCVCpp

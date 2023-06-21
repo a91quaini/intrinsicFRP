@@ -11,7 +11,7 @@
 // Computes the Generalized Cross Validation score of the adaptive intrinsic
 // factor risk premia for each penalty parameter value.
 arma::vec GCVScoreAdaptiveIFRPCpp(
-  const arma::mat& afrp,
+  const arma::mat& aifrp,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
@@ -30,6 +30,20 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
   const arma::vec& mean_returns,
   const unsigned int n_observations,
   const bool gcv_aic_scaling = false
+);
+
+// Function for internal use
+// Computes the Identification-scaled Generalized Cross Validation score
+// of the adaptive intrinsic factor risk premia for each penalty parameter value.
+arma::vec IGCVScoreAdaptiveIFRPCpp(
+  const arma::mat& aifrp,
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const arma::mat& covariance_factors_returns,
+  const arma::mat& variance_returns,
+  const arma::vec& mean_returns,
+  const unsigned int n_observations,
+  const bool gcv_aic_scaling = true
 );
 
 // Function for internal use

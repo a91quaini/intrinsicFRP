@@ -38,8 +38,9 @@ regression coefficients of returns on factors \code{'b'}; based on the first-ste
 intrinsic risk premia estimator \code{'a'}; otherwise a vector of ones (any other
 character). Default is \code{'c'}.}
 
-\item{tuning_type}{character indicating the parameter tuning type: 'g' for
-generalized cross validation; \code{'c'} for cross validation; \code{'r'} for rolling
+\item{tuning_type}{character indicating the parameter tuning type: \code{'g'} for
+generalized cross validation; \code{'f'} for identified generalized cross validation;
+\code{'c'} for cross validation; \code{'r'} for rolling
 validation; \code{'i'} for identification. Default is \code{'g'}.}
 
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the

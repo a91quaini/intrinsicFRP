@@ -28,8 +28,9 @@
 #' regression coefficients of returns on factors `'b'`; based on the first-step
 #' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
 #' character). Default is `'c'`.
-#' @param tuning_type character indicating the parameter tuning type: 'g' for
-#' generalized cross validation; `'c'` for cross validation; `'r'` for rolling
+#' @param tuning_type character indicating the parameter tuning type: `'g'` for
+#' generalized cross validation; `'f'` for identified generalized cross validation;
+#' `'c'` for cross validation; `'r'` for rolling
 #' validation; `'i'` for identification. Default is `'g'`.
 #' @param include_standard_errors boolean `TRUE` if you want to compute the
 #' adaptive intrinsic factor risk premia HAC standard errors; `FALSE` otherwise.
@@ -142,6 +143,21 @@ OptimalAdaptiveIFRP = function(
         gcv_aic_scaling,
         one_stddev_rule,
         relaxed
+      )
+
+    },
+    'f' = {
+
+      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPIGCVCpp`,
+        returns,
+        factors,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        penalty_parameters,
+        weighting_type,
+        gcv_aic_scaling,
+        one_stddev_rule
       )
 
     },
