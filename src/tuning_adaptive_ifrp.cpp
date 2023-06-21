@@ -352,7 +352,12 @@ arma::vec IdentificationScoreAdaptiveIFRPCpp(
     // model score = 0. Otherwise, leave the model as mis-identified, i.e.,
     // model score = 1.
     if (output(1) < test_size) {
-      model_score(arma::span(par,  aifrp.n_cols - 1)) = 0;
+      Rcpp::Rcout << "idx_selected = " << idx_selected << "\n";
+      Rcpp::Rcout << "stat = " << output(0) << "\n";
+      Rcpp::Rcout << "p-value = " << output(1) << "\n";
+      model_score(arma::span(par,  aifrp.n_cols - 1)) = arma::zeros(
+        aifrp.n_cols - par
+      );
       break;
     }
 
