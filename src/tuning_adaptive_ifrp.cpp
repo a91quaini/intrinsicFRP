@@ -32,7 +32,8 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
     if (! idx_selected.n_elem) continue;
 
     // check that min singular value of the selected beta is above a
-    // very low threshold, otherwise set the current model score to infinity
+    // very low threshold, otherwise set the current model score to
+    // the model score with no model
     if (beta_min_singular_value_check) {
 
       const arma::mat sv_beta_selected = arma::svd(
@@ -43,11 +44,11 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
         ).t()
       );
 
-      const double sv_threshold = std::log((double)factors.n_cols) *
-        std::pow((double)factors.n_rows, -1./3.);
+      // const double sv_threshold = std::pow((double)factors.n_rows, -1./4.);
+      const double sv_threshold = std::pow((double)factors.n_rows, -1./4.);
 
       if (sv_beta_selected(sv_beta_selected.n_elem - 1) < sv_threshold) {
-        model_score(par) = arma::datum::inf; continue;
+        model_score(par) = score_no_model; continue;
       }
 
     }
