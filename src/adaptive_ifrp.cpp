@@ -15,23 +15,24 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const char weighting_type,
   const bool gcv_vr_weighting,
   const bool gcv_aic_scaling,
+  const bool beta_min_singular_value_check,
   const bool one_stddev_rule,
   const bool relaxed
 ) {
 
   arma::mat aifrp = AdaptiveIFRPCpp(
-      IFRPCpp(
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      ),
-      AdaptiveWeightsCpp(
-        returns,
-        factors,
-        weighting_type
-      ),
-      penalty_parameters
-    );
+    IFRPCpp(
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns
+    ),
+    AdaptiveWeightsCpp(
+      returns,
+      factors,
+      weighting_type
+    ),
+    penalty_parameters
+  );
 
   if (relaxed) {
 
@@ -59,20 +60,14 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     ) :
     GCVScoreAdaptiveIFRPCpp(
       aifrp,
+      factors,
       covariance_factors_returns,
       variance_returns,
       mean_returns,
       returns.n_rows,
-      gcv_aic_scaling
+      gcv_aic_scaling,
+      beta_min_singular_value_check
     );
-
-  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
-  // arma::index_max(
-  //   model_score(arma::find(
-  //       model_score <= arma::min(model_score) + arma::stddev(model_score)
-  //   ))
-  // ) :
-  //   model_score.index_min();
 
   unsigned int idx_optimal_parameter = model_score.index_min();
 

@@ -44,6 +44,10 @@
 #' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
 #' (`log(n_observations) / n_observations`). Default is `TRUE`.
+#' @param beta_min_singular_value_check (only relevant for `tuning_type ='g'`)
+#' boolean `TRUE` for checking that the minimum singular value of beta is
+#' above `log(n_factors)/n_observations^(-1/3)`, and if it's not, set the GCV
+#' score to infinity; `FALSE` for not performing such checl. Default is `TRUE`.
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
 #' @param n_train_observations (only relevant for `tuning_type ='r'`) number of
@@ -92,6 +96,7 @@ OptimalAdaptiveIFRP = function(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_aic_scaling = TRUE,
+  beta_min_singular_value_check = TRUE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -113,6 +118,7 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_aic_scaling` must be boolean" = is.logical(gcv_aic_scaling))
+    stopifnot("`beta_min_singular_value_check` must be boolean" = is.logical(beta_min_singular_value_check))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
@@ -141,6 +147,7 @@ OptimalAdaptiveIFRP = function(
         weighting_type,
         gcv_vr_weighting,
         gcv_aic_scaling,
+        beta_min_singular_value_check,
         one_stddev_rule,
         relaxed
       )

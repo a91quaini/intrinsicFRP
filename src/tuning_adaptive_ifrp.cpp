@@ -7,11 +7,13 @@
 
 arma::vec GCVScoreAdaptiveIFRPCpp(
   const arma::mat& aifrp,
+  const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const unsigned int n_observations,
-  const bool gcv_aic_scaling
+  const bool gcv_aic_scaling,
+  const bool beta_min_singular_value_check
 ) {
 
   const double score_no_model = arma::dot(mean_returns, mean_returns);
@@ -26,7 +28,29 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
 
     const arma::uvec idx_selected = arma::find(aifrp.col(par));
 
+    // if there are no selected factor, move to the next iteration
     if (! idx_selected.n_elem) continue;
+
+    // check that min singular value of the selected beta is above a
+    // very low threshold, otherwise set the current model score to infinity
+    if (beta_min_singular_value_check) {
+
+      const arma::mat sv_beta_selected = arma::svd(
+        arma::solve(
+          arma::cov(factors.cols(idx_selected)),
+          covariance_factors_returns.rows(idx_selected),
+          arma::solve_opts::likely_sympd
+        ).t()
+      );
+
+      const double sv_threshold = std::log((double)factors.n_cols) *
+        std::pow((double)factors.n_rows, -1./3.);
+
+      if (sv_beta_selected(sv_beta_selected.n_elem - 1) < sv_threshold) {
+        model_score(par) = arma::datum::inf; continue;
+      }
+
+    }
 
     const arma::mat cov_selected_fac_ret =
       covariance_factors_returns.rows(idx_selected);

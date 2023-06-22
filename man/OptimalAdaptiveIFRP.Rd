@@ -14,6 +14,7 @@ OptimalAdaptiveIFRP(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_aic_scaling = TRUE,
+  beta_min_singular_value_check = TRUE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -58,6 +59,11 @@ Default is \code{FALSE}.}
 \item{gcv_aic_scaling}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for AIC scaling (\code{1 / n_observations}); \code{FALSE} for BIC scaling
 (\code{log(n_observations) / n_observations}). Default is \code{TRUE}.}
+
+\item{beta_min_singular_value_check}{(only relevant for \code{tuning_type ='g'})
+boolean \code{TRUE} for checking that the minimum singular value of beta is
+above \code{log(n_factors)/n_observations^(-1/3)}, and if it's not, set the GCV
+score to infinity; \code{FALSE} for not performing such checl. Default is \code{TRUE}.}
 
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
 for cross validation. Default is \code{5}.}

@@ -46,6 +46,10 @@
 //' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
 //' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
 //' (`log(n_observations) / n_observations`). Default is `TRUE`.
+//' @param beta_min_singular_value_check (only relevant for `tuning_type ='g'`)
+//' boolean `TRUE` for checking that the minimum singular value of beta is
+//' above `log(n_factors)/n_observations^(-1/3)`, and if it's not, set the GCV
+//' score to infinity; `FALSE` for not performing such checl. Default is `TRUE`.
 //' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 //' whose score is not higher than one standard error above the score of the
 //' best model; `FALSE` for picking the best model. Default is `FALSE`.
@@ -69,6 +73,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const char weighting_type = 'c',
   const bool gcv_vr_weighting = false,
   const bool gcv_aic_scaling = true,
+  const bool beta_min_singular_value_check = true,
   const bool one_stddev_rule = false,
   const bool relaxed = false
 );

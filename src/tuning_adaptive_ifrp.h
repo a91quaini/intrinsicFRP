@@ -12,11 +12,13 @@
 // factor risk premia for each penalty parameter value.
 arma::vec GCVScoreAdaptiveIFRPCpp(
   const arma::mat& aifrp,
+  const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const unsigned int n_observations,
-  const bool gcv_aic_scaling = true
+  const bool gcv_aic_scaling = true,
+  const bool beta_min_singular_value_check = true
 );
 
 // Function for internal use
