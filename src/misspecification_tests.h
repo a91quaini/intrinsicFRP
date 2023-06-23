@@ -4,7 +4,6 @@
 #define MISSPECIFICATION_TESTS_H
 
 #include <RcppArmadillo.h>
-#include "hac_standard_errors.h"
 
 // For internal use
 // Computes the Hansen-Jagannatan distance of an

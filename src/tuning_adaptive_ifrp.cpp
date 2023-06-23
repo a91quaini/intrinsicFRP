@@ -1,6 +1,9 @@
 // Author: Alberto Quaini
 
 #include "tuning_adaptive_ifrp.h"
+#include "ifrp.h"
+#include "adaptive_ifrp.h"
+#include "adaptive_weights.h"
 
 ///////////////////////////////////
 ///// GCVScoreAdaptiveIFRPCpp /////

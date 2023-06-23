@@ -1,6 +1,7 @@
 // Author Alberto Quaini
 
 #include "misspecification_tests.h"
+#include "hac_standard_errors.h"
 
 double HJDistanceCpp(
     const arma::mat& beta,

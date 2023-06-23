@@ -1,6 +1,10 @@
 // Author: Alberto Quaini
 
 #include "adaptive_ifrp.h"
+#include "ifrp.h"
+#include "adaptive_weights.h"
+#include "tuning_adaptive_ifrp.h"
+#include "hac_standard_errors.h"
 
 ////////////////////////////////////
 ///// OptimalAdaptiveIFRPGCVCpp ////

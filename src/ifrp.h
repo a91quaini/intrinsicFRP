@@ -4,7 +4,6 @@
 #define IFRP_H
 
 #include <RcppArmadillo.h>
-#include "hac_standard_errors.h"
 
 ////////////////////////////////////////////////
 ////////////  Intrinsic Factor Risk Premia /////

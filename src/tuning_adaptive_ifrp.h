@@ -4,8 +4,6 @@
 #define TUNING_ADAPTIVE_IFRP_H
 
 #include <RcppArmadillo.h>
-#include "adaptive_ifrp.h"
-#include "identification_tests.h"
 
 // Function for internal use
 // Computes the Generalized Cross Validation score of the adaptive intrinsic

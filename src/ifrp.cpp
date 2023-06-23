@@ -1,6 +1,7 @@
 // Author: Alberto Quaini
 
 #include "ifrp.h"
+#include "hac_standard_errors.h"
 
 //////////////////
 ///// IFRPCpp ////
