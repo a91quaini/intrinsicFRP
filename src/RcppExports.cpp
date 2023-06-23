@@ -33,25 +33,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// OptimalAdaptiveIFRPIGCVCpp
-Rcpp::List OptimalAdaptiveIFRPIGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool gcv_aic_scaling, const bool one_stddev_rule);
-RcppExport SEXP _intrinsicFRP_OptimalAdaptiveIFRPIGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP gcv_aic_scalingSEXP, SEXP one_stddev_ruleSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type covariance_factors_returns(covariance_factors_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type variance_returns(variance_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type mean_returns(mean_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type penalty_parameters(penalty_parametersSEXP);
-    Rcpp::traits::input_parameter< const char >::type weighting_type(weighting_typeSEXP);
-    Rcpp::traits::input_parameter< const bool >::type gcv_aic_scaling(gcv_aic_scalingSEXP);
-    Rcpp::traits::input_parameter< const bool >::type one_stddev_rule(one_stddev_ruleSEXP);
-    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveIFRPIGCVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_aic_scaling, one_stddev_rule));
-    return rcpp_result_gen;
-END_RCPP
-}
 // OptimalAdaptiveIFRPCVCpp
 Rcpp::List OptimalAdaptiveIFRPCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const unsigned int n_folds, const bool one_stddev_rule, const bool relaxed);
 RcppExport SEXP _intrinsicFRP_OptimalAdaptiveIFRPCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP n_foldsSEXP, SEXP one_stddev_ruleSEXP, SEXP relaxedSEXP) {
@@ -91,26 +72,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type one_stddev_rule(one_stddev_ruleSEXP);
     Rcpp::traits::input_parameter< const bool >::type relaxed(relaxedSEXP);
     rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveIFRPRVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_train_observations, n_test_observations, roll_shift, one_stddev_rule, relaxed));
-    return rcpp_result_gen;
-END_RCPP
-}
-// OptimalAdaptiveIFRPIdentificationScoreCpp
-Rcpp::List OptimalAdaptiveIFRPIdentificationScoreCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const int sv_threshold_type, const unsigned int n_bootstrap, const double test_size);
-RcppExport SEXP _intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP sv_threshold_typeSEXP, SEXP n_bootstrapSEXP, SEXP test_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type covariance_factors_returns(covariance_factors_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type variance_returns(variance_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type mean_returns(mean_returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type penalty_parameters(penalty_parametersSEXP);
-    Rcpp::traits::input_parameter< const char >::type weighting_type(weighting_typeSEXP);
-    Rcpp::traits::input_parameter< const int >::type sv_threshold_type(sv_threshold_typeSEXP);
-    Rcpp::traits::input_parameter< const unsigned int >::type n_bootstrap(n_bootstrapSEXP);
-    Rcpp::traits::input_parameter< const double >::type test_size(test_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveIFRPIdentificationScoreCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, sv_threshold_type, n_bootstrap, test_size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -267,10 +228,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp, 12},
-    {"_intrinsicFRP_OptimalAdaptiveIFRPIGCVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveIFRPIGCVCpp, 9},
     {"_intrinsicFRP_OptimalAdaptiveIFRPCVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveIFRPCVCpp, 10},
     {"_intrinsicFRP_OptimalAdaptiveIFRPRVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveIFRPRVCpp, 12},
-    {"_intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp, 10},
     {"_intrinsicFRP_AdaptiveIFRPCpp", (DL_FUNC) &_intrinsicFRP_AdaptiveIFRPCpp, 3},
     {"_intrinsicFRP_RelaxedAdaptiveIFRPCpp", (DL_FUNC) &_intrinsicFRP_RelaxedAdaptiveIFRPCpp, 4},
     {"_intrinsicFRP_StandardErrorsAdaptiveIFRPCpp", (DL_FUNC) &_intrinsicFRP_StandardErrorsAdaptiveIFRPCpp, 7},

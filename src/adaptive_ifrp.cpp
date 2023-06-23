@@ -52,11 +52,12 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const arma::vec model_score = gcv_vr_weighting ?
     WeightedGCVScoreAdaptiveIFRPCpp(
       aifrp,
+      factors,
       covariance_factors_returns,
       variance_returns,
       mean_returns,
-      returns.n_rows,
-      gcv_aic_scaling
+      gcv_aic_scaling,
+      beta_min_singular_value_check
     ) :
     GCVScoreAdaptiveIFRPCpp(
       aifrp,
@@ -64,7 +65,6 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
       covariance_factors_returns,
       variance_returns,
       mean_returns,
-      returns.n_rows,
       gcv_aic_scaling,
       beta_min_singular_value_check
     );
@@ -78,72 +78,9 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     );
 
     idx_optimal_parameter += arma::max(arma::find(
-          model_score_right_of_min <= arma::min(model_score) +
-            arma::stddev(model_score)
+          model_score_right_of_min <= arma::min(model_score_right_of_min) +
+            arma::stddev(model_score_right_of_min)
       ));
-
-  }
-
-  return Rcpp::List::create(
-    Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
-    Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
-    Rcpp::Named("model_score") = model_score
-  );
-
-}
-
-////////////////////////////////////
-///// OptimalAdaptiveIFRPIGCVCpp ////
-
-Rcpp::List OptimalAdaptiveIFRPIGCVCpp(
-    const arma::mat& returns,
-    const arma::mat& factors,
-    const arma::mat& covariance_factors_returns,
-    const arma::mat& variance_returns,
-    const arma::vec& mean_returns,
-    const arma::vec& penalty_parameters,
-    const char weighting_type,
-    const bool gcv_aic_scaling,
-    const bool one_stddev_rule
-) {
-
-  arma::mat aifrp = AdaptiveIFRPCpp(
-    IFRPCpp(
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns
-    ),
-    AdaptiveWeightsCpp(
-      returns,
-      factors,
-      weighting_type
-    ),
-    penalty_parameters
-  );
-
-  const arma::vec model_score = IGCVScoreAdaptiveIFRPCpp(
-    aifrp,
-    returns,
-    factors,
-    covariance_factors_returns,
-    variance_returns,
-    mean_returns,
-    returns.n_rows,
-    gcv_aic_scaling
-  );
-
-  unsigned int idx_optimal_parameter = model_score.index_min();
-
-  if (one_stddev_rule) {
-
-    const arma::vec model_score_right_of_min = model_score(
-      arma::span(idx_optimal_parameter, model_score.n_elem - 1)
-    );
-
-    idx_optimal_parameter += arma::max(arma::find(
-      model_score_right_of_min <= arma::min(model_score) +
-        arma::stddev(model_score)
-    ));
 
   }
 
@@ -347,56 +284,6 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
       ),
       penalty_parameters(idx_optimal_parameter)
     ),
-    Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
-    Rcpp::Named("model_score") = model_score
-  );
-
-}
-
-/////////////////////////////////////////////////////
-///// OptimalAdaptiveIFRPIdentificationScoreCpp /////
-
-Rcpp::List OptimalAdaptiveIFRPIdentificationScoreCpp(
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const arma::mat& covariance_factors_returns,
-  const arma::mat& variance_returns,
-  const arma::vec& mean_returns,
-  const arma::vec& penalty_parameters,
-  const char weighting_type,
-  const int sv_threshold_type,
-  const unsigned int n_bootstrap,
-  const double test_size
-) {
-
-  arma::mat aifrp = AdaptiveIFRPCpp(
-    IFRPCpp(
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns
-    ),
-    AdaptiveWeightsCpp(
-      returns,
-      factors,
-      weighting_type
-    ),
-    penalty_parameters
-  );
-
-  const arma::vec model_score = IdentificationScoreAdaptiveIFRPCpp(
-    aifrp,
-    returns,
-    factors,
-    covariance_factors_returns,
-    sv_threshold_type,
-    n_bootstrap,
-    test_size
-  );
-
-  unsigned int idx_optimal_parameter = model_score.index_min();
-
-  return Rcpp::List::create(
-    Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
     Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
     Rcpp::Named("model_score") = model_score
   );

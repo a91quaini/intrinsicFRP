@@ -153,21 +153,6 @@ OptimalAdaptiveIFRP = function(
       )
 
     },
-    'f' = {
-
-      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPIGCVCpp`,
-        returns,
-        factors,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        penalty_parameters,
-        weighting_type,
-        gcv_aic_scaling,
-        one_stddev_rule
-      )
-
-    },
     'c' = {
 
       .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`,
@@ -199,23 +184,6 @@ OptimalAdaptiveIFRP = function(
         roll_shift,
         one_stddev_rule,
         relaxed
-      )
-
-    },
-
-    'i' = {
-
-      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPIdentificationScoreCpp`,
-        returns,
-        factors,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        penalty_parameters,
-        weighting_type,
-        0,
-        1000,
-        0.01
       )
 
     },

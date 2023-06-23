@@ -11,7 +11,6 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const unsigned int n_observations,
   const bool gcv_aic_scaling,
   const bool beta_min_singular_value_check
 ) {
@@ -20,41 +19,41 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
 
   arma::vec model_score(aifrp.n_cols, arma::fill::value(score_no_model));
 
-  const double scaling = gcv_aic_scaling ?
-    1. / n_observations :
+  const unsigned int n_observations = factors.n_rows;
+
+  const double scaling = gcv_aic_scaling ? 1. / n_observations :
     std::log(n_observations) / n_observations;
 
   for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
 
     const arma::uvec idx_selected = arma::find(aifrp.col(par));
 
-    // if there are no selected factor, move to the next iteration
-    if (! idx_selected.n_elem) continue;
+    const unsigned int n_selected = idx_selected.n_elem;
 
-    // check that min singular value of the selected beta is above a
-    // very low threshold, otherwise set the current model score to
-    // the model score with no model
+    // if there are no selected factor, move to the next iteration
+    if (! n_selected) continue;
+
+    const arma::mat cov_selected_fac_ret =
+      covariance_factors_returns.rows(idx_selected);
+
     if (beta_min_singular_value_check) {
 
-      const arma::mat sv_beta_selected = arma::svd(
+      // check that min singular value of the selected beta is above a
+      // very low threshold, otherwise set the current model score to
+      // the model score with no model
+      const arma::vec sv_beta_selected = arma::svd(
         arma::solve(
           arma::cov(factors.cols(idx_selected)),
-          covariance_factors_returns.rows(idx_selected),
+          cov_selected_fac_ret,
           arma::solve_opts::likely_sympd
         ).t()
       );
 
-      // const double sv_threshold = std::pow((double)factors.n_rows, -1./4.);
-      const double sv_threshold = std::pow((double)factors.n_rows, -1./4.);
+      const double sv_threshold = std::pow(factors.n_rows, -1./4.);
 
-      if (sv_beta_selected(sv_beta_selected.n_elem - 1) < sv_threshold) {
-        model_score(par) = score_no_model; continue;
-      }
+      if (sv_beta_selected(n_selected - 1) < sv_threshold) continue;
 
     }
-
-    const arma::mat cov_selected_fac_ret =
-      covariance_factors_returns.rows(idx_selected);
 
     const arma::mat var_ret_inv_cov_ret_selected_fac = arma::solve(
       variance_returns,
@@ -71,9 +70,7 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
     const arma::vec pricing_errors = mean_returns - beta_selected *
       aifrp(idx_selected, arma::uvec(1, arma::fill::value(par)));
 
-    const double denominator = 1. - std::min(
-      (double)(idx_selected.n_elem * scaling), 1.
-    );
+    const double denominator = 1. - std::min(idx_selected.n_elem * scaling, 1.);
 
     model_score(par) = arma::dot(pricing_errors, pricing_errors)
       / (denominator * denominator);
@@ -89,11 +86,12 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
 
 arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
   const arma::mat& aifrp,
+  const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const unsigned int n_observations,
-  const bool gcv_aic_scaling
+  const bool gcv_aic_scaling,
+  const bool beta_min_singular_value_check
 ) {
 
   const double score_no_model = arma::dot(mean_returns, arma::solve(
@@ -102,18 +100,41 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
 
   arma::vec model_score(aifrp.n_cols, arma::fill::value(score_no_model));
 
-  const double scaling = gcv_aic_scaling ?
-    1. / n_observations :
+  const unsigned int n_observations = factors.n_rows;
+
+  const double scaling = gcv_aic_scaling ? 1. / n_observations :
     std::log(n_observations) / n_observations;
 
   for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
 
     const arma::uvec idx_selected = arma::find(aifrp.col(par));
 
-    if (!idx_selected.n_elem) continue;
+    const unsigned int n_selected = idx_selected.n_elem;
+
+    // if there are no selected factor, move to the next iteration
+    if (! n_selected) continue;
 
     const arma::mat cov_selected_fac_ret =
       covariance_factors_returns.rows(idx_selected);
+
+    if (beta_min_singular_value_check) {
+
+      // check that min singular value of the selected beta is above a
+      // very low threshold, otherwise set the current model score to
+      // the model score with no model
+      const arma::vec sv_beta_selected = arma::svd(
+        arma::solve(
+          arma::cov(factors.cols(idx_selected)),
+          cov_selected_fac_ret,
+          arma::solve_opts::likely_sympd
+        ).t()
+      );
+
+      const double sv_threshold = std::pow(factors.n_rows, -1./4.);
+
+      if (sv_beta_selected(n_selected - 1) < sv_threshold) continue;
+
+    }
 
     const arma::mat var_ret_inv_cov_ret_selected_fac = arma::solve(
       variance_returns,
@@ -130,87 +151,11 @@ arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
     const arma::vec pricing_errors = mean_returns - beta_selected *
       aifrp(idx_selected, arma::uvec(1, arma::fill::value(par)));
 
-    const double denominator = 1. - std::min(
-      (double)(idx_selected.n_elem * scaling), 1.
-    );
+    const double denominator = 1. - std::min(idx_selected.n_elem * scaling, 1.);
 
     model_score(par) = arma::dot(pricing_errors, arma::solve(
       variance_returns, pricing_errors, arma::solve_opts::likely_sympd
     )) / (denominator * denominator);
-
-  }
-
-  return model_score;
-
-}
-
-////////////////////////////////////
-///// IGCVScoreAdaptiveIFRPCpp /////
-
-arma::vec IGCVScoreAdaptiveIFRPCpp(
-  const arma::mat& aifrp,
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const arma::mat& covariance_factors_returns,
-  const arma::mat& variance_returns,
-  const arma::vec& mean_returns,
-  const unsigned int n_observations,
-  const bool gcv_aic_scaling
-) {
-
-  const double score_no_model = arma::dot(mean_returns, mean_returns);
-
-  arma::vec model_score(aifrp.n_cols, arma::fill::value(score_no_model));
-
-  const double scaling = gcv_aic_scaling ?
-  1. / n_observations :
-    std::log(n_observations) / n_observations;
-
-  for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
-
-    const arma::uvec idx_selected = arma::find(aifrp.col(par));
-
-    if (! idx_selected.n_elem) continue;
-
-    const arma::mat cov_selected_fac_ret =
-      covariance_factors_returns.rows(idx_selected);
-
-    const arma::mat var_ret_inv_cov_ret_selected_fac = arma::solve(
-      variance_returns,
-      cov_selected_fac_ret.t(),
-      arma::solve_opts::likely_sympd
-    );
-
-    const arma::mat beta_selected = arma::solve(
-      cov_selected_fac_ret * var_ret_inv_cov_ret_selected_fac,
-      cov_selected_fac_ret,
-      arma::solve_opts::likely_sympd
-    ).t();
-
-    const arma::vec pricing_errors = mean_returns - beta_selected *
-      aifrp(idx_selected, arma::uvec(1, arma::fill::value(par)));
-
-    const double denominator = 1. - std::min(
-      (double)(idx_selected.n_elem * scaling), 1.
-    );
-
-    arma::vec2 identification_statistics = BetaRankChenFang2019StatisticAndPvalueCpp(
-      returns,
-      factors.cols(idx_selected),
-      arma::solve(
-        arma::cov(factors.cols(idx_selected)),
-        cov_selected_fac_ret,
-        arma::solve_opts::likely_sympd
-      ).t(),
-      1,
-      500
-    );
-
-    const double identification_scaling = (1. + identification_statistics(1));
-
-    model_score(par) = arma::dot(pricing_errors, pricing_errors)
-      / (denominator * denominator)
-      * (identification_scaling * identification_scaling);
 
   }
 
@@ -397,69 +342,6 @@ arma::vec RVScoreAdaptiveIFRPCpp(
       }
 
     }
-
-  }
-
-  return model_score;
-
-}
-
-/////////////////////////////////////////////
-///// IdentificationScoreAdaptiveIFRPCpp /////
-
-arma::vec IdentificationScoreAdaptiveIFRPCpp(
-  const arma::mat& aifrp,
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const arma::mat& covariance_factors_returns,
-  const int sv_threshold_type,
-  const unsigned int n_bootstrap,
-  const double test_size
-) {
-
-  // initialize model score to 1 -> no identification
-  arma::vec model_score(aifrp.n_cols, arma::fill::ones);
-  arma::uvec idx_selected_lag;
-
-  for (unsigned int par = 0; par < aifrp.n_cols; ++par) {
-
-    const arma::uvec idx_selected = arma::find(aifrp.col(par));
-
-    // if there are no selected factor, move to the next iteration
-    if (! idx_selected.n_elem) continue;
-
-    // if current selected factors are the same as the ones of the
-    // previous iteration, move to the next iteration
-    if (idx_selected.n_elem == idx_selected_lag.n_elem) {
-      if (arma::all(idx_selected == idx_selected_lag)) continue;
-    }
-
-    const arma::vec2 output = BetaRankChenFang2019StatisticAndPvalueCpp(
-      returns,
-      factors.cols(idx_selected),
-      arma::solve(
-        arma::cov(factors.cols(idx_selected)),
-        covariance_factors_returns.rows(idx_selected),
-        arma::solve_opts::likely_sympd
-      ).t(),
-      sv_threshold_type,
-      n_bootstrap
-    );
-
-    // if the p-value of the Chen Fang 2019 rank test is below the test size
-    // set the current and subsequent models as identified, i.e.,
-    // model score = 0. Otherwise, leave the model as mis-identified, i.e.,
-    // model score = 1.
-    if (output(1) < test_size) {
-
-      model_score(arma::span(par,  aifrp.n_cols - 1)) = arma::zeros(
-        aifrp.n_cols - par
-      );
-      break;
-
-    }
-
-    idx_selected_lag = idx_selected;
 
   }
 
