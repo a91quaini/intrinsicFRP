@@ -19,9 +19,8 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const char weighting_type,
   const bool gcv_vr_weighting,
   const bool gcv_aic_scaling,
-  const bool beta_min_singular_value_check,
-  const bool one_stddev_rule,
-  const bool relaxed
+  const bool identification_check,
+  const bool one_stddev_rule
 ) {
 
   arma::mat aifrp = AdaptiveIFRPCpp(
@@ -38,40 +37,43 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     penalty_parameters
   );
 
-  if (relaxed) {
+  arma::vec model_score(penalty_parameters.n_elem);
 
-    for (unsigned int par = 0; par < penalty_parameters.n_elem; ++par) {
+  if (gcv_vr_weighting) {
 
-      aifrp.col(par) = RelaxedAdaptiveIFRPCpp(
-        aifrp.col(par),
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      );
+    model_score = WeightedGCVScoreAdaptiveIFRPCpp(
+      aifrp,
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns,
+      returns.n_rows,
+      gcv_aic_scaling
+    );
 
-    }
+  } else if (identification_check) {
+
+    model_score = IGCVScoreAdaptiveIFRPCpp(
+      aifrp,
+      returns,
+      factors,
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns,
+      gcv_aic_scaling
+    );
+
+  } else {
+
+    model_score = GCVScoreAdaptiveIFRPCpp(
+      aifrp,
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns,
+      returns.n_rows,
+      gcv_aic_scaling
+    );
 
   }
-
-  const arma::vec model_score = gcv_vr_weighting ?
-    WeightedGCVScoreAdaptiveIFRPCpp(
-      aifrp,
-      factors,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      gcv_aic_scaling,
-      beta_min_singular_value_check
-    ) :
-    GCVScoreAdaptiveIFRPCpp(
-      aifrp,
-      factors,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      gcv_aic_scaling,
-      beta_min_singular_value_check
-    );
 
   unsigned int idx_optimal_parameter = model_score.index_min();
 
@@ -108,8 +110,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
   const arma::vec& penalty_parameters,
   const char weighting_type,
   const unsigned int n_folds,
-  const bool one_stddev_rule,
-  const bool relaxed
+  const bool one_stddev_rule
 ) {
 
   const arma::vec model_score = CVScoreAdaptiveIFRPCpp(
@@ -117,17 +118,8 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
     factors,
     penalty_parameters,
     weighting_type,
-    n_folds,
-    relaxed
+    n_folds
   );
-
-  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
-  //   arma::index_max(
-  //     model_score(arma::find(
-  //         model_score <= arma::min(model_score) + arma::stddev(model_score)
-  //     ))
-  //   ) :
-  //   model_score.index_min();
 
   unsigned int idx_optimal_parameter = model_score.index_min();
 
@@ -138,38 +130,9 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
     );
 
     idx_optimal_parameter += arma::max(arma::find(
-      model_score_right_of_min <= arma::min(model_score) +
-        arma::stddev(model_score)
+      model_score_right_of_min <= arma::min(model_score_right_of_min) +
+        arma::stddev(model_score_right_of_min)
     ));
-
-  }
-
-  if (relaxed) {
-
-    const arma::vec aifrp = AdaptiveIFRPCpp(
-      IFRPCpp(
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      ),
-      AdaptiveWeightsCpp(
-        returns,
-        factors,
-        weighting_type
-      ),
-      penalty_parameters(idx_optimal_parameter)
-    );
-
-    return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = RelaxedAdaptiveIFRPCpp(
-        aifrp,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      ),
-      Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
-      Rcpp::Named("model_score") = model_score
-    );
 
   }
 
@@ -207,8 +170,7 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
   const unsigned int n_train_observations,
   const unsigned int n_test_observations,
   const unsigned int roll_shift,
-  const bool one_stddev_rule,
-  const bool relaxed
+  const bool one_stddev_rule
 ) {
 
   const arma::vec model_score = RVScoreAdaptiveIFRPCpp(
@@ -218,8 +180,7 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
     weighting_type,
     n_train_observations,
     n_test_observations,
-    roll_shift,
-    relaxed
+    roll_shift
   );
 
   // const unsigned int idx_optimal_parameter = one_stddev_rule ?
@@ -242,35 +203,6 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
       model_score_right_of_min <= arma::min(model_score) +
         arma::stddev(model_score)
     ));
-
-  }
-
-  if (relaxed) {
-
-    const arma::vec aifrp = AdaptiveIFRPCpp(
-      IFRPCpp(
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      ),
-      AdaptiveWeightsCpp(
-        returns,
-        factors,
-        weighting_type
-      ),
-      penalty_parameters(idx_optimal_parameter)
-    );
-
-    return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = RelaxedAdaptiveIFRPCpp(
-        aifrp,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      ),
-      Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
-      Rcpp::Named("model_score") = model_score
-    );
 
   }
 
@@ -324,29 +256,6 @@ arma::vec AdaptiveIFRPCpp(
     sign_ifrp % ifrp - penalty_parameter * weights,
     0., arma::datum::inf
   );
-
-}
-
-arma::vec RelaxedAdaptiveIFRPCpp(
-  const arma::vec& aifrp,
-  const arma::mat& covariance_factors_returns,
-  const arma::mat& variance_returns,
-  const arma::vec& mean_returns
-) {
-
-  const arma::uvec idx_selected = arma::find(aifrp);
-
-  if (!idx_selected.n_elem) return aifrp;
-
-  arma::vec r_aifrp(aifrp.n_elem);
-
-  r_aifrp(idx_selected) = IFRPCpp(
-    covariance_factors_returns.rows(idx_selected),
-    variance_returns,
-    mean_returns
-  );
-
-  return r_aifrp;
 
 }
 

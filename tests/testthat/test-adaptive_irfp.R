@@ -154,87 +154,17 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (gcv_vr_weighting in c(TRUE, FALSE)) {
         for (gcv_aic_scaling in c(TRUE, FALSE)) {
-          for (relaxed in c(TRUE, FALSE)) {
-
-            adaptive_ifrp = OptimalAdaptiveIFRP(
-              returns,
-              factors,
-              penalty_parameters,
-              weighting_type = weighting_type,
-              tuning_type = 'g',
-              include_standard_errors = TRUE,
-              one_stddev_rule = one_stddev_rule,
-              gcv_vr_weighting = gcv_vr_weighting,
-              gcv_aic_scaling = gcv_aic_scaling,
-              relaxed = relaxed
-            )
-
-            expect_length(adaptive_ifrp$risk_premia, n_factors)
-            expect_length(adaptive_ifrp$standard_errors, n_factors)
-            expect_length(adaptive_ifrp$penalty_parameter, 1)
-
-
-            adaptive_ifrp0 = OptimalAdaptiveIFRP(
-              returns,
-              factors,
-              penalty_parameters = 0.,
-              weighting_type = weighting_type,
-              tuning_type = 'g',
-              include_standard_errors = TRUE,
-              one_stddev_rule = one_stddev_rule,
-              gcv_vr_weighting = gcv_vr_weighting,
-              gcv_aic_scaling = gcv_aic_scaling,
-              relaxed = relaxed
-            )
-
-            expect_equal(
-              matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
-              ifrp$risk_premia
-            )
-
-            if (weighting_type == 'c') {
-
-              adaptive_ifrp1 = OptimalAdaptiveIFRP(
-                returns,
-                factors,
-                penalty_parameters = .1,
-                weighting_type = weighting_type,
-                tuning_type = 'g',
-                include_standard_errors = TRUE,
-                one_stddev_rule = one_stddev_rule,
-                gcv_vr_weighting = gcv_vr_weighting,
-                gcv_aic_scaling = gcv_aic_scaling,
-                relaxed = FALSE
-              )
-
-              expect_equal(
-                matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
-                aifrp1
-              )
-
-            }
-          }
-        }
-      }
-    }
-  }
-
-  ### CV
-  for (weighting_type in c('c', 'b', 'a', 'n')) {
-    for (one_stddev_rule in c(TRUE, FALSE)) {
-      for (n_folds in c(5, 10)) {
-        for (relaxed in c(TRUE, FALSE)) {
 
           adaptive_ifrp = OptimalAdaptiveIFRP(
             returns,
             factors,
             penalty_parameters,
             weighting_type = weighting_type,
-            tuning_type = 'c',
+            tuning_type = 'g',
             include_standard_errors = TRUE,
             one_stddev_rule = one_stddev_rule,
-            n_folds = n_folds,
-            relaxed = relaxed
+            gcv_vr_weighting = gcv_vr_weighting,
+            gcv_aic_scaling = gcv_aic_scaling
           )
 
           expect_length(adaptive_ifrp$risk_premia, n_factors)
@@ -247,11 +177,11 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
             factors,
             penalty_parameters = 0.,
             weighting_type = weighting_type,
-            tuning_type = 'c',
+            tuning_type = 'g',
             include_standard_errors = TRUE,
             one_stddev_rule = one_stddev_rule,
-            n_folds = n_folds,
-            relaxed = relaxed
+            gcv_vr_weighting = gcv_vr_weighting,
+            gcv_aic_scaling = gcv_aic_scaling
           )
 
           expect_equal(
@@ -266,11 +196,11 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
               factors,
               penalty_parameters = .1,
               weighting_type = weighting_type,
-              tuning_type = 'c',
+              tuning_type = 'g',
               include_standard_errors = TRUE,
               one_stddev_rule = one_stddev_rule,
-              n_folds = n_folds,
-              relaxed = FALSE
+              gcv_vr_weighting = gcv_vr_weighting,
+              gcv_aic_scaling = gcv_aic_scaling
             )
 
             expect_equal(
@@ -284,74 +214,130 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
     }
   }
 
+  ### CV
+  for (weighting_type in c('c', 'b', 'a', 'n')) {
+    for (one_stddev_rule in c(TRUE, FALSE)) {
+      for (n_folds in c(5, 10)) {
+
+        adaptive_ifrp = OptimalAdaptiveIFRP(
+          returns,
+          factors,
+          penalty_parameters,
+          weighting_type = weighting_type,
+          tuning_type = 'c',
+          include_standard_errors = TRUE,
+          one_stddev_rule = one_stddev_rule,
+          n_folds = n_folds
+        )
+
+        expect_length(adaptive_ifrp$risk_premia, n_factors)
+        expect_length(adaptive_ifrp$standard_errors, n_factors)
+        expect_length(adaptive_ifrp$penalty_parameter, 1)
+
+
+        adaptive_ifrp0 = OptimalAdaptiveIFRP(
+          returns,
+          factors,
+          penalty_parameters = 0.,
+          weighting_type = weighting_type,
+          tuning_type = 'c',
+          include_standard_errors = TRUE,
+          one_stddev_rule = one_stddev_rule,
+          n_folds = n_folds
+        )
+
+        expect_equal(
+          matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
+          ifrp$risk_premia
+        )
+
+        if (weighting_type == 'c') {
+
+          adaptive_ifrp1 = OptimalAdaptiveIFRP(
+            returns,
+            factors,
+            penalty_parameters = .1,
+            weighting_type = weighting_type,
+            tuning_type = 'c',
+            include_standard_errors = TRUE,
+            one_stddev_rule = one_stddev_rule,
+            n_folds = n_folds
+          )
+
+          expect_equal(
+            matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
+            aifrp1
+          )
+
+        }
+      }
+    }
+  }
+
   ### RV
   for (weighting_type in c('c', 'b', 'a', 'n')) {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (n_train_observations in c(120, 240)) {
         for (n_test_observations in c(120, 240)) {
           for (roll_shift in c(10, 12)) {
-            for (relaxed in c(TRUE, FALSE)) {
 
-              adaptive_ifrp = OptimalAdaptiveIFRP(
+            adaptive_ifrp = OptimalAdaptiveIFRP(
+              returns,
+              factors,
+              penalty_parameters,
+              weighting_type = weighting_type,
+              tuning_type = 'r',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              n_train_observations = n_train_observations,
+              n_test_observations = n_test_observations,
+              roll_shift = roll_shift
+            )
+
+            expect_length(adaptive_ifrp$risk_premia, n_factors)
+            expect_length(adaptive_ifrp$standard_errors, n_factors)
+            expect_length(adaptive_ifrp$penalty_parameter, 1)
+
+
+            adaptive_ifrp0 = OptimalAdaptiveIFRP(
+              returns,
+              factors,
+              penalty_parameters = 0.,
+              weighting_type = weighting_type,
+              tuning_type = 'r',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              n_train_observations = n_train_observations,
+              n_test_observations = n_test_observations,
+              roll_shift = roll_shift
+            )
+
+            expect_equal(
+              matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
+              ifrp$risk_premia
+            )
+
+            if (weighting_type == 'c') {
+
+              adaptive_ifrp1 = OptimalAdaptiveIFRP(
                 returns,
                 factors,
-                penalty_parameters,
+                penalty_parameters = .1,
                 weighting_type = weighting_type,
                 tuning_type = 'r',
                 include_standard_errors = TRUE,
                 one_stddev_rule = one_stddev_rule,
                 n_train_observations = n_train_observations,
                 n_test_observations = n_test_observations,
-                roll_shift = roll_shift,
-                relaxed = relaxed
-              )
-
-              expect_length(adaptive_ifrp$risk_premia, n_factors)
-              expect_length(adaptive_ifrp$standard_errors, n_factors)
-              expect_length(adaptive_ifrp$penalty_parameter, 1)
-
-
-              adaptive_ifrp0 = OptimalAdaptiveIFRP(
-                returns,
-                factors,
-                penalty_parameters = 0.,
-                weighting_type = weighting_type,
-                tuning_type = 'r',
-                include_standard_errors = TRUE,
-                one_stddev_rule = one_stddev_rule,
-                n_train_observations = n_train_observations,
-                n_test_observations = n_test_observations,
-                roll_shift = roll_shift,
-                relaxed = relaxed
+                roll_shift = roll_shift
               )
 
               expect_equal(
-                matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
-                ifrp$risk_premia
+                matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
+                aifrp1
               )
 
-              if (weighting_type == 'c') {
 
-                adaptive_ifrp1 = OptimalAdaptiveIFRP(
-                  returns,
-                  factors,
-                  penalty_parameters = .1,
-                  weighting_type = weighting_type,
-                  tuning_type = 'r',
-                  include_standard_errors = TRUE,
-                  one_stddev_rule = one_stddev_rule,
-                  n_train_observations = n_train_observations,
-                  n_test_observations = n_test_observations,
-                  roll_shift = roll_shift,
-                  relaxed = FALSE
-                )
-
-                expect_equal(
-                  matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
-                  aifrp1
-                )
-
-              }
             }
           }
         }
@@ -361,44 +347,40 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
 
   # AdaptiveIFRP
   for (weighting_type in c('c', 'b', 'a', 'n')) {
-    for (relaxed in c(TRUE, FALSE)) {
 
-      weights = intrinsicFRP:::AdaptiveWeightsCpp(
-        returns, factors, weighting_type
+    weights = intrinsicFRP:::AdaptiveWeightsCpp(
+      returns, factors, weighting_type
+    )
+
+    expect_no_error(
+      AdaptiveIFRP(
+        returns,
+        factors,
+        penalty_parameters,
+        weights
       )
+    )
 
-      expect_no_error(
-        AdaptiveIFRP(
-          returns,
-          factors,
-          penalty_parameters,
-          weights,
-          relaxed = relaxed
-        )
-      )
+    expect_equal(
+      AdaptiveIFRP(
+        returns,
+        factors,
+        penalty_parameters = 0.,
+        weights
+      ),
+      aifrp0
+    )
 
-      expect_equal(
-        AdaptiveIFRP(
-          returns,
-          factors,
-          penalty_parameters = 0.,
-          weights,
-          relaxed = relaxed
-        ),
-        aifrp0
-      )
+    expect_equal(
+      AdaptiveIFRP(
+        returns,
+        factors,
+        penalty_parameters = 1e7,
+        weights
+      ),
+      matrix(0., n_factors, 1)
+    )
 
-      expect_equal(
-        AdaptiveIFRP(
-          returns,
-          factors,
-          penalty_parameters = 1e7,
-          weights,
-          relaxed = relaxed
-        ),
-        matrix(0., n_factors, 1)
-      )
-
-  }}
+  }
 
 })

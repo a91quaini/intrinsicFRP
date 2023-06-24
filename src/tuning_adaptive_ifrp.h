@@ -10,12 +10,24 @@
 // factor risk premia for each penalty parameter value.
 arma::vec GCVScoreAdaptiveIFRPCpp(
   const arma::mat& aifrp,
+  const arma::mat& covariance_factors_returns,
+  const arma::mat& variance_returns,
+  const arma::vec& mean_returns,
+  const unsigned int n_observations,
+  const bool gcv_aic_scaling = true
+);
+
+// Function for internal use
+// Computes the Identified Generalized Cross Validation score of the adaptive
+// intrinsic factor risk premia for each penalty parameter value.
+arma::vec IGCVScoreAdaptiveIFRPCpp(
+  const arma::mat& aifrp,
+  const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const bool gcv_aic_scaling = true,
-  const bool beta_min_singular_value_check = true
+  const bool gcv_aic_scaling = true
 );
 
 // Function for internal use
@@ -24,12 +36,11 @@ arma::vec GCVScoreAdaptiveIFRPCpp(
 // score is weighted by the variance matrix of asset excess returns.
 arma::vec WeightedGCVScoreAdaptiveIFRPCpp(
   const arma::mat& afrp,
-  const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const bool gcv_aic_scaling = false,
-  const bool beta_min_singular_value_check = true
+  const unsigned int n_observations,
+  const bool gcv_aic_scaling = false
 );
 
 // Function for internal use
@@ -40,8 +51,7 @@ arma::vec CVScoreAdaptiveIFRPCpp(
   const arma::mat& factors,
   const arma::vec& penalty_parameters,
   const char weighting_type = 'c',
-  const unsigned int n_folds = 5,
-  const bool relaxed = false
+  const unsigned int n_folds = 5
 );
 
 // Function for internal use
@@ -54,8 +64,7 @@ arma::vec RVScoreAdaptiveIFRPCpp(
   const char weighting_type = 'c',
   const unsigned int n_train_observations = 120,
   const unsigned int n_test_observations = 12,
-  const unsigned int roll_shift = 12,
-  const bool relaxed = false
+  const unsigned int roll_shift = 12
 );
 
 // Function for internal use

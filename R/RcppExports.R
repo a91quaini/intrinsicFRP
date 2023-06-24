@@ -31,14 +31,15 @@
 #' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
 #' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
 #' Default is `FALSE`.
-#' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
+#' @param gcv_aic_scaling
 #' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
 #' (`log(n_observations) / n_observations`). Default is `TRUE`.
+#' @param identification_check
+#' boolean `TRUE` for checking for model identification; `FALSE` otherwise.
+#' Default is `FALSE`.
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
-#' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
-#' post selection; `FALSE` otherwise. Default is `FALSE`.
 #'
 #' @return a list containing the `n_factors`-dimensional vector of adaptive
 #' intrinsic factor risk premia in `"risk_premia"`, and the optimal penalty
@@ -46,8 +47,8 @@
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_aic_scaling = TRUE, beta_min_singular_value_check = TRUE, one_stddev_rule = FALSE, relaxed = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_aic_scaling, beta_min_singular_value_check, one_stddev_rule, relaxed)
+OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_aic_scaling = TRUE, identification_check = FALSE, one_stddev_rule = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_aic_scaling, identification_check, one_stddev_rule)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under cross validation
@@ -80,8 +81,6 @@ OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_retur
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
-#' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
-#' post selection; `FALSE` otherwise. Default is `FALSE`.
 #'
 #' @return a list containing the n_factors-dimensional vector of adaptive
 #' intrinsic factor risk premia in "risk_premia", and the optimal penalty
@@ -89,8 +88,8 @@ OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_retur
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_folds = 5L, one_stddev_rule = FALSE, relaxed = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_folds, one_stddev_rule, relaxed)
+OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_folds = 5L, one_stddev_rule = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_folds, one_stddev_rule)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under rolling validation
@@ -128,8 +127,6 @@ OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_return
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
-#' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
-#' post selection; `FALSE` otherwise. Default is `FALSE`.
 #'
 #' @return a list containing the n_factors-dimensional vector of adaptive
 #' intrinsic factor risk premia in "risk_premia", and the optimal penalty
@@ -137,8 +134,8 @@ OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_return
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_train_observations = 120L, n_test_observations = 12L, roll_shift = 12L, one_stddev_rule = FALSE, relaxed = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPRVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_train_observations, n_test_observations, roll_shift, one_stddev_rule, relaxed)
+OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_train_observations = 120L, n_test_observations = 12L, roll_shift = 12L, one_stddev_rule = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPRVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_train_observations, n_test_observations, roll_shift, one_stddev_rule)
 }
 
 #' Compute adaptive intrinsic factor risk premia
@@ -162,31 +159,6 @@ OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_return
 #'
 AdaptiveIFRPCpp <- function(ifrp, weights, penalty_parameter) {
     .Call(`_intrinsicFRP_AdaptiveIFRPCpp`, ifrp, weights, penalty_parameter)
-}
-
-#' Compute adaptive intrinsic factor risk premia
-#'
-#' @name RelaxedAdaptiveIFRPCpp
-#' @description Computes the intrinsic factor risk premia of the factors selected
-#' by an adaptive intrinsic factor risk premia.
-#'
-#' @param aifrp `n_factors`-dimensional vector of adaptive intrinsic factor
-#' risk premia.
-#' Usually, it is the output of function `AdaptiveIFRPCpp`
-#' @param covariance_factors_returns `n_factors x n_returns`-dimensional
-#' covariance matrix between factors and test asset excess returns.
-#' @param variance_returns `n_returns x n_returns`-dimensional covariance
-#' matrix of test asset excess returns.
-#' @param mean_returns `n_returns`-dimensional mean vector of test asset excess
-#' returns.
-#'
-#' @return `n_selected_factors x n_parameters`-dimensional matrix of intrinsic
-#' factor risk premia.
-#'
-#' @noRd
-#'
-RelaxedAdaptiveIFRPCpp <- function(aifrp, covariance_factors_returns, variance_returns, mean_returns) {
-    .Call(`_intrinsicFRP_RelaxedAdaptiveIFRPCpp`, aifrp, covariance_factors_returns, variance_returns, mean_returns)
 }
 
 #' Compute the HAC standard errors of the nonzero adaptive intrinsic factor risk

@@ -9,7 +9,6 @@ AdaptiveIFRP(
   factors,
   penalty_parameters,
   weights = rep(1, ncol(factors)),
-  relaxed = FALSE,
   check_arguments = TRUE
 )
 }
@@ -27,9 +26,6 @@ separate penalty parameter for each risk premium, given by vector
 \code{penalty_parameter * weights}.
 Default is a vector of ones, i.e., the same penalty parameter
 \code{penalty_parameter} is applied to each risk premium.}
-
-\item{relaxed}{boolean \code{TRUE} for re-fitting the model without shrinkage
-post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
 
 \item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
 \code{FALSE} otherwise. Default is \code{TRUE}.}

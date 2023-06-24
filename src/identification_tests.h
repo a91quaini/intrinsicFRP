@@ -12,7 +12,7 @@ arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
   const arma::mat& factors,
   const arma::mat& beta,
   const int sv_threshold_type = 0,
-  const unsigned int n_bootstrap = 1000
+  const unsigned int n_bootstrap = 500
 );
 
 #endif

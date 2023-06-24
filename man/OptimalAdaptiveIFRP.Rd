@@ -14,12 +14,11 @@ OptimalAdaptiveIFRP(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_aic_scaling = TRUE,
-  beta_min_singular_value_check = TRUE,
+  identification_check = FALSE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
   roll_shift = 12,
-  relaxed = FALSE,
   plot_score = TRUE,
   check_arguments = TRUE
 )
@@ -40,9 +39,7 @@ intrinsic risk premia estimator \code{'a'}; otherwise a vector of ones (any othe
 character). Default is \code{'c'}.}
 
 \item{tuning_type}{character indicating the parameter tuning type: \code{'g'} for
-generalized cross validation; \code{'f'} for identified generalized cross validation;
-\code{'c'} for cross validation; \code{'r'} for rolling
-validation; \code{'i'} for identification. Default is \code{'g'}.}
+generalized cross validation; \code{'r'} for rolling validation. Default is \code{'g'}.}
 
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
 adaptive intrinsic factor risk premia HAC standard errors; \code{FALSE} otherwise.
@@ -60,10 +57,9 @@ Default is \code{FALSE}.}
 boolean \code{TRUE} for AIC scaling (\code{1 / n_observations}); \code{FALSE} for BIC scaling
 (\code{log(n_observations) / n_observations}). Default is \code{TRUE}.}
 
-\item{beta_min_singular_value_check}{(only relevant for \code{tuning_type ='g'})
-boolean \code{TRUE} for checking that the minimum singular value of beta is
-above \code{log(n_factors)/n_observations^(-1/3)}, and if it's not, set the GCV
-score to infinity; \code{FALSE} for not performing such checl. Default is \code{TRUE}.}
+\item{identification_check}{(only relevant for \code{tuning_type ='g'})
+boolean \code{TRUE} for checking for model identification; \code{FALSE} otherwise.
+Default is \code{FALSE}.}
 
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
 for cross validation. Default is \code{5}.}
@@ -76,9 +72,6 @@ observations in the test set. Default is \code{12}.}
 
 \item{roll_shift}{(only relevant for \code{tuning_type ='r'}) number of observation
 shift when moving from the rolling window to the next one. Default is \code{12}.}
-
-\item{relaxed}{boolean \code{TRUE} for re-fitting the model without shrinkage
-post selection; \code{FALSE} otherwise. Default is \code{FALSE}.}
 
 \item{plot_score}{boolean \code{TRUE} for plotting the model score; \code{FALSE} otherwise.
 Default is \code{TRUE}.}

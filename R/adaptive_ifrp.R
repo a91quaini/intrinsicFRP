@@ -29,9 +29,7 @@
 #' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
 #' character). Default is `'c'`.
 #' @param tuning_type character indicating the parameter tuning type: `'g'` for
-#' generalized cross validation; `'f'` for identified generalized cross validation;
-#' `'c'` for cross validation; `'r'` for rolling
-#' validation; `'i'` for identification. Default is `'g'`.
+#' generalized cross validation; `'r'` for rolling validation. Default is `'g'`.
 #' @param include_standard_errors boolean `TRUE` if you want to compute the
 #' adaptive intrinsic factor risk premia HAC standard errors; `FALSE` otherwise.
 #' Default is `FALSE`.
@@ -44,10 +42,9 @@
 #' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
 #' (`log(n_observations) / n_observations`). Default is `TRUE`.
-#' @param beta_min_singular_value_check (only relevant for `tuning_type ='g'`)
-#' boolean `TRUE` for checking that the minimum singular value of beta is
-#' above `log(n_factors)/n_observations^(-1/3)`, and if it's not, set the GCV
-#' score to infinity; `FALSE` for not performing such checl. Default is `TRUE`.
+#' @param identification_check (only relevant for `tuning_type ='g'`)
+#' boolean `TRUE` for checking for model identification; `FALSE` otherwise.
+#' Default is `FALSE`.
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
 #' @param n_train_observations (only relevant for `tuning_type ='r'`) number of
@@ -56,8 +53,6 @@
 #' observations in the test set. Default is `12`.
 #' @param roll_shift (only relevant for `tuning_type ='r'`) number of observation
 #' shift when moving from the rolling window to the next one. Default is `12`.
-#' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
-#' post selection; `FALSE` otherwise. Default is `FALSE`.
 #' @param plot_score boolean `TRUE` for plotting the model score; `FALSE` otherwise.
 #' Default is `TRUE`.
 #' @param check_arguments boolean `TRUE` if you want to check function arguments;
@@ -96,12 +91,11 @@ OptimalAdaptiveIFRP = function(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_aic_scaling = TRUE,
-  beta_min_singular_value_check = TRUE,
+  identification_check = FALSE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
   roll_shift = 12,
-  relaxed = FALSE,
   plot_score = TRUE,
   check_arguments = TRUE
 ) {
@@ -118,12 +112,11 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_aic_scaling` must be boolean" = is.logical(gcv_aic_scaling))
-    stopifnot("`beta_min_singular_value_check` must be boolean" = is.logical(beta_min_singular_value_check))
+    stopifnot("`identification_check` must be boolean" = is.logical(identification_check))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
     stopifnot("`roll_shift` should be between 1 and n_test_observations" = roll_shift >= 1 || roll_shift < n_test_observations)
-    stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
     stopifnot("`plot_score` must be boolean" = is.logical(plot_score))
     penalty_parameters = sort(penalty_parameters)
 
@@ -147,9 +140,8 @@ OptimalAdaptiveIFRP = function(
         weighting_type,
         gcv_vr_weighting,
         gcv_aic_scaling,
-        beta_min_singular_value_check,
-        one_stddev_rule,
-        relaxed
+        identification_check,
+        one_stddev_rule
       )
 
     },
@@ -164,8 +156,7 @@ OptimalAdaptiveIFRP = function(
         penalty_parameters,
         weighting_type,
         n_folds,
-        one_stddev_rule,
-        relaxed
+        one_stddev_rule
       )
 
     },
@@ -182,8 +173,7 @@ OptimalAdaptiveIFRP = function(
         n_train_observations,
         n_test_observations,
         roll_shift,
-        one_stddev_rule,
-        relaxed
+        one_stddev_rule
       )
 
     },
@@ -226,8 +216,6 @@ OptimalAdaptiveIFRP = function(
 #' `penalty_parameter * weights`.
 #' Default is a vector of ones, i.e., the same penalty parameter
 #' `penalty_parameter` is applied to each risk premium.
-#' @param relaxed boolean `TRUE` for re-fitting the model without shrinkage
-#' post selection; `FALSE` otherwise. Default is `FALSE`.
 #' @param check_arguments boolean `TRUE` if you want to check function arguments;
 #' `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -256,7 +244,6 @@ AdaptiveIFRP = function(
   factors,
   penalty_parameters,
   weights = rep(1., ncol(factors)),
-  relaxed = FALSE,
   check_arguments = TRUE
 ) {
 
@@ -268,7 +255,6 @@ AdaptiveIFRP = function(
     stopifnot("`penalty_parameters` contains missing values (NA/NaN)" = !anyNA(penalty_parameters))
     stopifnot("`weights` contains non-numeric values" = is.numeric(weights))
     stopifnot("`weights` contains missing values (NA/NaN)" = !anyNA(weights))
-    stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
 
   }
 
@@ -281,29 +267,6 @@ AdaptiveIFRP = function(
     variance_returns,
     mean_returns
   )
-
-  if (relaxed) {
-
-    aifrp = .Call(`_intrinsicFRP_AdaptiveIFRPCpp`,
-      ifrp,
-      weights,
-      penalty_parameters
-    )
-
-    for (par in 1:length(penalty_parameters)) {
-
-      aifrp[,par] = .Call(`_intrinsicFRP_RelaxedAdaptiveIFRPCpp`,
-        aifrp[,par],
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns
-      )
-
-    }
-
-    return(aifrp)
-
-  }
 
   return(.Call(`_intrinsicFRP_AdaptiveIFRPCpp`,
     ifrp,

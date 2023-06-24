@@ -25,3 +25,28 @@
 #' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "factors"
+
+
+#' yoo
+#'
+#' @format ## `returnsMEBTM25`
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"returnsMEBTM25"
+
+#' yoo
+#'
+#' @format ## `returnsIND17`
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"returnsIND17"
+
+#' yoo
+#'
+#' @format ## `returnsIND10`
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"returnsIND10"
+
+#' yoo
+#'
+#' @format ## `factors51`
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"factors51"
