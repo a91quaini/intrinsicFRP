@@ -39,11 +39,11 @@
 //' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
 //' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
 //' Default is `FALSE`.
-//' @param gcv_aic_scaling
-//' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
-//' (`log(n_observations) / n_observations`). Default is `TRUE`.
-//' @param identification_check
-//' boolean `TRUE` for checking for model identification; `FALSE` otherwise.
+//' @param gcv_scaling_n_assets
+//' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
+//' `FALSE` otherwise (`1 / n_observations`). Default is `TRUE`.
+//' @param gcv_identification_check
+//' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 //' Default is `FALSE`.
 //' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 //' whose score is not higher than one standard error above the score of the
@@ -65,8 +65,8 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const arma::vec& penalty_parameters,
   const char weighting_type = 'c',
   const bool gcv_vr_weighting = false,
-  const bool gcv_aic_scaling = true,
-  const bool identification_check = false,
+  const bool gcv_scaling_n_assets = true,
+  const bool gcv_identification_check = false,
   const bool one_stddev_rule = false
 );
 

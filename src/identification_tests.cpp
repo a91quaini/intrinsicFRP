@@ -25,17 +25,13 @@ arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
   arma::vec2 output;
   output(0) = n_observations * sv(n_sv - 1) * sv(n_sv - 1);
 
+  // set singular value threshold: a number that tends to 0 as n_observations
+  // grows, but tends to infinity if multiplied by sqrt(n_observations)
   const double sv_threshold = sv_threshold_type == 0 ?
-    std::pow(n_observations, -1) * std::log(n_factors) :
-    std::pow(n_observations, -1./2.);
-
-  Rcpp::Rcout << "singular values = " << sv << "\n";
-  Rcpp::Rcout << "singular values threshold = " << sv_threshold << "\n";
+    std::pow(n_observations, -1./3) / (std::log(n_factors) * std::log(n_returns)) :
+    std::pow(n_observations, -1./3);
 
   const unsigned int rank_estimate = arma::sum(sv >= sv_threshold);
-  // const unsigned int rank_estimate = n_factors - 1;
-
-  Rcpp::Rcout << "rank estimate = " << rank_estimate << "\n";
 
   if (rank_estimate == n_sv) {
     output(1) = 0.;

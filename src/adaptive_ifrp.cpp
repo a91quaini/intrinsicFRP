@@ -18,8 +18,8 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const arma::vec& penalty_parameters,
   const char weighting_type,
   const bool gcv_vr_weighting,
-  const bool gcv_aic_scaling,
-  const bool identification_check,
+  const bool gcv_scaling_n_assets,
+  const bool gcv_identification_check,
   const bool one_stddev_rule
 ) {
 
@@ -41,37 +41,46 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 
   if (gcv_vr_weighting) {
 
-    model_score = WeightedGCVScoreAdaptiveIFRPCpp(
-      aifrp,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      returns.n_rows,
-      gcv_aic_scaling
-    );
-
-  } else if (identification_check) {
-
-    model_score = IGCVScoreAdaptiveIFRPCpp(
-      aifrp,
-      returns,
-      factors,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      gcv_aic_scaling
-    );
+    model_score = gcv_identification_check ?
+      WeightedIGCVScoreAdaptiveIFRPCpp(
+        aifrp,
+        returns,
+        factors,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        returns.n_rows,
+        gcv_scaling_n_assets
+      ) :
+      WeightedGCVScoreAdaptiveIFRPCpp(
+        aifrp,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        returns.n_rows,
+        gcv_scaling_n_assets
+      );
 
   } else {
 
-    model_score = GCVScoreAdaptiveIFRPCpp(
-      aifrp,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      returns.n_rows,
-      gcv_aic_scaling
-    );
+    model_score = gcv_identification_check ?
+      IGCVScoreAdaptiveIFRPCpp(
+        aifrp,
+        returns,
+        factors,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        gcv_scaling_n_assets
+      ) :
+      GCVScoreAdaptiveIFRPCpp(
+        aifrp,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns,
+        returns.n_rows,
+        gcv_scaling_n_assets
+      );
 
   }
 
@@ -84,9 +93,9 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
     );
 
     idx_optimal_parameter += arma::max(arma::find(
-          model_score_right_of_min <= arma::min(model_score_right_of_min) +
-            arma::stddev(model_score_right_of_min)
-      ));
+      model_score_right_of_min <= arma::min(model_score_right_of_min) +
+      arma::stddev(model_score_right_of_min)
+    ));
 
   }
 
@@ -131,7 +140,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
 
     idx_optimal_parameter += arma::max(arma::find(
       model_score_right_of_min <= arma::min(model_score_right_of_min) +
-        arma::stddev(model_score_right_of_min)
+      arma::stddev(model_score_right_of_min)
     ));
 
   }
@@ -183,14 +192,6 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
     roll_shift
   );
 
-  // const unsigned int idx_optimal_parameter = one_stddev_rule ?
-  //   arma::index_max(
-  //     model_score(arma::find(
-  //         model_score <= arma::min(model_score) + arma::stddev(model_score)
-  //     ))
-  //   ) :
-  //   model_score.index_min();
-
   unsigned int idx_optimal_parameter = model_score.index_min();
 
   if (one_stddev_rule) {
@@ -200,8 +201,8 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
     );
 
     idx_optimal_parameter += arma::max(arma::find(
-      model_score_right_of_min <= arma::min(model_score) +
-        arma::stddev(model_score)
+      model_score_right_of_min <= arma::min(model_score_right_of_min) +
+      arma::stddev(model_score_right_of_min)
     ));
 
   }

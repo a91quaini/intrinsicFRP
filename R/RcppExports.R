@@ -31,11 +31,11 @@
 #' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
 #' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
 #' Default is `FALSE`.
-#' @param gcv_aic_scaling
-#' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
-#' (`log(n_observations) / n_observations`). Default is `TRUE`.
-#' @param identification_check
-#' boolean `TRUE` for checking for model identification; `FALSE` otherwise.
+#' @param gcv_scaling_n_assets
+#' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
+#' `FALSE` otherwise (`1 / n_observations`). Default is `TRUE`.
+#' @param gcv_identification_check
+#' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
@@ -47,8 +47,8 @@
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_aic_scaling = TRUE, identification_check = FALSE, one_stddev_rule = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_aic_scaling, identification_check, one_stddev_rule)
+OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_scaling_n_assets = TRUE, gcv_identification_check = FALSE, one_stddev_rule = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, one_stddev_rule)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under cross validation

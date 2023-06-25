@@ -39,11 +39,11 @@
 #' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
 #' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
 #' Default is `FALSE`.
-#' @param gcv_aic_scaling (only relevant for `tuning_type ='g'`)
-#' boolean `TRUE` for AIC scaling (`1 / n_observations`); `FALSE` for BIC scaling
-#' (`log(n_observations) / n_observations`). Default is `TRUE`.
-#' @param identification_check (only relevant for `tuning_type ='g'`)
-#' boolean `TRUE` for checking for model identification; `FALSE` otherwise.
+#' @param gcv_scaling_n_assets (only relevant for `tuning_type ='g'`)
+#' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
+#' `FALSE` otherwise (`1 / n_observations`). Default is `TRUE`.
+#' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
+#' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
@@ -90,8 +90,8 @@ OptimalAdaptiveIFRP = function(
   include_standard_errors = FALSE,
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
-  gcv_aic_scaling = TRUE,
-  identification_check = FALSE,
+  gcv_scaling_n_assets = TRUE,
+  gcv_identification_check = FALSE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -111,8 +111,8 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`include_standard_errors` must be boolean" = is.logical(include_standard_errors))
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
-    stopifnot("`gcv_aic_scaling` must be boolean" = is.logical(gcv_aic_scaling))
-    stopifnot("`identification_check` must be boolean" = is.logical(identification_check))
+    stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
+    stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
@@ -139,8 +139,8 @@ OptimalAdaptiveIFRP = function(
         penalty_parameters,
         weighting_type,
         gcv_vr_weighting,
-        gcv_aic_scaling,
-        identification_check,
+        gcv_scaling_n_assets,
+        gcv_identification_check,
         one_stddev_rule
       )
 

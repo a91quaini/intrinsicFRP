@@ -82,7 +82,14 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
       t(returns),
       t(factors),
       penalty_parameters,
-      gcv_aic_scaling = "r"
+      gcv_scaling_n_assets = "r"
+    ))
+  expect_error(
+    OptimalAdaptiveIFRP(
+      t(returns),
+      t(factors),
+      penalty_parameters,
+      gcv_identifiation_check = "r"
     ))
   expect_error(
     OptimalAdaptiveIFRP(
@@ -153,61 +160,66 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
   for (weighting_type in c('c', 'b', 'a', 'n')) {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (gcv_vr_weighting in c(TRUE, FALSE)) {
-        for (gcv_aic_scaling in c(TRUE, FALSE)) {
+        for (gcv_scaling_n_assets in c(TRUE, FALSE)) {
+          for (gcv_identification_check in c(TRUE, FALSE)) {
 
-          adaptive_ifrp = OptimalAdaptiveIFRP(
-            returns,
-            factors,
-            penalty_parameters,
-            weighting_type = weighting_type,
-            tuning_type = 'g',
-            include_standard_errors = TRUE,
-            one_stddev_rule = one_stddev_rule,
-            gcv_vr_weighting = gcv_vr_weighting,
-            gcv_aic_scaling = gcv_aic_scaling
-          )
-
-          expect_length(adaptive_ifrp$risk_premia, n_factors)
-          expect_length(adaptive_ifrp$standard_errors, n_factors)
-          expect_length(adaptive_ifrp$penalty_parameter, 1)
-
-
-          adaptive_ifrp0 = OptimalAdaptiveIFRP(
-            returns,
-            factors,
-            penalty_parameters = 0.,
-            weighting_type = weighting_type,
-            tuning_type = 'g',
-            include_standard_errors = TRUE,
-            one_stddev_rule = one_stddev_rule,
-            gcv_vr_weighting = gcv_vr_weighting,
-            gcv_aic_scaling = gcv_aic_scaling
-          )
-
-          expect_equal(
-            matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
-            ifrp$risk_premia
-          )
-
-          if (weighting_type == 'c') {
-
-            adaptive_ifrp1 = OptimalAdaptiveIFRP(
+            adaptive_ifrp = OptimalAdaptiveIFRP(
               returns,
               factors,
-              penalty_parameters = .1,
+              penalty_parameters,
               weighting_type = weighting_type,
               tuning_type = 'g',
               include_standard_errors = TRUE,
               one_stddev_rule = one_stddev_rule,
               gcv_vr_weighting = gcv_vr_weighting,
-              gcv_aic_scaling = gcv_aic_scaling
+              gcv_scaling_n_assets = gcv_scaling_n_assets,
+              gcv_identification_check = gcv_identification_check
+            )
+
+            expect_length(adaptive_ifrp$risk_premia, n_factors)
+            expect_length(adaptive_ifrp$standard_errors, n_factors)
+            expect_length(adaptive_ifrp$penalty_parameter, 1)
+
+
+            adaptive_ifrp0 = OptimalAdaptiveIFRP(
+              returns,
+              factors,
+              penalty_parameters = 0.,
+              weighting_type = weighting_type,
+              tuning_type = 'g',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              gcv_vr_weighting = gcv_vr_weighting,
+              gcv_scaling_n_assets = gcv_scaling_n_assets,
+              gcv_identification_check = gcv_identification_check
             )
 
             expect_equal(
-              matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
-              aifrp1
+              matrix(adaptive_ifrp0$risk_premia, n_factors, 1),
+              ifrp$risk_premia
             )
 
+            if (weighting_type == 'c') {
+
+              adaptive_ifrp1 = OptimalAdaptiveIFRP(
+                returns,
+                factors,
+                penalty_parameters = .1,
+                weighting_type = weighting_type,
+                tuning_type = 'g',
+                include_standard_errors = TRUE,
+                one_stddev_rule = one_stddev_rule,
+                gcv_vr_weighting = gcv_vr_weighting,
+                gcv_scaling_n_assets = gcv_scaling_n_assets,
+                gcv_identification_check = gcv_identification_check
+              )
+
+              expect_equal(
+                matrix(adaptive_ifrp1$risk_premia, n_factors, 1),
+                aifrp1
+              )
+
+            }
           }
         }
       }

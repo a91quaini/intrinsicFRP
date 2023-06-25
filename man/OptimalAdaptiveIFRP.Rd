@@ -13,8 +13,8 @@ OptimalAdaptiveIFRP(
   include_standard_errors = FALSE,
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
-  gcv_aic_scaling = TRUE,
-  identification_check = FALSE,
+  gcv_scaling_n_assets = TRUE,
+  gcv_identification_check = FALSE,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -53,12 +53,12 @@ best model; \code{FALSE} for picking the best model. Default is \code{FALSE}.}
 the inverse variance matrix of asset excess returns; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
 
-\item{gcv_aic_scaling}{(only relevant for \code{tuning_type ='g'})
-boolean \code{TRUE} for AIC scaling (\code{1 / n_observations}); \code{FALSE} for BIC scaling
-(\code{log(n_observations) / n_observations}). Default is \code{TRUE}.}
+\item{gcv_scaling_n_assets}{(only relevant for \code{tuning_type ='g'})
+boolean \code{TRUE} for sqrt(n_assets) scaling (\code{sqrt(n_assets) / n_observations});
+\code{FALSE} otherwise (\code{1 / n_observations}). Default is \code{TRUE}.}
 
-\item{identification_check}{(only relevant for \code{tuning_type ='g'})
-boolean \code{TRUE} for checking for model identification; \code{FALSE} otherwise.
+\item{gcv_identification_check}{(only relevant for \code{tuning_type ='g'})
+boolean \code{TRUE} for a loose check for model identification; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
 
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
