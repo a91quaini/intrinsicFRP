@@ -77,7 +77,10 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const bool gcv_scaling_n_assets
+  const bool gcv_scaling_n_assets,
+  const unsigned int n_bootstrap_cf2019_rank_test,
+  const double level_cf2019_rank_test,
+  const double level_kp2006_rank_test
 ) {
 
   // initialize model_score to the inner product of the mean of returns
@@ -118,23 +121,18 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
 
       cardinality_previous_model = idx_selected.n_elem;
 
-      const arma::mat beta_selected = arma::solve(
-        arma::cov(factors.cols(idx_selected)),
-        cov_selected_fac_ret,
-        arma::solve_opts::likely_sympd
-      ).t();
-
-      const arma::vec2 identification_statistics =
+      const arma::vec2 cf2019_output =
         BetaRankChenFang2019StatisticAndPvalueCpp(
           returns,
           factors.cols(idx_selected),
-          beta_selected
+          n_bootstrap_cf2019_rank_test,
+          level_kp2006_rank_test
         );
 
       // if we do not reject the null that the model is not identified
       // set the model score to `score_no_model`
       // to decide, use a high threshold for the p-value
-      if (identification_statistics(1) >= 0.1) continue;
+      if (cf2019_output(1) >= level_cf2019_rank_test) continue;
 
       // otherwise set the mis-identification flag to false
       misidentification_flag = false;
@@ -239,7 +237,10 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const unsigned int n_observations,
-  const bool gcv_scaling_n_assets
+  const bool gcv_scaling_n_assets,
+  const unsigned int n_bootstrap_cf2019_rank_test,
+  const double level_cf2019_rank_test,
+  const double level_kp2006_rank_test
 ) {
 
   const double score_no_model = arma::dot(mean_returns, arma::solve(
@@ -281,23 +282,18 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
 
       cardinality_previous_model = idx_selected.n_elem;
 
-      const arma::mat beta_selected = arma::solve(
-        arma::cov(factors.cols(idx_selected)),
-        cov_selected_fac_ret,
-        arma::solve_opts::likely_sympd
-      ).t();
-
-      const arma::vec2 identification_statistics =
+      const arma::vec2 cf2019_output =
         BetaRankChenFang2019StatisticAndPvalueCpp(
           returns,
           factors.cols(idx_selected),
-          beta_selected
+          n_bootstrap_cf2019_rank_test,
+          level_kp2006_rank_test
         );
 
       // if we do not reject the null that the model is not identified
       // set the model score to `score_no_model`
       // to decide, use a high threshold for the p-value
-      if (identification_statistics(1) >= 0.1) continue;
+      if (cf2019_output(1) >= level_cf2019_rank_test) continue;
 
       // otherwise set the mis-identification flag to false
       misidentification_flag = false;

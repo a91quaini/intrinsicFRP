@@ -6,6 +6,23 @@
 #include <RcppArmadillo.h>
 
 // For internal use
+// Computes the Chen fang 2019 rank statistic and p-value of the null that
+// the matrix of regression loadings of test asset excess returns on risk
+// factors has reduced rank.
+// If `level_kp_test > 0`, it uses the iterative Kleibergen Paap
+// 2006 rank test to estimate the initial rank, with
+// `level = level_kp_test`.
+// If `level_kp_test <= 0`, the initial rank estimator is taken
+// to be the number of singular values above `n_observations^(-1/3)`.
+// It assumes n_factors < n_returns.
+arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const unsigned int n_bootstrap = 500,
+  const double level_kp_test = 0.005
+);
+
+// For internal use
 // Computes the iterative Kleibergen Paap 2006 rank statistics and p-values
 // of the test that the matrix of regression loadings of test asset excess
 // returns on risk factors has rank q = 0, ..., n_factors - 1.
@@ -33,25 +50,10 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
 );
 
 // For internal use
-// Computes the Chen fang 2019 rank statistic and p-value of the null that
-// the matrix of regression loadings of test asset excess returns on risk
-// factors has reduced rank.
-// If `level_kp_test <= 0`, the initial rank estimator is taken
-// to be the number of singular values above `n_observations^(-1/3)`.
-// If `level_kp_test > 0`, it uses the iterative Kleibergen Paap
-// 2006 rank test to estimate the initial rank, with
-// `level = level_kp_test`.
-// It assumes n_factors < n_returns.
-arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const unsigned int n_bootstrap = 500,
-  const double level_kp_test = 0.
-);
-
-// For internal use
 // Computes the scaled (n_factors x n_returns) matrix of factor loadings,
 // useful for the Kleibergen Paap 2006 or the Chen Fang 2019 rank tests.
+// The resulting invariant matrix is proportional to the matrix of t-statistics
+// of the least squares regression estimator.
 arma::mat ScaledFactorLoadingsCpp(
   const arma::mat& returns,
   const arma::mat& factors

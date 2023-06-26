@@ -27,7 +27,10 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const bool gcv_scaling_n_assets = false
+  const bool gcv_scaling_n_assets = false,
+  const unsigned int n_bootstrap_cf2019_rank_test = 500,
+  const double level_cf2019_rank_test = 0.045,
+  const double level_kp2006_rank_test = 0.005
 );
 
 // Function for internal use
@@ -55,7 +58,10 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const unsigned int n_observations,
-  const bool gcv_scaling_n_assets = false
+  const bool gcv_scaling_n_assets = false,
+  const unsigned int n_bootstrap_cf2019_rank_test = 500,
+  const double level_cf2019_rank_test = 0.045,
+  const double level_kp2006_rank_test = 0.005
 );
 
 // Function for internal use

@@ -28,18 +28,31 @@
 #' regression coefficients of returns on factors `'b'`; based on the first-step
 #' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
 #' character). Default is `'c'`.
-#' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
-#' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
-#' Default is `FALSE`.
-#' @param gcv_scaling_n_assets
-#' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
-#' `FALSE` otherwise (`1 / n_observations`). Default is `TRUE`.
-#' @param gcv_identification_check
-#' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
-#' Default is `FALSE`.
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
+#' @param gcv_vr_weighting boolean `TRUE` for scaling pricing errors by
+#' the inverse variance matrix of asset excess returns; `FALSE` otherwise.
+#' Default is `FALSE`.
+#' @param gcv_scaling_n_assets boolean `TRUE` for sqrt(n_assets) scaling
+#' (`sqrt(n_assets) / n_observations`); `FALSE` otherwise (`1 / n_observations`).
+#' Default is `TRUE`.
+#' @param gcv_identification_check boolean `TRUE` for a loose check for model
+#' identification; `FALSE` otherwise. Default is `FALSE`.
+#' @param n_bootstrap_cf2019_rank_test (only relevant if
+#' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
+#' Chen Fang 2019 rank test. Default is `500`.
+#' @param level_cf2019_rank_test (only relevant if `gcv_identification_check`
+#' is `TRUE`) numeric level of the Chen Fang 2019 rank test. Default is `0.045`
+#' (as correction for the iterative Kleibergen Paap 2006 rank test used within).
+#' @param level_kp2006_test (only relevant if `gcv_identification_check` is
+#' `TRUE`) numeric level of the Kleibergen Paap 2006 rank test. If it is
+#' strictly grater than zero, then the iterative Kleibergen Paap 2006 rank
+#' test at level `level_kp2005_test` is used to compute an initial estimator
+#' of the rank of the factor loadings in the Chen Fang 2019 rank test.
+#' Otherwise, the initial rank estimator is taken to be the number of singular
+#' values above `n_observations^(-1/3)`. Default is `0.005` (as correction
+#' for multiple testing).
 #'
 #' @return a list containing the `n_factors`-dimensional vector of adaptive
 #' intrinsic factor risk premia in `"risk_premia"`, and the optimal penalty
@@ -47,8 +60,8 @@
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_scaling_n_assets = TRUE, gcv_identification_check = FALSE, one_stddev_rule = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, one_stddev_rule)
+OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_scaling_n_assets = TRUE, one_stddev_rule = FALSE, gcv_identification_check = FALSE, n_bootstrap_cf2019_rank_test = 500L, level_cf2019_rank_test = 0.045, level_kp2006_rank_test = 0.005) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_scaling_n_assets, one_stddev_rule, gcv_identification_check, n_bootstrap_cf2019_rank_test, level_cf2019_rank_test, level_kp2006_rank_test)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under cross validation
@@ -77,10 +90,10 @@ OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_retur
 #' regression coefficients of returns on factors `'b'`; based on the first-step
 #' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
 #' character). Default is `'c'`.
-#' @param n_folds integer number of k-fold for cross validation. Default is `5`.
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `FALSE`.
+#' @param n_folds integer number of k-fold for cross validation. Default is `5`.
 #'
 #' @return a list containing the n_factors-dimensional vector of adaptive
 #' intrinsic factor risk premia in "risk_premia", and the optimal penalty
@@ -88,8 +101,8 @@ OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_retur
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_folds = 5L, one_stddev_rule = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_folds, one_stddev_rule)
+OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, n_folds = 5L) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, n_folds)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under rolling validation
@@ -118,15 +131,15 @@ OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_return
 #' regression coefficients of returns on factors `'b'`; based on the first-step
 #' intrinsic risk premia estimator `'a'`; otherwise a vector of ones (any other
 #' character). Default is `'c'`.
+#' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
+#' whose score is not higher than one standard error above the score of the
+#' best model; `FALSE` for picking the best model. Default is `FALSE`.
 #' @param n_train_observations number of observations in the rolling training
 #' set. Default is `120`.
 #' @param n_test_observations number of observations in the test set. Default
 #' is `12`.
 #' @param roll_shift number of observation shift when moving from the rolling
 #' window to the next one. Default is `12`.
-#' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
-#' whose score is not higher than one standard error above the score of the
-#' best model; `FALSE` for picking the best model. Default is `FALSE`.
 #'
 #' @return a list containing the n_factors-dimensional vector of adaptive
 #' intrinsic factor risk premia in "risk_premia", and the optimal penalty
@@ -134,8 +147,8 @@ OptimalAdaptiveIFRPCVCpp <- function(returns, factors, covariance_factors_return
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', n_train_observations = 120L, n_test_observations = 12L, roll_shift = 12L, one_stddev_rule = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPRVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, n_train_observations, n_test_observations, roll_shift, one_stddev_rule)
+OptimalAdaptiveIFRPRVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, n_train_observations = 120L, n_test_observations = 12L, roll_shift = 12L) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPRVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, n_train_observations, n_test_observations, roll_shift)
 }
 
 #' Compute adaptive intrinsic factor risk premia

@@ -17,10 +17,13 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const arma::vec& mean_returns,
   const arma::vec& penalty_parameters,
   const char weighting_type,
+  const bool one_stddev_rule,
   const bool gcv_vr_weighting,
   const bool gcv_scaling_n_assets,
   const bool gcv_identification_check,
-  const bool one_stddev_rule
+  const unsigned int n_bootstrap_cf2019_rank_test,
+  const double level_cf2019_rank_test,
+  const double level_kp2006_rank_test
 ) {
 
   arma::mat aifrp = AdaptiveIFRPCpp(
@@ -50,7 +53,10 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
         variance_returns,
         mean_returns,
         returns.n_rows,
-        gcv_scaling_n_assets
+        gcv_scaling_n_assets,
+        n_bootstrap_cf2019_rank_test,
+        level_cf2019_rank_test,
+        level_kp2006_rank_test
       ) :
       WeightedGCVScoreAdaptiveIFRPCpp(
         aifrp,
@@ -71,7 +77,10 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
         covariance_factors_returns,
         variance_returns,
         mean_returns,
-        gcv_scaling_n_assets
+        gcv_scaling_n_assets,
+        n_bootstrap_cf2019_rank_test,
+        level_cf2019_rank_test,
+        level_kp2006_rank_test
       ) :
       GCVScoreAdaptiveIFRPCpp(
         aifrp,
@@ -118,8 +127,8 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
   const arma::vec& mean_returns,
   const arma::vec& penalty_parameters,
   const char weighting_type,
-  const unsigned int n_folds,
-  const bool one_stddev_rule
+  const bool one_stddev_rule,
+  const unsigned int n_folds
 ) {
 
   const arma::vec model_score = CVScoreAdaptiveIFRPCpp(
@@ -176,10 +185,10 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
   const arma::vec& mean_returns,
   const arma::vec& penalty_parameters,
   const char weighting_type,
+  const bool one_stddev_rule,
   const unsigned int n_train_observations,
   const unsigned int n_test_observations,
-  const unsigned int roll_shift,
-  const bool one_stddev_rule
+  const unsigned int roll_shift
 ) {
 
   const arma::vec model_score = RVScoreAdaptiveIFRPCpp(

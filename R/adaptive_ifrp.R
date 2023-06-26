@@ -45,6 +45,28 @@
 #' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
+#' @param n_bootstrap_cf2019_rank_test (only relevant for `tuning_type ='g'` if
+#' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
+#' Chen Fang 2019 rank test. Default is `500`.
+#' @param level_cf2019_rank_test (only relevant for `tuning_type ='g'` if
+#' `gcv_identification_check` is `TRUE`) numeric level of the Chen Fang 2019
+#' rank test. Default is `0.045` (as correction for the iterative Kleibergen
+#' Paap 2006 rank test used within).
+#' @param level_kp2006_rank_test (only relevant for `tuning_type ='g'` if
+#' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen Paap
+#' 2006 rank test. If it is strictly grater than zero, then the iterative
+#' Kleibergen Paap 2006 rank test at level `level_kp2005_test` is used to
+#' compute an initial estimator of the rank of the factor loadings in the Chen
+#' Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
+#' the number of singular values above `n_observations^(-1/3)`. Default is
+#' `0.005` (as correction for multiple testing).
+#' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen
+#' Paap 2006 rank test. If it is strictly grater than zero, then the iterative
+#' Kleibergen Paap 2006 rank test at level `level_kp2005_test` is used to
+#' compute an initial estimator of the rank of the factor loadings in the
+#' Chen Fang 2019 rank test. Otherwise, the initial rank estimator is taken
+#' to be the number of singular values above `n_observations^(-1/3)`. Default
+#' is `0.005` (as correction for multiple testing).
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
 #' @param n_train_observations (only relevant for `tuning_type ='r'`) number of
@@ -92,6 +114,9 @@ OptimalAdaptiveIFRP = function(
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = TRUE,
   gcv_identification_check = FALSE,
+  n_bootstrap_cf2019_rank_test = 500,
+  level_cf2019_rank_test = 0.045,
+  level_kp2006_rank_test = 0.005,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -113,6 +138,9 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
     stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
+    stopifnot("`n_bootstrap_cf2019_rank_test` contains non-numeric values" = is.numeric(n_bootstrap_cf2019_rank_test))
+    stopifnot("`level_cf2019_rank_test` contains non-numeric values" = is.numeric(level_cf2019_rank_test))
+    stopifnot("`level_kp2006_rank_test` contains non-numeric values" = is.numeric(level_kp2006_rank_test))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
@@ -138,10 +166,13 @@ OptimalAdaptiveIFRP = function(
         mean_returns,
         penalty_parameters,
         weighting_type,
+        one_stddev_rule,
         gcv_vr_weighting,
         gcv_scaling_n_assets,
         gcv_identification_check,
-        one_stddev_rule
+        n_bootstrap_cf2019_rank_test,
+        level_cf2019_rank_test,
+        level_kp2006_rank_test
       )
 
     },
@@ -155,8 +186,8 @@ OptimalAdaptiveIFRP = function(
         mean_returns,
         penalty_parameters,
         weighting_type,
-        n_folds,
-        one_stddev_rule
+        one_stddev_rule,
+        n_folds
       )
 
     },
@@ -170,10 +201,10 @@ OptimalAdaptiveIFRP = function(
         mean_returns,
         penalty_parameters,
         weighting_type,
+        one_stddev_rule,
         n_train_observations,
         n_test_observations,
-        roll_shift,
-        one_stddev_rule
+        roll_shift
       )
 
     },
