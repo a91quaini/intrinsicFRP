@@ -4,7 +4,7 @@
 #include "ifrp.h"
 #include "adaptive_ifrp.h"
 #include "adaptive_weights.h"
-#include "identification_tests.h"
+#include "rank_tests.h"
 
 ///////////////////////////////////
 ///// GCVScoreAdaptiveIFRPCpp /////
