@@ -22,7 +22,7 @@ aifrp = OptimalAdaptiveIFRP(
   returns,
   factors,
   penalty_parameters,
-  include_standard_errors = FALSE,
+  include_standard_errors = TRUE,
 )
 
 afrp = OptimalAdaptiveFRP(
@@ -53,3 +53,4 @@ ggplot2::ggplot(df, ggplot2::aes(
     ymin=risk_premia - stats::qnorm(0.975) * standard_errors,
     ymax=risk_premia + stats::qnorm(0.975) * standard_errors),
     linewidth=.8, position = ggplot2::position_dodge(0.5), width = 0.25)
+

@@ -41,7 +41,7 @@
 #' Default is `FALSE`.
 #' @param gcv_scaling_n_assets (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
-#' `FALSE` otherwise (`1 / n_observations`). Default is `TRUE`.
+#' `FALSE` otherwise (`1 / n_observations`). Default is `FALSE`.
 #' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
@@ -112,7 +112,7 @@ OptimalAdaptiveIFRP = function(
   include_standard_errors = FALSE,
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
-  gcv_scaling_n_assets = TRUE,
+  gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
   n_bootstrap_cf2019_rank_test = 500,
   level_cf2019_rank_test = 0.045,

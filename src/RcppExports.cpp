@@ -212,16 +212,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // IterativeKleibergenPaap2006BetaRankTestCpp
-Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const double level, const bool scaling);
-RcppExport SEXP _intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP levelSEXP, SEXP scalingSEXP) {
+Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const double level);
+RcppExport SEXP _intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP levelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
     Rcpp::traits::input_parameter< const double >::type level(levelSEXP);
-    Rcpp::traits::input_parameter< const bool >::type scaling(scalingSEXP);
-    rcpp_result_gen = Rcpp::wrap(IterativeKleibergenPaap2006BetaRankTestCpp(returns, factors, level, scaling));
+    rcpp_result_gen = Rcpp::wrap(IterativeKleibergenPaap2006BetaRankTestCpp(returns, factors, level));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -239,7 +238,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_StandardErrorsKRSFRPCpp", (DL_FUNC) &_intrinsicFRP_StandardErrorsKRSFRPCpp, 9},
     {"_intrinsicFRP_IFRPCpp", (DL_FUNC) &_intrinsicFRP_IFRPCpp, 3},
     {"_intrinsicFRP_StandardErrorsIFRPCpp", (DL_FUNC) &_intrinsicFRP_StandardErrorsIFRPCpp, 7},
-    {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 4},
+    {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
     {NULL, NULL, 0}
 };
 

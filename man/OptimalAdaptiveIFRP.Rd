@@ -13,7 +13,7 @@ OptimalAdaptiveIFRP(
   include_standard_errors = FALSE,
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
-  gcv_scaling_n_assets = TRUE,
+  gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
   n_bootstrap_cf2019_rank_test = 500,
   level_cf2019_rank_test = 0.045,
@@ -58,7 +58,7 @@ Default is \code{FALSE}.}
 
 \item{gcv_scaling_n_assets}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for sqrt(n_assets) scaling (\code{sqrt(n_assets) / n_observations});
-\code{FALSE} otherwise (\code{1 / n_observations}). Default is \code{TRUE}.}
+\code{FALSE} otherwise (\code{1 / n_observations}). Default is \code{FALSE}.}
 
 \item{gcv_identification_check}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for a loose check for model identification; \code{FALSE} otherwise.

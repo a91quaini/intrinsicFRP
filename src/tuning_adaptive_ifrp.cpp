@@ -122,7 +122,7 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
       cardinality_previous_model = idx_selected.n_elem;
 
       const arma::vec2 cf2019_output =
-        BetaRankChenFang2019StatisticAndPvalueCpp(
+        ChenFang2019BetaRankTestStatisticAndPvalueCpp(
           returns,
           factors.cols(idx_selected),
           n_bootstrap_cf2019_rank_test,
@@ -283,7 +283,7 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
       cardinality_previous_model = idx_selected.n_elem;
 
       const arma::vec2 cf2019_output =
-        BetaRankChenFang2019StatisticAndPvalueCpp(
+        ChenFang2019BetaRankTestStatisticAndPvalueCpp(
           returns,
           factors.cols(idx_selected),
           n_bootstrap_cf2019_rank_test,

@@ -15,7 +15,7 @@
 // If `level_kp_test <= 0`, the initial rank estimator is taken
 // to be the number of singular values above `n_observations^(-1/3)`.
 // It assumes n_factors < n_returns.
-arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
+arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const unsigned int n_bootstrap = 500,
@@ -34,8 +34,7 @@ arma::vec2 BetaRankChenFang2019StatisticAndPvalueCpp(
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,
-  const double level = .005,
-  const bool scaling = true
+  const double level = .005
 );
 
 // For internal use

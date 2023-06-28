@@ -407,7 +407,7 @@ StandardErrorsIFRPCpp <- function(ifrp, returns, factors, covariance_factors_ret
 }
 
 #' @export
-IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, level = .005, scaling = TRUE) {
-    .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, level, scaling)
+IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, level = .005) {
+    .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, level)
 }
 
