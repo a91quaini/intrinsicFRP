@@ -73,6 +73,22 @@ Chen Fang 2019 rank test. Default is \code{500}.}
 rank test. Default is \code{0.045} (as correction for the iterative Kleibergen
 Paap 2006 rank test used within).}
 
+\item{level_kp2006_rank_test}{(only relevant for \code{tuning_type ='g'} if
+\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen Paap
+2006 rank test. If it is strictly grater than zero, then the iterative
+Kleibergen Paap 2006 rank test at level \code{level_kp2005_test} is used to
+compute an initial estimator of the rank of the factor loadings in the Chen
+Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
+the number of singular values above \code{n_observations^(-1/3)}. Default is
+\code{0.005} (as correction for multiple testing).
+\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen
+Paap 2006 rank test. If it is strictly grater than zero, then the iterative
+Kleibergen Paap 2006 rank test at level \code{level_kp2005_test} is used to
+compute an initial estimator of the rank of the factor loadings in the
+Chen Fang 2019 rank test. Otherwise, the initial rank estimator is taken
+to be the number of singular values above \code{n_observations^(-1/3)}. Default
+is \code{0.005} (as correction for multiple testing).}
+
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
 for cross validation. Default is \code{5}.}
 
@@ -90,22 +106,6 @@ Default is \code{TRUE}.}
 
 \item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
 \code{FALSE} otherwise. Default is \code{TRUE}.}
-
-\item{level_kp2006_test}{(only relevant for \code{tuning_type ='g'} if
-\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen Paap
-2006 rank test. If it is strictly grater than zero, then the iterative
-Kleibergen Paap 2006 rank test at level \code{level_kp2005_test} is used to
-compute an initial estimator of the rank of the factor loadings in the Chen
-Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
-the number of singular values above \code{n_observations^(-1/3)}. Default is
-\code{0.005} (as correction for multiple testing).
-\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen
-Paap 2006 rank test. If it is strictly grater than zero, then the iterative
-Kleibergen Paap 2006 rank test at level \code{level_kp2005_test} is used to
-compute an initial estimator of the rank of the factor loadings in the
-Chen Fang 2019 rank test. Otherwise, the initial rank estimator is taken
-to be the number of singular values above \code{n_observations^(-1/3)}. Default
-is \code{0.005} (as correction for multiple testing).}
 }
 \value{
 a list containing the \code{n_factors}-dimensional vector of adaptive

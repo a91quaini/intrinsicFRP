@@ -10,40 +10,57 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::mat& U,
   const arma::mat& V,
   const arma::mat& W,
-  const unsigned int q
+  const unsigned int q,
+  const unsigned int n_observations
 ) {
 
   const unsigned int n_factors = theta.n_rows;
   const unsigned int n_returns = theta.n_cols;
 
   // see eq. (3) in Kleibergen Paap 2006
-  const arma::mat U22 = U.submat(q + 1, n_factors - 1, q + 1, n_factors - 1);
-  const arma::mat V22 = V.submat(q + 1, n_returns - 1, q + 1, n_returns - 1);
+  const arma::mat U22 = U.submat(q, q, n_factors - 1, n_factors - 1);
+  const arma::mat V22 = V.submat(q, q, n_factors - 1, n_factors - 1);
+
+  Rcpp::Rcout << "V22 = " << V22 << "\n";
 
   const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
   const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
 
+  Rcpp::Rcout << "sqrt_U22 = " << sqrt_U22 << "\n";
+
   // see eq. (12) in Kleibergen Paap 2006
   const arma::mat A_qperp = U.tail_cols(n_factors - q) * arma::solve(
-    U22, sqrt_U22, arma::solve_opts::likely_sympd
+    U22, sqrt_U22,
+    arma::solve_opts::likely_sympd
   );
   const arma::mat B_qperp = sqrt_V22 * arma::solve(
-    V22.t(), V.tail_cols(n_factors - q).t()
+    V22.t(), V.tail_cols(n_factors - q).t(),
+    arma::solve_opts::likely_sympd
   );
 
+  Rcpp::Rcout << "A_qperp = " << A_qperp << "\n";
+  Rcpp::Rcout << "B_qperp = " << B_qperp << "\n";
+
   const arma::mat kron_BA_qperp = arma::kron(B_qperp, A_qperp.t());
+  Rcpp::Rcout << "kron_BA_qperp = " << kron_BA_qperp.submat(0,2,0,2) << "\n";
+
 
   // see below eq. (21) in Kleibergen Paap 2006
-  const arma::vec lambda_q = kron_BA_qperp * arma::vec(theta);
+  // use that vec(A'lB') = (B kron A') vec(l)
+  const arma::vec lambda_q = kron_BA_qperp * arma::vectorise(theta);
   const arma::mat Omega_q = kron_BA_qperp * W * kron_BA_qperp.t();
+
+  Rcpp::Rcout << "lambda_q = " << lambda_q(0,2) << "\n";
+  Rcpp::Rcout << "Omega_q = " << Omega_q.submat(0,2,0,2) << "\n";
 
   arma::vec2 output;
 
   // test statistic
-  output(0) = arma::dot(lambda_q, arma::solve(
+  output(0) = n_observations * arma::dot(lambda_q, arma::solve(
       Omega_q, lambda_q,
       arma::solve_opts::likely_sympd
   ));
+
 
   // p-value
   output(1) = 1. - R::pchisq(
@@ -52,6 +69,8 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
     true,
     false
   );
+  Rcpp::Rcout << "output(0)  = " << output(0)  << "\n";
+  Rcpp::Rcout << "output(1)  = " << output(1)  << "\n";
 
   return output;
 
@@ -63,7 +82,8 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,
-  const double level
+  const double level,
+  const bool scaling
 ) {
 
   const unsigned int n_returns = returns.n_cols;
@@ -80,50 +100,66 @@ Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
     fac_t_fac, factors.t() * returns,
     arma::solve_opts::likely_sympd
   );
+  Rcpp::Rcout << "pi = " << pi << "\n";
+
 
   // see eq. (16) in Kleibergen Paap 2006
   const arma::mat F_t_inv = arma::chol(returns.t() * returns);
+  Rcpp::Rcout << "F_t_inv = " << F_t_inv << "\n";
   const arma::mat G = arma::chol(fac_t_fac);
   const arma::mat theta = G * arma::solve(
-    F_t_inv, pi,
-    arma::solve_opts::likely_sympd
+    arma::trimatl(F_t_inv.t()), pi.t()
   ).t();
+  Rcpp::Rcout << "theta = " << theta << "\n";
 
-  /// svd of theta
+  // White covariance matrix estimator with scaling matrices incorporated
+  arma::mat W(n_returns * n_factors, n_returns * n_factors, arma::fill::eye);
+
+  const arma::mat residuals = returns - factors * pi;// - arma::repmat(
+  //  arma::mean(returns), n_observations, 1
+  //);
+  Rcpp::Rcout << "residuals = " << residuals.submat(0,0,2,2) << "\n";
+  const arma::mat err1 = arma::solve(
+    arma::trimatl(F_t_inv.t()), residuals.t()
+  ).t();
+  Rcpp::Rcout << "err1 = " << err1.submat(0,0,2,2) << "\n";
+  const arma::mat err2 = arma::solve(
+    arma::trimatl(G.t()), factors.t()
+  ).t();
+  Rcpp::Rcout << "err2 = " << err2.submat(0,0,1,1) << "\n";
+
+  const arma::mat err = arma::repelem(err1, 1, n_factors) %
+    arma::repmat(err2, 1, n_returns);
+  Rcpp::Rcout << "err = " << err.submat(0,0,2,2) << "\n";
+
+  W = err.t() * err;
+
+  // for (unsigned int obs = 0; obs < n_observations; ++obs) {
+  //
+  //   const arma::mat err = arma::kron(err1, err2.row(obs));
+  //   W += err.t() * err;
+  //
+  // }
+  Rcpp::Rcout << "W = " << W.submat(0,0,2,2) << "\n";
+
+  // svd of theta
   arma::mat U(n_factors, n_factors);
   arma::mat V(n_returns, n_returns);
   arma::vec sv(n_factors);
 
   arma::svd(U, sv, V, theta);
 
-  // White covariance matrix estimator with scaling matrices incorporated
-  arma::mat W(n_returns * n_factors, n_returns * n_factors);
+  Rcpp::Rcout << "U = " << U << "\n";
+  Rcpp::Rcout << "V = " << V << "\n";
 
-  const arma::mat residuals = returns - factors * pi - arma::repmat(
-    arma::mean(returns), n_observations, 1
-  );
-  const arma::mat err1 = arma::solve(
-    F_t_inv, residuals,
-    arma::solve_opts::likely_sympd
-  ).t();
-  const arma::mat err2 = arma::solve(
-    G, factors, arma::solve_opts::likely_sympd
-  ).t();
-
-  for (unsigned int obs = 0; obs < n_observations; ++obs) {
-
-    const arma::vec err = arma::kron(err1, err2.row(obs)).t();
-    W += err * err.t();
-
-  }
-
-  arma::mat output(2, n_factors - 1);
+  arma::mat output(2, n_factors);
 
   // test for rank q = 0, ..., n_factors - 1
   for (unsigned int q = 0; q < n_factors; q++) {
 
+    if (q != 1) continue;
     output.col(q) = KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
-      theta, U, V, W, q
+      theta, U, V, W, q, n_observations
     );
 
   }
