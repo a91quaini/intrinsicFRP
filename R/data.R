@@ -26,27 +26,52 @@
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "factors"
 
-
 #' yoo
 #'
 #' @format ## `returnsMEBTM25`
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{Factor observations}
+#' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "returnsMEBTM25"
 
 #' yoo
 #'
+#' @format ## `returnsOPINV25`
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{Factor observations}
+#' }
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"returnsOPINV25"
+
+#' yoo
+#'
 #' @format ## `returnsIND17`
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{Factor observations}
+#' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "returnsIND17"
 
 #' yoo
 #'
 #' @format ## `returnsIND10`
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{Factor observations}
+#' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "returnsIND10"
 
 #' yoo
 #'
 #' @format ## `factors51`
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{Factor observations}
+#' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "factors51"

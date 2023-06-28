@@ -3,7 +3,6 @@
 export(AdaptiveIFRP)
 export(FRP)
 export(IFRP)
-export(IterativeKleibergenPaap2006BetaRankTestCpp)
 export(OptimalAdaptiveIFRP)
 importFrom(Rcpp,sourceCpp)
 useDynLib(intrinsicFRP, .registration = TRUE)

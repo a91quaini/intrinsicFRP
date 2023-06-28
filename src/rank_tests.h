@@ -29,8 +29,6 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
 // It also returns an estimate of the rank as the first value q with associated
 // p-value below a given `level`.
 // It assumes n_factors < n_returns.
-//' @export
-// [[Rcpp::export]]
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,

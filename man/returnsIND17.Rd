@@ -6,6 +6,11 @@
 \title{yoo}
 \format{
 \subsection{\code{returnsIND17}}{
+
+\describe{
+\item{Date}{Date in yyyymm format}
+\item{...}{Factor observations}
+}
 }
 }
 \source{

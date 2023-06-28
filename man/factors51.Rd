@@ -6,6 +6,11 @@
 \title{yoo}
 \format{
 \subsection{\code{factors51}}{
+
+\describe{
+\item{Date}{Date in yyyymm format}
+\item{...}{Factor observations}
+}
 }
 }
 \source{
