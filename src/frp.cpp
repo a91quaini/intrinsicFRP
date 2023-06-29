@@ -1,6 +1,7 @@
 // Author: Alberto Quaini
 
 #include "frp.h"
+#include "hac_standard_errors.h"
 
 /////////////////
 ///// FRPCpp ////
@@ -45,7 +46,6 @@ arma::vec StandardErrorsFRPCpp(
   const arma::mat& factors,
   const arma::mat& beta,
   const arma::mat& covariance_factors_returns,
-  const arma::mat& variance_returns,
   const arma::mat& variance_factors,
   const arma::vec& mean_returns,
   const arma::vec& mean_factors

@@ -4,7 +4,6 @@
 #define FRP_H
 
 #include <RcppArmadillo.h>
-#include "hac_standard_errors.h"
 
 /////////////////////////////////////////////////
 ////////////  Factor Risk Premia ////////////////
