@@ -107,7 +107,6 @@ FRP = function(
         factors,
         factor_loadings,
         covariance_factors_returns,
-        variance_returns,
         variance_factors,
         mean_returns,
         colMeans(factors)

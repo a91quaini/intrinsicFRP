@@ -79,8 +79,6 @@ arma::vec KRSFRPCpp(
 //' covariance(returns, factors) * variance(factors)^(-1)`.
 //' @param covariance_factors_returns `n_factors x n_returns`-dimensional
 //' covariance matrix between factors and test asset excess returns.
-//' @param variance_returns `n_returns x n_returns`-dimensional covariance
-//' matrix of test asset excess returns.
 //' @param variance_factors `n_factors x n_factors`-dimensional covariance
 //' matrix of factors.
 //' @param mean_returns `n_returns`-dimensional mean vector of test asset excess
