@@ -60,8 +60,8 @@
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', gcv_vr_weighting = FALSE, gcv_scaling_n_assets = TRUE, one_stddev_rule = FALSE, gcv_identification_check = FALSE, n_bootstrap_cf2019_rank_test = 500L, level_cf2019_rank_test = 0.045, level_kp2006_rank_test = 0.005) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, gcv_vr_weighting, gcv_scaling_n_assets, one_stddev_rule, gcv_identification_check, n_bootstrap_cf2019_rank_test, level_cf2019_rank_test, level_kp2006_rank_test)
+OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_vr_weighting = FALSE, gcv_scaling_n_assets = TRUE, gcv_identification_check = FALSE, n_bootstrap_cf2019_rank_test = 500L, level_cf2019_rank_test = 0.045, level_kp2006_rank_test = 0.005) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, n_bootstrap_cf2019_rank_test, level_cf2019_rank_test, level_kp2006_rank_test)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under cross validation
