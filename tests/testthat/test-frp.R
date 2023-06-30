@@ -22,14 +22,14 @@ test_that("Test FRP", {
   )
 
   expect_no_error(FRP(returns, factors, include_standard_errors = TRUE))
-  expect_no_error(FRP(returns, factors, krs = FALSE, include_standard_errors = TRUE))
+  expect_no_error(FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE))
 
   expect_error(FRP(t(returns), factors, include_standard_errors = TRUE))
   expect_error(FRP(returns, t(factors), include_standard_errors = TRUE))
   expect_error(FRP(t(returns), t(factors), include_standard_errors = TRUE))
 
   krs_frp = FRP(returns, factors, include_standard_errors = TRUE)
-  frp = FRP(returns, factors, krs = FALSE, include_standard_errors = TRUE)
+  frp = FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE)
 
   expect_length(frp$risk_premia, n_factors)
   expect_length(frp$standard_errors, n_factors)

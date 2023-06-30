@@ -1,19 +1,19 @@
 // Author: Alberto Quaini
 
-#ifndef ADAPTIVE_IFRP_H
-#define ADAPTIVE_IFRP_H
+#ifndef ADAPTIVE_FRP_H
+#define ADAPTIVE_FRP_H
 
 #include <RcppArmadillo.h>
 
-/////////////////////////////////////////////////////////////
-////////  Adaptive Intrinsic Factor Risk Premia /////////////
-/////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+////////  Adaptive Factor Risk Premia /////////////
+///////////////////////////////////////////////////
 
-//' Compute optimal adaptive intrinsic factor risk premia under generalized
+//' Compute optimal adaptive factor risk premia under generalized
 //' cross validation
 //'
-//' @name OptimalAdaptiveIFRPGCVCpp
-//' @description Computes optimal adaptive intrinsic factor risk premia based
+//' @name OptimalAdaptiveFRPGCVCpp
+//' @description Computes optimal adaptive factor risk premia based
 //' on moments extracted from factors and test asset excess returns and adaptive
 //' weights over various penalty parameter values. Tuning is performed via
 //' Generalized Cross Validation (GCV). Adaptive weights can be based on the
@@ -66,13 +66,14 @@
 //' Default is `FALSE`.
 //'
 //' @return a list containing the `n_factors`-dimensional vector of adaptive
-//' intrinsic factor risk premia in `"risk_premia"`, and the optimal penalty
-//' parameter value in `"penalty_parameter"`.
+//' factor risk premia in `"risk_premia"`, their optimal penalty parameter
+//' value in `"penalty_parameter"`, , and optionally their standard errors
+//' in `"standard_errors"`.
 //'
 //' @noRd
 //'
 // [[Rcpp::export]]
-Rcpp::List OptimalAdaptiveIFRPGCVCpp(
+Rcpp::List OptimalAdaptiveFRPGCVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -90,10 +91,10 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const bool include_standard_errors = false
 );
 
-//' Compute optimal adaptive intrinsic factor risk premia under cross validation
+//' Compute optimal adaptive factor risk premia under cross validation
 //'
-//' @name OptimalAdaptiveIFRPCVCpp
-//' @description Computes optimal adaptive intrinsic factor risk premia based
+//' @name OptimalAdaptiveFRPCVCpp
+//' @description Computes optimal adaptive factor risk premia based
 //' on moments extracted from factors and test asset excess returns and adaptive
 //' weights over various penalty parameter values. Tuning is performed via
 //' Cross Validation (CV). Adaptive weights can be based on the correlation
@@ -125,13 +126,13 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 //' Default is `FALSE`.
 //'
 //' @return a list containing the n_factors-dimensional vector of adaptive
-//' intrinsic factor risk premia in "risk_premia", and the optimal penalty
+//' factor risk premia in "risk_premia", and the optimal penalty
 //' parameter value in "penalty_parameter".
 //'
 //' @noRd
 //'
 // [[Rcpp::export]]
-Rcpp::List OptimalAdaptiveIFRPCVCpp(
+Rcpp::List OptimalAdaptiveFRPCVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -144,10 +145,10 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
   const bool include_standard_errors = false
 );
 
-//' Compute optimal adaptive intrinsic factor risk premia under rolling validation
+//' Compute optimal adaptive factor risk premia under rolling validation
 //'
-//' @name OptimalAdaptiveIFRPRVCpp
-//' @description Computes optimal adaptive intrinsic factor risk premia based
+//' @name OptimalAdaptiveFRPRVCpp
+//' @description Computes optimal adaptive factor risk premia based
 //' on moments extracted from factors and test asset excess returns and adaptive
 //' weights over various penalty parameter values. Tuning is performed via
 //' Rolling Validation (RV). Adaptive weights can be based on the correlation
@@ -184,13 +185,13 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
 //' Default is `FALSE`.
 //'
 //' @return a list containing the n_factors-dimensional vector of adaptive
-//' intrinsic factor risk premia in "risk_premia", and the optimal penalty
+//' factor risk premia in "risk_premia", and the optimal penalty
 //' parameter value in "penalty_parameter".
 //'
 //' @noRd
 //'
 // [[Rcpp::export]]
-Rcpp::List OptimalAdaptiveIFRPRVCpp(
+Rcpp::List OptimalAdaptiveFRPRVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -205,54 +206,17 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
   const bool include_standard_errors = false
 );
 
-//' Compute adaptive intrinsic factor risk premia
-//'
-//' @name AdaptiveIFRPCpp
-//' @description Computes adaptive intrinsic factor risk premia based on
-//' pre-computed intrinsic factor risk premia and adaptive penalty weights for
-//' various penalty parameter values.
-//'
-//' @param ifrp `n_factors`-dimensional vector of intrinsic factor risk premia.
-//' Usually, it is the output of function `IFRPCpp`
-//' @param weights `n_factors`-dimensional vector of weights for the penalty
-//' term. Usually, it is the output of function `AdaptiveWeightsCpp`.
-//' @param penalty_parameters `n_parameters`-dimensional vector of penalty
-//' parameter values from smallest to largest.
-//'
-//' @return `n_factors x n_parameters`-dimensional matrix of adaptive
-//' intrinsic factor risk premia.
-//'
-//' @noRd
-//'
-// [[Rcpp::export]]
-arma::mat AdaptiveIFRPCpp(
-  const arma::vec& ifrp,
-  const arma::vec& weights,
-  const arma::vec& penalty_parameter
-);
-
-// For internal use
-// Computes adaptive intrinsic factor risk premia based on pre-computed
-// intrinsic factor risk premia and adaptive penalty weights for a specific
-// penalty parameter value.
-arma::vec AdaptiveIFRPCpp(
-  const arma::vec& ifrp,
-  const arma::vec& weights,
-  const double penalty_parameter
-);
-
-//' Compute the HAC standard errors of the nonzero adaptive intrinsic factor risk
+//' Compute the HAC standard errors of the nonzero adaptive factor risk
 //' premia
 //'
-//' @name StandardErrorsAdaptiveIFRPCpp
-//' @description Computes the HAC standard errors of adaptive intrinsic factor
+//' @name StandardErrorsAdaptiveFRPCpp
+//' @description Computes the HAC standard errors of adaptive factor
 //' risk premia based on moments extracted from factors and test asset excess
 //' returns. It uses the Newey-West (1994) plug-in procedure to select the
 //' number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 //'
-//' @param aifrp n_factors-dimensional vector of intrinsic factor risk
-//' premia. E.g., the result of function `OptimalAdaptiveIFRPGCV` or
-//' `OptimalAdaptiveIFRPCV`.
+//' @param afrp n_factors-dimensional vector of adaptive factor risk
+//' premia. E.g., the result of function `OptimalAdaptiveFRPGCV`.
 //' @param returns `n_observations x n_returns`-dimensional matrix of test asset
 //' excess returns.
 //' @param factors `n_observations x n_factors`-dimensional matrix of risk
@@ -267,9 +231,9 @@ arma::vec AdaptiveIFRPCpp(
 //' @noRd
 //'
 //' @return `n_factors`-dimensional vector of standard errors for adaptive
-//' intrinsic factor risk premia.
-arma::vec StandardErrorsAdaptiveIFRPCpp(
-  const arma::vec& aifrp,
+//' factor risk premia.
+arma::vec StandardErrorsAdaptiveFRPCpp(
+  const arma::vec& afrp,
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,

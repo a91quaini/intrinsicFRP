@@ -1,13 +1,13 @@
 # Author: Alberto Quaini
 
-##################################################
-####  Adaptive Intrinsic Factor Risk Premia ######
-##################################################
+########################################
+####  Adaptive Factor Risk Premia ######
+########################################
 
-#' Compute optimal adaptive intrinsic factor risk premia
+#' Compute optimal adaptive factor risk premia
 #'
-#' @name OptimalAdaptiveIFRP
-#' @description Computes optimal adaptive intrinsic factor risk premia based on
+#' @name OptimalAdaptiveFRP
+#' @description Computes optimal adaptive factor risk premia based on
 #' pre-computed intrinsic factor risk premia for
 #' various penalty parameter values. Tuning is performed via
 #' Generalized Cross Validation (GCV), Cross Validation (CV) or Rolling
@@ -81,10 +81,10 @@
 #' `FALSE` otherwise. Default is `TRUE`.
 #'
 #' @return a list containing the `n_factors`-dimensional vector of adaptive
-#' intrinsic factor risk premia in `"risk_premia"`; the optimal penalty
+#' factor risk premia in `"risk_premia"`; the optimal penalty
 #' parameter value in `"penalty_parameter"`; the model score for each penalty
 #' parameter value in `"model_score"`;  if `include_standard_errors=TRUE`, then
-#' it further includes `n_factors`-dimensional vector of intrinsic factor risk
+#' it further includes `n_factors`-dimensional vector of factor risk
 #' premia standard errors in `"standard_errors"`.
 #'
 #' @examples
@@ -95,7 +95,7 @@
 #' penalty_parameters = seq(0., 1., length.out = 100)
 #'
 #' # compute optimal adaptive intrinsic factor risk premia and their standard errors
-#' aifrp = OptimalAdaptiveIFRP(
+#' aifrp = OptimalAdaptiveFRP(
 #' returns,
 #' factors,
 #' penalty_parameters,
@@ -103,7 +103,7 @@
 #' )
 #'
 #' @export
-OptimalAdaptiveIFRP = function(
+OptimalAdaptiveFRP = function(
   returns,
   factors,
   penalty_parameters,
@@ -154,7 +154,7 @@ OptimalAdaptiveIFRP = function(
     tuning_type,
     'g' = {
 
-      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`,
+      .Call(`_intrinsicFRP_OptimalAdaptiveFRPGCVCpp`,
         returns,
         factors,
         stats::cov(factors, returns),
@@ -175,7 +175,7 @@ OptimalAdaptiveIFRP = function(
     },
     'c' = {
 
-      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPCVCpp`,
+      .Call(`_intrinsicFRP_OptimalAdaptiveFRPCVCpp`,
         returns,
         factors,
         stats::cov(factors, returns),
@@ -191,7 +191,7 @@ OptimalAdaptiveIFRP = function(
     },
     'r' = {
 
-      .Call(`_intrinsicFRP_OptimalAdaptiveIFRPRVCpp`,
+      .Call(`_intrinsicFRP_OptimalAdaptiveFRPRVCpp`,
         returns,
         factors,
         stats::cov(factors, returns),
@@ -213,77 +213,5 @@ OptimalAdaptiveIFRP = function(
   if (plot_score) {PlotAdaptiveIFRPModelScore(output, penalty_parameters)}
 
   return(output)
-
-}
-
-#' Compute adaptive intrinsic factor risk premia
-#'
-#' @name AdaptiveIFRP
-#' @description Computes adaptive intrinsic factor risk premia with user-defined
-#' weights for various penalty parameter values.
-#'
-#' @param returns `n_observations x n_returns`-dimensional matrix of test asset
-#' excess returns.
-#' @param factors `n_observations x n_factors`-dimensional matrix of factors.
-#' @param penalty_parameters `n_parameters`-dimensional vector of penalty
-#' parameter values from smallest to largest.
-#' @param weights `n_factors`-dimensional vector of weights determining a
-#' separate penalty parameter for each risk premium, given by vector
-#' `penalty_parameter * weights`.
-#' Default is a vector of ones, i.e., the same penalty parameter
-#' `penalty_parameter` is applied to each risk premium.
-#' @param check_arguments boolean `TRUE` if you want to check function arguments;
-#' `FALSE` otherwise. Default is `TRUE`.
-#'
-#' @return `n_factors x n_parameters`-dimensional matrix of adaptive
-#' intrinsic factor risk premia.
-#'
-#' @examples
-#' # import package data on 15 risk factors and 42 test asset excess returns
-#' factors = intrinsicFRP::factors[,-1]
-#' returns = intrinsicFRP::returns[,-1]
-#'
-#' weights = 1. / rowSums(stats::cor(factors, returns))
-#' penalty_parameters = seq(0., 1., length.out = 100)
-#'
-#' # compute adaptive intrinsic factor risk premia for each penalty parameter
-#' aifrp = AdaptiveIFRP(
-#' returns,
-#' factors,
-#' penalty_parameters,
-#' weights
-#' )
-#'
-#' @export
-AdaptiveIFRP = function(
-  returns,
-  factors,
-  penalty_parameters,
-  weights = rep(1., ncol(factors)),
-  check_arguments = TRUE
-) {
-
-  stopifnot("`check_arguments` must be boolean" = is.logical(check_arguments))
-  if (check_arguments) {
-
-    CheckData(returns, factors)
-    stopifnot("`penalty_parameters` contains non-numeric values" = is.numeric(penalty_parameters))
-    stopifnot("`penalty_parameters` contains missing values (NA/NaN)" = !anyNA(penalty_parameters))
-    stopifnot("`weights` contains non-numeric values" = is.numeric(weights))
-    stopifnot("`weights` contains missing values (NA/NaN)" = !anyNA(weights))
-
-  }
-
-  ifrp = .Call(`_intrinsicFRP_IFRPCpp`,
-    returns,
-    factors,
-    FALSE
-  )
-
-  return(.Call(`_intrinsicFRP_AdaptiveIFRPCpp`,
-    ifrp$risk_premia,
-    weights,
-    penalty_parameters
-  ))
 
 }

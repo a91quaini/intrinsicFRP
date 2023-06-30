@@ -1,15 +1,17 @@
 // Author: Alberto Quaini
 
+#include "adaptive_frp.h"
 #include "adaptive_ifrp.h"
 #include "ifrp.h"
+#include "frp.h"
 #include "adaptive_weights.h"
 #include "tuning_adaptive_ifrp.h"
 #include "hac_standard_errors.h"
 
 ////////////////////////////////////
-///// OptimalAdaptiveIFRPGCVCpp ////
+///// OptimalAdaptiveFRPGCVCpp ////
 
-Rcpp::List OptimalAdaptiveIFRPGCVCpp(
+Rcpp::List OptimalAdaptiveFRPGCVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -109,11 +111,24 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 
   }
 
+  const arma::uvec idx_selected = arma::find(aifrp.col(idx_optimal_parameter));
+
+  arma::vec afrp(factors.n_cols);
+  afrp(idx_selected) = KRSFRPCpp(
+    arma::solve(
+      arma::cov(factors.cols(idx_selected)),
+      covariance_factors_returns.rows(idx_selected),
+      arma::solve_opts::likely_sympd
+    ).t(),
+    mean_returns,
+    variance_returns
+  );
+
   return include_standard_errors ?
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
-      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveIFRPCpp(
-        aifrp.col(idx_optimal_parameter),
+      Rcpp::Named("risk_premia") = afrp,
+      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveFRPCpp(
+        afrp,
         returns,
         factors,
         covariance_factors_returns,
@@ -124,7 +139,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
       Rcpp::Named("model_score") = model_score
     ) :
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
+      Rcpp::Named("risk_premia") = afrp,
       Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
       Rcpp::Named("model_score") = model_score
     );
@@ -132,9 +147,9 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 }
 
 ////////////////////////////////
-///// OptimalAdaptiveIFRPCV ////
+///// OptimalAdaptiveFRPCV ////
 
-Rcpp::List OptimalAdaptiveIFRPCVCpp(
+Rcpp::List OptimalAdaptiveFRPCVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -184,11 +199,24 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
     penalty_parameters(idx_optimal_parameter)
   );
 
+  const arma::uvec idx_selected = arma::find(aifrp.col(idx_optimal_parameter));
+
+  arma::vec afrp(factors.n_cols);
+  afrp(idx_selected) = KRSFRPCpp(
+    arma::solve(
+      arma::cov(factors.cols(idx_selected)),
+      covariance_factors_returns.rows(idx_selected),
+      arma::solve_opts::likely_sympd
+    ).t(),
+    mean_returns,
+    variance_returns
+  );
+
   return include_standard_errors ?
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp,
-      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveIFRPCpp(
-        aifrp,
+      Rcpp::Named("risk_premia") = afrp,
+      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveFRPCpp(
+        afrp,
         returns,
         factors,
         covariance_factors_returns,
@@ -199,7 +227,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
       Rcpp::Named("model_score") = model_score
     ) :
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
+      Rcpp::Named("risk_premia") = afrp,
       Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
       Rcpp::Named("model_score") = model_score
     );
@@ -207,9 +235,9 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
 }
 
 ///////////////////////////////////
-///// OptimalAdaptiveIFRPRVCpp ////
+///// OptimalAdaptiveFRPRVCpp ////
 
-Rcpp::List OptimalAdaptiveIFRPRVCpp(
+Rcpp::List OptimalAdaptiveFRPRVCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -263,11 +291,24 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
     penalty_parameters(idx_optimal_parameter)
   );
 
+  const arma::uvec idx_selected = arma::find(aifrp.col(idx_optimal_parameter));
+
+  arma::vec afrp(factors.n_cols);
+  afrp(idx_selected) = KRSFRPCpp(
+    arma::solve(
+      arma::cov(factors.cols(idx_selected)),
+      covariance_factors_returns.rows(idx_selected),
+      arma::solve_opts::likely_sympd
+    ).t(),
+    mean_returns,
+    variance_returns
+  );
+
   return include_standard_errors ?
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp,
-      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveIFRPCpp(
-        aifrp,
+      Rcpp::Named("risk_premia") = afrp,
+      Rcpp::Named("standard_errors") = StandardErrorsAdaptiveFRPCpp(
+        afrp,
         returns,
         factors,
         covariance_factors_returns,
@@ -278,51 +319,18 @@ Rcpp::List OptimalAdaptiveIFRPRVCpp(
       Rcpp::Named("model_score") = model_score
     ) :
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
+      Rcpp::Named("risk_premia") = afrp,
       Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
       Rcpp::Named("model_score") = model_score
     );
 
 }
 
-///////////////////////////
-///// AdaptiveIFRPCpp /////
-
-arma::mat AdaptiveIFRPCpp(
-  const arma::vec& ifrp,
-  const arma::vec& weights,
-  const arma::vec& penalty_parameters
-) {
-
-  const arma::vec sign_factor_rp = arma::sign(ifrp);
-  arma::mat temp = - weights * penalty_parameters.t();
-  temp.each_col() += sign_factor_rp % ifrp;
-  temp.clamp(0., arma::datum::inf);
-
-  return sign_factor_rp % temp.each_col();
-
-}
-
-arma::vec AdaptiveIFRPCpp(
-  const arma::vec& ifrp,
-  const arma::vec& weights,
-  const double penalty_parameter
-) {
-
-  const arma::vec sign_ifrp = arma::sign(ifrp);
-
-  return sign_ifrp % arma::clamp(
-    sign_ifrp % ifrp - penalty_parameter * weights,
-    0., arma::datum::inf
-  );
-
-}
-
 /////////////////////////////////////////
-///// StandardErrorsAdaptiveIFRPCpp /////
+///// StandardErrorsAdaptiveFRPCpp /////
 
-arma::vec StandardErrorsAdaptiveIFRPCpp(
-  const arma::vec& aifrp,
+arma::vec StandardErrorsAdaptiveFRPCpp(
+  const arma::vec& afrp,
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
@@ -330,16 +338,22 @@ arma::vec StandardErrorsAdaptiveIFRPCpp(
   const arma::vec& mean_returns
 ) {
 
-  const arma::uvec idx_selected = arma::find(aifrp);
+  const arma::uvec idx_selected = arma::find(afrp);
 
   if (! idx_selected.n_elem) {return arma::zeros(factors.n_cols);}
 
-  arma::vec standard_errors(factors.n_cols);
+  const arma::mat factors_selected = factors.cols(idx_selected);
 
-  standard_errors(idx_selected) = StandardErrorsIFRPCpp(
-    aifrp(idx_selected),
+  arma::vec standard_errors(factors.n_cols);
+  standard_errors(idx_selected) = StandardErrorsKRSFRPCpp(
+    afrp(idx_selected),
     returns,
-    factors.cols(idx_selected),
+    factors_selected,
+    arma::solve(
+      arma::cov(factors_selected),
+      covariance_factors_returns.rows(idx_selected),
+      arma::solve_opts::likely_sympd
+    ).t(),
     covariance_factors_returns.rows(idx_selected),
     variance_returns,
     mean_returns

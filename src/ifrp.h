@@ -9,6 +9,33 @@
 ////////////  Intrinsic Factor Risk Premia /////
 ////////////////////////////////////////////////
 
+//' Compute intrinsic factor risk premia and their standard errors
+//'
+//' @name IFRPCpp
+//' @description Computes intrinsic factor risk premia based on data on
+//' risk factors and test asset excess returns.
+//'
+//' @param returns `n_observations x n_returns`-dimensional matrix of test
+//' asset excess returns.
+//' @param factors `n_observations x n_factors`-dimensional matrix of factors.
+//' @param include_standard_errors boolean `TRUE` if you want to compute the
+//' adaptive factor risk premia HAC standard errors; `FALSE` otherwise.
+//' Default is `FALSE`.
+//'
+//' @return a list containing the `n_factors`-dimensional vector of intrinsic
+//' factor risk premia in `"risk_premia"`; if `include_standard_errors=TRUE`, then
+//' it further includes `n_factors`-dimensional vector of factor risk
+//' premia standard errors in `"standard_errors"`.
+//'
+//' @noRd
+//'
+// [[Rcpp::export]]
+Rcpp::List IFRPCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const bool include_standard_errors
+);
+
 //' Compute intrinsic factor risk premia from moments extracted from data
 //'
 //' @name IFRPCpp
@@ -25,8 +52,6 @@
 //' @return `n_factors`-dimensional vector of intrinsic factor risk premia.
 //'
 //' @noRd
-//'
-// [[Rcpp::export]]
 arma::vec IFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
@@ -53,22 +78,18 @@ arma::vec IFRPCpp(
 //' matrix of test asset excess returns.
 //' @param mean_returns n_returns-dimensional mean vector of test asset excess
 //' returns.
-//' @param mean_factors n_factors-dimensional mean vector of risk factors.
 //'
 //' @return n_factors-dimensional vector of HAC standard errors for
 //' intrinsic factor risk premia.
 //'
 //' @noRd
-//'
-// [[Rcpp::export]]
 arma::vec StandardErrorsIFRPCpp(
   const arma::vec& ifrp,
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns,
-  const arma::vec& mean_factors
+  const arma::vec& mean_returns
 );
 
 #endif

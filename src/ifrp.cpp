@@ -6,6 +6,50 @@
 //////////////////
 ///// IFRPCpp ////
 
+Rcpp::List IFRPCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const bool include_standard_errors
+) {
+
+  if (include_standard_errors) {
+
+    const arma::mat covariance_factors_returns = arma::cov(factors, returns);
+    const arma::mat variance_returns = arma::cov(returns);
+    const arma::vec mean_returns = arma::mean(returns).t();
+
+    const arma::vec ifrp = IFRPCpp(
+      covariance_factors_returns,
+      variance_returns,
+      mean_returns
+    );
+
+    return Rcpp::List::create(
+      Rcpp::Named("risk_premia") = ifrp,
+      Rcpp::Named("standard_errors") = StandardErrorsIFRPCpp(
+        ifrp,
+        returns,
+        factors,
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns
+      )
+    );
+
+  } else {
+
+    return Rcpp::List::create(
+      Rcpp::Named("risk_premia") = IFRPCpp(
+        arma::cov(factors, returns),
+        arma::cov(returns),
+        arma::mean(returns).t()
+      )
+    );
+
+  }
+
+}
+
 arma::vec IFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
@@ -29,8 +73,7 @@ arma::vec StandardErrorsIFRPCpp(
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns,
-  const arma::vec& mean_factors
+  const arma::vec& mean_returns
 ) {
 
   const arma::mat var_ret_inv_cov_ret_fac = arma::solve(
@@ -41,7 +84,7 @@ arma::vec StandardErrorsIFRPCpp(
 
   const arma::mat returns_centred = returns.each_row() - mean_returns.t();
 
-  const arma::mat factors_centred = factors.each_row() - mean_factors.t();
+  const arma::mat factors_centred = factors.each_row() - arma::mean(factors);
 
   const arma::vec ret_cen_var_ret_inv_mean_ret = returns_centred * arma::solve(
     variance_returns,

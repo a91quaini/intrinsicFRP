@@ -51,39 +51,11 @@ IFRP = function(
 
   }
 
-  if (include_standard_errors) {
-
-    covariance_factors_returns = stats::cov(factors, returns)
-    variance_returns = stats::cov(returns)
-    mean_returns = colMeans(returns)
-
-    ifrp = .Call(`_intrinsicFRP_IFRPCpp`,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns
-    )
-
-    return(list(
-      "risk_premia" = ifrp,
-      "standard_errors" = .Call(`_intrinsicFRP_StandardErrorsIFRPCpp`,
-        ifrp,
-        returns,
-        factors,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        colMeans(factors)
-      )
-    ))
-
-  }
-
-  return(list(
-    "risk_premia" = .Call(`_intrinsicFRP_IFRPCpp`,
-      stats::cov(factors, returns),
-      stats::cov(returns),
-      colMeans(returns)
-  )))
+  return(.Call(`_intrinsicFRP_IFRPCpp`,
+    returns,
+    factors,
+    include_standard_errors
+  ))
 
 }
 
