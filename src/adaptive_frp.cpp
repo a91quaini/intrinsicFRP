@@ -199,7 +199,7 @@ Rcpp::List OptimalAdaptiveFRPCVCpp(
     penalty_parameters(idx_optimal_parameter)
   );
 
-  const arma::uvec idx_selected = arma::find(aifrp.col(idx_optimal_parameter));
+  const arma::uvec idx_selected = arma::find(aifrp);
 
   arma::vec afrp(factors.n_cols);
   afrp(idx_selected) = KRSFRPCpp(
@@ -291,7 +291,7 @@ Rcpp::List OptimalAdaptiveFRPRVCpp(
     penalty_parameters(idx_optimal_parameter)
   );
 
-  const arma::uvec idx_selected = arma::find(aifrp.col(idx_optimal_parameter));
+  const arma::uvec idx_selected = arma::find(aifrp);
 
   arma::vec afrp(factors.n_cols);
   afrp(idx_selected) = KRSFRPCpp(
