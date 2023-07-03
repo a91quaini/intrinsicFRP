@@ -67,12 +67,6 @@ NULL
 #' Default is `FALSE`.
 #' @param gcv_identification_check boolean `TRUE` for a loose check for model
 #' identification; `FALSE` otherwise. Default is `FALSE`.
-#' @param n_bootstrap_cf2019_rank_test (only relevant if
-#' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
-#' Chen Fang 2019 rank test. Default is `500`.
-#' @param level_cf2019_rank_test (only relevant if `gcv_identification_check`
-#' is `TRUE`) numeric level of the Chen Fang 2019 rank test. Default is `0.045`
-#' (as correction for the iterative Kleibergen Paap 2006 rank test used within).
 #' @param level_kp2006_test (only relevant if `gcv_identification_check` is
 #' `TRUE`) numeric level of the Kleibergen Paap 2006 rank test. If it is
 #' strictly grater than zero, then the iterative Kleibergen Paap 2006 rank
@@ -92,8 +86,8 @@ NULL
 #'
 #' @noRd
 #'
-OptimalAdaptiveFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_vr_weighting = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, n_bootstrap_cf2019_rank_test = 500L, level_cf2019_rank_test = 0.045, level_kp2006_rank_test = 0.005, include_standard_errors = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, n_bootstrap_cf2019_rank_test, level_cf2019_rank_test, level_kp2006_rank_test, include_standard_errors)
+OptimalAdaptiveFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_vr_weighting = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, level_kp2006_rank_test = 0.05, include_standard_errors = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, level_kp2006_rank_test, include_standard_errors)
 }
 
 #' Compute optimal adaptive factor risk premia under cross validation
@@ -256,12 +250,6 @@ NULL
 #' Default is `FALSE`.
 #' @param gcv_identification_check boolean `TRUE` for a loose check for model
 #' identification; `FALSE` otherwise. Default is `FALSE`.
-#' @param n_bootstrap_cf2019_rank_test (only relevant if
-#' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
-#' Chen Fang 2019 rank test. Default is `500`.
-#' @param level_cf2019_rank_test (only relevant if `gcv_identification_check`
-#' is `TRUE`) numeric level of the Chen Fang 2019 rank test. Default is `0.045`
-#' (as correction for the iterative Kleibergen Paap 2006 rank test used within).
 #' @param level_kp2006_test (only relevant if `gcv_identification_check` is
 #' `TRUE`) numeric level of the Kleibergen Paap 2006 rank test. If it is
 #' strictly grater than zero, then the iterative Kleibergen Paap 2006 rank
@@ -280,8 +268,8 @@ NULL
 #'
 #' @noRd
 #'
-OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_vr_weighting = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, n_bootstrap_cf2019_rank_test = 500L, level_cf2019_rank_test = 0.045, level_kp2006_rank_test = 0.005, include_standard_errors = FALSE) {
-    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, n_bootstrap_cf2019_rank_test, level_cf2019_rank_test, level_kp2006_rank_test, include_standard_errors)
+OptimalAdaptiveIFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_vr_weighting = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, level_kp2006_rank_test = 0.05, include_standard_errors = FALSE) {
+    .Call(`_intrinsicFRP_OptimalAdaptiveIFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, level_kp2006_rank_test, include_standard_errors)
 }
 
 #' Compute optimal adaptive intrinsic factor risk premia under cross validation
@@ -627,5 +615,15 @@ NULL
 #'
 IFRPCpp <- function(returns, factors, include_standard_errors) {
     .Call(`_intrinsicFRP_IFRPCpp`, returns, factors, include_standard_errors)
+}
+
+#' @export
+ChenFang2019BetaRankTestStatisticAndPvalueCpp <- function(returns, factors, n_bootstrap = 500L, level_kp_test = 0.005) {
+    .Call(`_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp`, returns, factors, n_bootstrap, level_kp_test)
+}
+
+#' @export
+IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, level = .05) {
+    .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, level)
 }
 

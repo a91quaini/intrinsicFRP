@@ -49,22 +49,23 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::vec lambda_q = kron_BA_qperp * theta_vectorised;
   const arma::mat Omega_q = kron_BA_qperp * W * kron_BA_qperp.t();
 
-  arma::vec2 output;
-
   // test statistic: no need to multiply by n_observations
-  output(0) = arma::dot(lambda_q, arma::solve(
+  const double statistic = arma::dot(lambda_q, arma::solve(
     Omega_q, lambda_q,
     arma::solve_opts::likely_sympd
   ));
 
   // p-value: probability of observing a larger value than the test statistic
   // under a Chi-square((n_factors - q) * (n_returns - q))
-  output(1) = R::pchisq(
-    output(0),
-    (n_factors - q) * (n_returns - q),
-    false,
-    false
-  );
+  const arma::vec2 output = {
+    statistic,
+    R::pchisq(
+      statistic,
+      (n_factors - q) * (n_returns - q),
+      false,
+      false
+    )
+  };
 
   return output;
 

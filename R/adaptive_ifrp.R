@@ -45,13 +45,6 @@
 #' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
-#' @param n_bootstrap_cf2019_rank_test (only relevant for `tuning_type ='g'` if
-#' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
-#' Chen Fang 2019 rank test. Default is `500`.
-#' @param level_cf2019_rank_test (only relevant for `tuning_type ='g'` if
-#' `gcv_identification_check` is `TRUE`) numeric level of the Chen Fang 2019
-#' rank test. Default is `0.045` (as correction for the iterative Kleibergen
-#' Paap 2006 rank test used within).
 #' @param level_kp2006_rank_test (only relevant for `tuning_type ='g'` if
 #' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen Paap
 #' 2006 rank test. If it is strictly grater than zero, then the iterative
@@ -114,9 +107,7 @@ OptimalAdaptiveIFRP = function(
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
-  n_bootstrap_cf2019_rank_test = 500,
-  level_cf2019_rank_test = 0.045,
-  level_kp2006_rank_test = 0.005,
+  level_kp2006_rank_test = 0.05,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -138,8 +129,6 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
     stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
-    stopifnot("`n_bootstrap_cf2019_rank_test` contains non-numeric values" = is.numeric(n_bootstrap_cf2019_rank_test))
-    stopifnot("`level_cf2019_rank_test` contains non-numeric values" = is.numeric(level_cf2019_rank_test))
     stopifnot("`level_kp2006_rank_test` contains non-numeric values" = is.numeric(level_kp2006_rank_test))
     stopifnot("`n_folds` contains non-numeric values" = is.numeric(n_folds))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
@@ -170,8 +159,6 @@ OptimalAdaptiveIFRP = function(
         gcv_vr_weighting,
         gcv_scaling_n_assets,
         gcv_identification_check,
-        n_bootstrap_cf2019_rank_test,
-        level_cf2019_rank_test,
         level_kp2006_rank_test,
         include_standard_errors
       )

@@ -47,12 +47,6 @@
 //' Default is `FALSE`.
 //' @param gcv_identification_check boolean `TRUE` for a loose check for model
 //' identification; `FALSE` otherwise. Default is `FALSE`.
-//' @param n_bootstrap_cf2019_rank_test (only relevant if
-//' `gcv_identification_check` is `TRUE`) number of bootstrap samples in the
-//' Chen Fang 2019 rank test. Default is `500`.
-//' @param level_cf2019_rank_test (only relevant if `gcv_identification_check`
-//' is `TRUE`) numeric level of the Chen Fang 2019 rank test. Default is `0.045`
-//' (as correction for the iterative Kleibergen Paap 2006 rank test used within).
 //' @param level_kp2006_test (only relevant if `gcv_identification_check` is
 //' `TRUE`) numeric level of the Kleibergen Paap 2006 rank test. If it is
 //' strictly grater than zero, then the iterative Kleibergen Paap 2006 rank
@@ -85,9 +79,7 @@ Rcpp::List OptimalAdaptiveFRPGCVCpp(
   const bool gcv_vr_weighting = false,
   const bool gcv_scaling_n_assets = false,
   const bool gcv_identification_check = false,
-  const unsigned int n_bootstrap_cf2019_rank_test = 500,
-  const double level_cf2019_rank_test = 0.045,
-  const double level_kp2006_rank_test = 0.005,
+  const double level_kp2006_rank_test = 0.05,
   const bool include_standard_errors = false
 );
 

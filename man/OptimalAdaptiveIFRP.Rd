@@ -15,9 +15,7 @@ OptimalAdaptiveIFRP(
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
-  n_bootstrap_cf2019_rank_test = 500,
-  level_cf2019_rank_test = 0.045,
-  level_kp2006_rank_test = 0.005,
+  level_kp2006_rank_test = 0.05,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -63,15 +61,6 @@ boolean \code{TRUE} for sqrt(n_assets) scaling (\code{sqrt(n_assets) / n_observa
 \item{gcv_identification_check}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for a loose check for model identification; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
-
-\item{n_bootstrap_cf2019_rank_test}{(only relevant for \code{tuning_type ='g'} if
-\code{gcv_identification_check} is \code{TRUE}) number of bootstrap samples in the
-Chen Fang 2019 rank test. Default is \code{500}.}
-
-\item{level_cf2019_rank_test}{(only relevant for \code{tuning_type ='g'} if
-\code{gcv_identification_check} is \code{TRUE}) numeric level of the Chen Fang 2019
-rank test. Default is \code{0.045} (as correction for the iterative Kleibergen
-Paap 2006 rank test used within).}
 
 \item{level_kp2006_rank_test}{(only relevant for \code{tuning_type ='g'} if
 \code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen Paap

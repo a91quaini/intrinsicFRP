@@ -78,8 +78,6 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool gcv_scaling_n_assets,
-  const unsigned int n_bootstrap_cf2019_rank_test,
-  const double level_cf2019_rank_test,
   const double level_kp2006_rank_test
 ) {
 
@@ -121,18 +119,25 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
 
       cardinality_previous_model = idx_selected.n_elem;
 
-      const arma::vec2 cf2019_output =
-        ChenFang2019BetaRankTestStatisticAndPvalueCpp(
+      // const arma::vec2 cf2019_output =
+      //   ChenFang2019BetaRankTestStatisticAndPvalueCpp(
+      //     returns,
+      //     factors.cols(idx_selected),
+      //     n_bootstrap_cf2019_rank_test,
+      //     level_kp2006_rank_test
+      //   );
+
+      const unsigned int kp2006_rank_estimate =
+        IterativeKleibergenPaap2006BetaRankTestCpp(
           returns,
           factors.cols(idx_selected),
-          n_bootstrap_cf2019_rank_test,
           level_kp2006_rank_test
-        );
+        )["rank"];
 
       // if we do not reject the null that the model is not identified
       // set the model score to `score_no_model`
       // to decide, use a high threshold for the p-value
-      if (cf2019_output(1) >= level_cf2019_rank_test) continue;
+      if (kp2006_rank_estimate < factors.n_cols) continue;
 
       // otherwise set the mis-identification flag to false
       misidentification_flag = false;
@@ -238,8 +243,6 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
   const arma::vec& mean_returns,
   const unsigned int n_observations,
   const bool gcv_scaling_n_assets,
-  const unsigned int n_bootstrap_cf2019_rank_test,
-  const double level_cf2019_rank_test,
   const double level_kp2006_rank_test
 ) {
 
@@ -282,18 +285,25 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
 
       cardinality_previous_model = idx_selected.n_elem;
 
-      const arma::vec2 cf2019_output =
-        ChenFang2019BetaRankTestStatisticAndPvalueCpp(
+      // const arma::vec2 cf2019_output =
+      //   ChenFang2019BetaRankTestStatisticAndPvalueCpp(
+      //     returns,
+      //     factors.cols(idx_selected),
+      //     n_bootstrap_cf2019_rank_test,
+      //     level_kp2006_rank_test
+      //   );
+
+      const unsigned int kp2006_rank_estimate =
+        IterativeKleibergenPaap2006BetaRankTestCpp(
           returns,
           factors.cols(idx_selected),
-          n_bootstrap_cf2019_rank_test,
           level_kp2006_rank_test
-        );
+        )["rank"];
 
       // if we do not reject the null that the model is not identified
       // set the model score to `score_no_model`
       // to decide, use a high threshold for the p-value
-      if (cf2019_output(1) >= level_cf2019_rank_test) continue;
+      if (kp2006_rank_estimate < factors.n_cols) continue;
 
       // otherwise set the mis-identification flag to false
       misidentification_flag = false;
