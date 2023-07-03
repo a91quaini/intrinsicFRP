@@ -198,6 +198,33 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ChenFang2019BetaRankTestStatisticAndPvalueCpp
+arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(const arma::mat& returns, const arma::mat& factors, const unsigned int n_bootstrap, const double level_kp_test);
+RcppExport SEXP _intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP n_bootstrapSEXP, SEXP level_kp_testSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type n_bootstrap(n_bootstrapSEXP);
+    Rcpp::traits::input_parameter< const double >::type level_kp_test(level_kp_testSEXP);
+    rcpp_result_gen = Rcpp::wrap(ChenFang2019BetaRankTestStatisticAndPvalueCpp(returns, factors, n_bootstrap, level_kp_test));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IterativeKleibergenPaap2006BetaRankTestCpp
+Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const double level);
+RcppExport SEXP _intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const double >::type level(levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(IterativeKleibergenPaap2006BetaRankTestCpp(returns, factors, level));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_OptimalAdaptiveFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveFRPGCVCpp, 15},
@@ -210,6 +237,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_AdaptiveWeightsCpp", (DL_FUNC) &_intrinsicFRP_AdaptiveWeightsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 4},
     {"_intrinsicFRP_IFRPCpp", (DL_FUNC) &_intrinsicFRP_IFRPCpp, 3},
+    {"_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp, 4},
+    {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
     {NULL, NULL, 0}
 };
 

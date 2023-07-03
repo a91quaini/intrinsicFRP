@@ -15,6 +15,8 @@
 // If `level_kp_test <= 0`, the initial rank estimator is taken
 // to be the number of singular values above `n_observations^(-1/3)`.
 // It assumes n_factors < n_returns.
+//' @export
+// [[Rcpp::export]]
 arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
@@ -29,6 +31,8 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
 // It also returns an estimate of the rank as the first value q with associated
 // p-value below a given `level`.
 // It assumes n_factors < n_returns.
+//' @export
+// [[Rcpp::export]]
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,

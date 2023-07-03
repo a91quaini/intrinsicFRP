@@ -554,11 +554,7 @@ NULL
 #' it further includes `n_factors`-dimensional vector of factor risk
 #' premia standard errors in `"standard_errors"`.
 #'
-#' @examples
-#' factors = factors5FF[,-1]
-#' returns = returnsMEBTM25[,-1]
-#'
-#' frp = FactorRiskPremia(returns, factors, include_standard_errors = TRUE)
+#' @noRd
 #'
 FRPCpp <- function(returns, factors, misspecification_robust = TRUE, include_standard_errors = FALSE) {
     .Call(`_intrinsicFRP_FRPCpp`, returns, factors, misspecification_robust, include_standard_errors)
@@ -631,5 +627,15 @@ NULL
 #'
 IFRPCpp <- function(returns, factors, include_standard_errors) {
     .Call(`_intrinsicFRP_IFRPCpp`, returns, factors, include_standard_errors)
+}
+
+#' @export
+ChenFang2019BetaRankTestStatisticAndPvalueCpp <- function(returns, factors, n_bootstrap = 500L, level_kp_test = 0.005) {
+    .Call(`_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp`, returns, factors, n_bootstrap, level_kp_test)
+}
+
+#' @export
+IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, level = .005) {
+    .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, level)
 }
 

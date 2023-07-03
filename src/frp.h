@@ -36,11 +36,7 @@
 //' it further includes `n_factors`-dimensional vector of factor risk
 //' premia standard errors in `"standard_errors"`.
 //'
-//' @examples
-//' factors = factors5FF[,-1]
-//' returns = returnsMEBTM25[,-1]
-//'
-//' frp = FactorRiskPremia(returns, factors, include_standard_errors = TRUE)
+//' @noRd
 //'
 // [[Rcpp::export]]
 Rcpp::List FRPCpp(
