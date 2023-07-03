@@ -629,13 +629,3 @@ IFRPCpp <- function(returns, factors, include_standard_errors) {
     .Call(`_intrinsicFRP_IFRPCpp`, returns, factors, include_standard_errors)
 }
 
-#' @export
-ChenFang2019BetaRankTestStatisticAndPvalueCpp <- function(returns, factors, n_bootstrap = 500L, level_kp_test = 0.005) {
-    .Call(`_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp`, returns, factors, n_bootstrap, level_kp_test)
-}
-
-#' @export
-IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, level = .005) {
-    .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, level)
-}
-
