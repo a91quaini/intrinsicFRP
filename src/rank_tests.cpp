@@ -185,10 +185,11 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   // test statistic
   output(0) = n_observations * sv(n_factors - 1) * sv(n_factors - 1);
 
-  // If `level_kp_test <= 0`, the initial rank estimator is taken
-  // to be the number of singular values above `n_observations^(-1/3)`.
-  // If `level_kp_test > 0`, the initial rank estimator is based on
-  // the iterative Kleibergen Paap 2006 test with `level = level_kp_test`.
+  // If `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken
+  // to be the number of singular values above `n_observations^(-1/4)`.
+  // If `target_level_kp2006_rank_test > 0`, the initial rank estimator is based on
+  // the iterative Kleibergen Paap 2006 test with
+  // `level = target_level_kp2006_rank_test / n_factors`.
   const unsigned int rank_estimate = target_level_kp2006_rank_test > 0. ?
   IterativeKleibergenPaap2006BetaRankTestCpp(
       returns,
