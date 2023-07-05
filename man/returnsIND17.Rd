@@ -7,6 +7,7 @@
 \format{
 \subsection{\code{returnsIND17}}{
 
+A data frame with \code{624} rows and \code{18} columns:
 \describe{
 \item{Date}{Date in yyyymm format}
 \item{...}{Factor observations}

@@ -162,7 +162,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
       for (gcv_vr_weighting in c(TRUE, FALSE)) {
         for (gcv_scaling_n_assets in c(TRUE, FALSE)) {
           for (gcv_identification_check in c(TRUE, FALSE)) {
-            for (level_kp2006_rank_test in c(0., 0.005)) {
+            for (target_level_kp2006_rank_test in c(0., 0.005)) {
 
               adaptive_ifrp = OptimalAdaptiveIFRP(
                 returns,
@@ -175,7 +175,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
                 gcv_vr_weighting = gcv_vr_weighting,
                 gcv_scaling_n_assets = gcv_scaling_n_assets,
                 gcv_identification_check = gcv_identification_check,
-                level_kp2006_rank_test = level_kp2006_rank_test
+                target_level_kp2006_rank_test = target_level_kp2006_rank_test
               )
 
               expect_length(adaptive_ifrp$risk_premia, n_factors)
@@ -194,7 +194,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
                 gcv_vr_weighting = gcv_vr_weighting,
                 gcv_scaling_n_assets = gcv_scaling_n_assets,
                 gcv_identification_check = gcv_identification_check,
-                level_kp2006_rank_test = level_kp2006_rank_test
+                target_level_kp2006_rank_test = target_level_kp2006_rank_test
               )
 
               expect_equal(
@@ -215,7 +215,7 @@ test_that("Test OptimalAdaptiveIFRP and AdaptiveIFRP", {
                   gcv_vr_weighting = gcv_vr_weighting,
                   gcv_scaling_n_assets = gcv_scaling_n_assets,
                   gcv_identification_check = gcv_identification_check,
-                  level_kp2006_rank_test = level_kp2006_rank_test
+                  target_level_kp2006_rank_test = target_level_kp2006_rank_test
                 )
 
                 expect_equal(

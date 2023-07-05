@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // OptimalAdaptiveFRPGCVCpp
-Rcpp::List OptimalAdaptiveFRPGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool one_stddev_rule, const bool gcv_vr_weighting, const bool gcv_scaling_n_assets, const bool gcv_identification_check, const double level_kp2006_rank_test, const bool include_standard_errors);
-RcppExport SEXP _intrinsicFRP_OptimalAdaptiveFRPGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP one_stddev_ruleSEXP, SEXP gcv_vr_weightingSEXP, SEXP gcv_scaling_n_assetsSEXP, SEXP gcv_identification_checkSEXP, SEXP level_kp2006_rank_testSEXP, SEXP include_standard_errorsSEXP) {
+Rcpp::List OptimalAdaptiveFRPGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool one_stddev_rule, const bool gcv_vr_weighting, const bool gcv_scaling_n_assets, const bool gcv_identification_check, const double target_level_kp2006_rank_test, const bool include_standard_errors);
+RcppExport SEXP _intrinsicFRP_OptimalAdaptiveFRPGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP one_stddev_ruleSEXP, SEXP gcv_vr_weightingSEXP, SEXP gcv_scaling_n_assetsSEXP, SEXP gcv_identification_checkSEXP, SEXP target_level_kp2006_rank_testSEXP, SEXP include_standard_errorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -28,9 +28,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type gcv_vr_weighting(gcv_vr_weightingSEXP);
     Rcpp::traits::input_parameter< const bool >::type gcv_scaling_n_assets(gcv_scaling_n_assetsSEXP);
     Rcpp::traits::input_parameter< const bool >::type gcv_identification_check(gcv_identification_checkSEXP);
-    Rcpp::traits::input_parameter< const double >::type level_kp2006_rank_test(level_kp2006_rank_testSEXP);
+    Rcpp::traits::input_parameter< const double >::type target_level_kp2006_rank_test(target_level_kp2006_rank_testSEXP);
     Rcpp::traits::input_parameter< const bool >::type include_standard_errors(include_standard_errorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveFRPGCVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, level_kp2006_rank_test, include_standard_errors));
+    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveFRPGCVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, include_standard_errors));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -77,8 +77,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // OptimalAdaptiveIFRPGCVCpp
-Rcpp::List OptimalAdaptiveIFRPGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool one_stddev_rule, const bool gcv_vr_weighting, const bool gcv_scaling_n_assets, const bool gcv_identification_check, const double level_kp2006_rank_test, const bool include_standard_errors);
-RcppExport SEXP _intrinsicFRP_OptimalAdaptiveIFRPGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP one_stddev_ruleSEXP, SEXP gcv_vr_weightingSEXP, SEXP gcv_scaling_n_assetsSEXP, SEXP gcv_identification_checkSEXP, SEXP level_kp2006_rank_testSEXP, SEXP include_standard_errorsSEXP) {
+Rcpp::List OptimalAdaptiveIFRPGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool one_stddev_rule, const bool gcv_vr_weighting, const bool gcv_scaling_n_assets, const bool gcv_identification_check, const double target_level_kp2006_rank_test, const bool include_standard_errors);
+RcppExport SEXP _intrinsicFRP_OptimalAdaptiveIFRPGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP one_stddev_ruleSEXP, SEXP gcv_vr_weightingSEXP, SEXP gcv_scaling_n_assetsSEXP, SEXP gcv_identification_checkSEXP, SEXP target_level_kp2006_rank_testSEXP, SEXP include_standard_errorsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -93,9 +93,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type gcv_vr_weighting(gcv_vr_weightingSEXP);
     Rcpp::traits::input_parameter< const bool >::type gcv_scaling_n_assets(gcv_scaling_n_assetsSEXP);
     Rcpp::traits::input_parameter< const bool >::type gcv_identification_check(gcv_identification_checkSEXP);
-    Rcpp::traits::input_parameter< const double >::type level_kp2006_rank_test(level_kp2006_rank_testSEXP);
+    Rcpp::traits::input_parameter< const double >::type target_level_kp2006_rank_test(target_level_kp2006_rank_testSEXP);
     Rcpp::traits::input_parameter< const bool >::type include_standard_errors(include_standard_errorsSEXP);
-    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveIFRPGCVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, level_kp2006_rank_test, include_standard_errors));
+    rcpp_result_gen = Rcpp::wrap(OptimalAdaptiveIFRPGCVCpp(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_vr_weighting, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, include_standard_errors));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -194,33 +194,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ChenFang2019BetaRankTestStatisticAndPvalueCpp
-arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(const arma::mat& returns, const arma::mat& factors, const unsigned int n_bootstrap, const double level_kp_test);
-RcppExport SEXP _intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP n_bootstrapSEXP, SEXP level_kp_testSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
-    Rcpp::traits::input_parameter< const unsigned int >::type n_bootstrap(n_bootstrapSEXP);
-    Rcpp::traits::input_parameter< const double >::type level_kp_test(level_kp_testSEXP);
-    rcpp_result_gen = Rcpp::wrap(ChenFang2019BetaRankTestStatisticAndPvalueCpp(returns, factors, n_bootstrap, level_kp_test));
-    return rcpp_result_gen;
-END_RCPP
-}
-// IterativeKleibergenPaap2006BetaRankTestCpp
-Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const double level);
-RcppExport SEXP _intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP levelSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
-    Rcpp::traits::input_parameter< const double >::type level(levelSEXP);
-    rcpp_result_gen = Rcpp::wrap(IterativeKleibergenPaap2006BetaRankTestCpp(returns, factors, level));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_OptimalAdaptiveFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OptimalAdaptiveFRPGCVCpp, 13},
@@ -233,8 +206,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_AdaptiveWeightsCpp", (DL_FUNC) &_intrinsicFRP_AdaptiveWeightsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 4},
     {"_intrinsicFRP_IFRPCpp", (DL_FUNC) &_intrinsicFRP_IFRPCpp, 3},
-    {"_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestStatisticAndPvalueCpp, 4},
-    {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
     {NULL, NULL, 0}
 };
 

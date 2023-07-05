@@ -9,19 +9,17 @@
 // Computes the Chen fang 2019 rank statistic and p-value of the null that
 // the matrix of regression loadings of test asset excess returns on risk
 // factors has reduced rank.
-// If `level_kp_test > 0`, it uses the iterative Kleibergen Paap
+// If `target_level_kp2006_rank_test > 0`, it uses the iterative Kleibergen Paap
 // 2006 rank test to estimate the initial rank, with
-// `level = level_kp_test`.
-// If `level_kp_test <= 0`, the initial rank estimator is taken
-// to be the number of singular values above `n_observations^(-1/3)`.
+// `level = target_level_kp2006_rank_test / n_factors`.
+// If `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken
+// to be the number of singular values above `n_observations^(-1/4)`.
 // It assumes n_factors < n_returns.
-//' @export
-// [[Rcpp::export]]
 arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const unsigned int n_bootstrap = 500,
-  const double level_kp_test = 0.005
+  const double target_level_kp2006_rank_test = 0.05
 );
 
 // For internal use
@@ -29,14 +27,12 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
 // of the test that the matrix of regression loadings of test asset excess
 // returns on risk factors has rank q = 0, ..., n_factors - 1.
 // It also returns an estimate of the rank as the first value q with associated
-// p-value below a given `level`.
+// p-value below a given `level = target_level / n_factors`.
 // It assumes n_factors < n_returns.
-//' @export
-// [[Rcpp::export]]
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,
-  const double level = .05
+  const double target_level = .05
 );
 
 // For internal use

@@ -47,13 +47,13 @@
 //' Default is `FALSE`.
 //' @param gcv_identification_check boolean `TRUE` for a loose check for model
 //' identification; `FALSE` otherwise. Default is `FALSE`.
-//' @param level_kp2006_test (only relevant if `gcv_identification_check` is
+//' @param target_level_kp2006_rank_test (only relevant if `gcv_identification_check` is
 //' `TRUE`) numeric level of the Kleibergen Paap 2006 rank test. If it is
 //' strictly grater than zero, then the iterative Kleibergen Paap 2006 rank
-//' test at level `level_kp2005_test` is used to compute an initial estimator
+//' test at `level = target_level_kp2006_rank_test / n_factors` is used to compute an initial estimator
 //' of the rank of the factor loadings in the Chen Fang 2019 rank test.
 //' Otherwise, the initial rank estimator is taken to be the number of singular
-//' values above `n_observations^(-1/3)`. Default is `0.005` (as correction
+//' values above `n_observations^(-1/4)`. Default is `0.05` (as correction
 //' for multiple testing).
 //' @param include_standard_errors boolean `TRUE` if you want to compute the
 //' adaptive factor risk premia HAC standard errors; `FALSE` otherwise.
@@ -78,7 +78,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const bool gcv_vr_weighting = false,
   const bool gcv_scaling_n_assets = false,
   const bool gcv_identification_check = false,
-  const double level_kp2006_rank_test = 0.05,
+  const double target_level_kp2006_rank_test = 0.05,
   const bool include_standard_errors = false
 );
 

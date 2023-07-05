@@ -23,7 +23,7 @@ Rcpp::List OptimalAdaptiveFRPGCVCpp(
   const bool gcv_vr_weighting,
   const bool gcv_scaling_n_assets,
   const bool gcv_identification_check,
-  const double level_kp2006_rank_test,
+  const double target_level_kp2006_rank_test,
   const bool include_standard_errors
 ) {
 
@@ -55,7 +55,7 @@ Rcpp::List OptimalAdaptiveFRPGCVCpp(
         mean_returns,
         returns.n_rows,
         gcv_scaling_n_assets,
-        level_kp2006_rank_test
+        target_level_kp2006_rank_test
       ) :
       WeightedGCVScoreAdaptiveIFRPCpp(
         aifrp,
@@ -77,7 +77,7 @@ Rcpp::List OptimalAdaptiveFRPGCVCpp(
         variance_returns,
         mean_returns,
         gcv_scaling_n_assets,
-        level_kp2006_rank_test
+        target_level_kp2006_rank_test
       ) :
       GCVScoreAdaptiveIFRPCpp(
         aifrp,

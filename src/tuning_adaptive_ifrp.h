@@ -28,7 +28,7 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool gcv_scaling_n_assets = false,
-  const double level_kp2006_rank_test = 0.05
+  const double target_level_kp2006_rank_test = 0.05
 );
 
 // Function for internal use
@@ -57,7 +57,7 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
   const arma::vec& mean_returns,
   const unsigned int n_observations,
   const bool gcv_scaling_n_assets = false,
-  const double level_kp2006_rank_test = 0.05
+  const double target_level_kp2006_rank_test = 0.05
 );
 
 // Function for internal use

@@ -7,6 +7,7 @@
 \format{
 \subsection{\code{factors51}}{
 
+A data frame with \code{519} rows and \code{51} columns:
 \describe{
 \item{Date}{Date in yyyymm format}
 \item{...}{Factor observations}

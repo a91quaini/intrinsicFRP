@@ -29,6 +29,7 @@
 #' yoo
 #'
 #' @format ## `returnsMEBTM25`
+#' A data frame with `624` rows and `26` columns:
 #' \describe{
 #'   \item{Date}{Date in yyyymm format}
 #'   \item{...}{Factor observations}
@@ -39,6 +40,7 @@
 #' yoo
 #'
 #' @format ## `returnsOPINV25`
+#' A data frame with `624` rows and `26` columns:
 #' \describe{
 #'   \item{Date}{Date in yyyymm format}
 #'   \item{...}{Factor observations}
@@ -49,6 +51,7 @@
 #' yoo
 #'
 #' @format ## `returnsIND17`
+#' A data frame with `624` rows and `18` columns:
 #' \describe{
 #'   \item{Date}{Date in yyyymm format}
 #'   \item{...}{Factor observations}
@@ -59,6 +62,7 @@
 #' yoo
 #'
 #' @format ## `returnsIND10`
+#' A data frame with `624` rows and `11` columns:
 #' \describe{
 #'   \item{Date}{Date in yyyymm format}
 #'   \item{...}{Factor observations}
@@ -69,6 +73,7 @@
 #' yoo
 #'
 #' @format ## `factors51`
+#' A data frame with `519` rows and `51` columns:
 #' \describe{
 #'   \item{Date}{Date in yyyymm format}
 #'   \item{...}{Factor observations}

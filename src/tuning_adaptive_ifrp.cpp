@@ -78,7 +78,7 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool gcv_scaling_n_assets,
-  const double level_kp2006_rank_test
+  const double target_level_kp2006_rank_test
 ) {
 
   // initialize model_score to the inner product of the mean of returns
@@ -131,7 +131,7 @@ arma::vec IGCVScoreAdaptiveIFRPCpp(
         IterativeKleibergenPaap2006BetaRankTestCpp(
           returns,
           factors.cols(idx_selected),
-          level_kp2006_rank_test
+          target_level_kp2006_rank_test
         )["rank"];
 
       // if we do not reject the null that the model is not identified
@@ -243,7 +243,7 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
   const arma::vec& mean_returns,
   const unsigned int n_observations,
   const bool gcv_scaling_n_assets,
-  const double level_kp2006_rank_test
+  const double target_level_kp2006_rank_test
 ) {
 
   const double score_no_model = arma::dot(mean_returns, arma::solve(
@@ -297,7 +297,7 @@ arma::vec WeightedIGCVScoreAdaptiveIFRPCpp(
         IterativeKleibergenPaap2006BetaRankTestCpp(
           returns,
           factors.cols(idx_selected),
-          level_kp2006_rank_test
+          target_level_kp2006_rank_test
         )["rank"];
 
       // if we do not reject the null that the model is not identified

@@ -7,6 +7,7 @@
 \format{
 \subsection{\code{returnsOPINV25}}{
 
+A data frame with \code{624} rows and \code{26} columns:
 \describe{
 \item{Date}{Date in yyyymm format}
 \item{...}{Factor observations}

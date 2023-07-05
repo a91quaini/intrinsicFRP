@@ -45,14 +45,15 @@
 #' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
 #' Default is `FALSE`.
-#' @param level_kp2006_rank_test (only relevant for `tuning_type ='g'` if
+#' @param target_level_kp2006_rank_test (only relevant for `tuning_type ='g'` if
 #' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen Paap
 #' 2006 rank test. If it is strictly grater than zero, then the iterative
-#' Kleibergen Paap 2006 rank test at level `level_kp2005_test` is used to
+#' Kleibergen Paap 2006 rank test at
+#' `level = target_level_kp2006_rank_test / n_factors` (as a correction for multiple testing) is used to
 #' compute an initial estimator of the rank of the factor loadings in the Chen
 #' Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
-#' the number of singular values above `n_observations^(-1/3)`. Default is
-#' `0.005` (as correction for multiple testing).
+#' the number of singular values above `n_observations^(-1/4)`. Default is
+#' `0.05` (as correction for multiple testing).
 #' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen
 #' Paap 2006 rank test. If it is strictly grater than zero, then the iterative
 #' Kleibergen Paap 2006 rank test at level `level_kp2005_test` is used to
@@ -107,7 +108,7 @@ OptimalAdaptiveIFRP = function(
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
-  level_kp2006_rank_test = 0.05,
+  target_level_kp2006_rank_test = 0.05,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -129,7 +130,7 @@ OptimalAdaptiveIFRP = function(
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
     stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
-    stopifnot("`level_kp2006_rank_test` contains non-numeric values" = is.numeric(level_kp2006_rank_test))
+    stopifnot("`target_level_kp2006_rank_test` contains non-numeric values" = is.numeric(target_level_kp2006_rank_test))
     stopifnot("`n_folds` contains non-numeric values" = is.numeric(n_folds))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` contains non-numeric values" = is.numeric(n_train_observations))
@@ -159,7 +160,7 @@ OptimalAdaptiveIFRP = function(
         gcv_vr_weighting,
         gcv_scaling_n_assets,
         gcv_identification_check,
-        level_kp2006_rank_test,
+        target_level_kp2006_rank_test,
         include_standard_errors
       )
 

@@ -21,26 +21,18 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::mat U22 = U.submat(q, q, n_factors - 1, n_factors - 1);
   const arma::mat V22 = V.submat(q, q, n_returns - 1, n_returns - 1);
 
+  const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
+  const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
+
   // see eq. (12) in Kleibergen Paap 2006
-  // notice that sqrt(U22 U22') and sqrt(V22 V22') are equal to the identity
-  const arma::mat A_qperp = arma::solve(
-    U22.t(), U.tail_cols(n_factors - q).t(),
+  const arma::mat A_qperp = U.tail_cols(n_factors - q) * arma::solve(
+    U22, sqrt_U22,
     arma::solve_opts::likely_sympd
-  ).t();
-  const arma::mat B_qperp = arma::solve(
+  );
+  const arma::mat B_qperp = sqrt_V22 * arma::solve(
     V22.t(), V.tail_cols(n_returns - q).t(),
     arma::solve_opts::likely_sympd
   );
-
-  // // see eq. (12) in Kleibergen Paap 2006
-  // const arma::mat A_qperp = U.tail_cols(n_factors - q) * arma::solve(
-  //   U22, sqrt_U22,
-  //   arma::solve_opts::likely_sympd
-  // );
-  // const arma::mat B_qperp = sqrt_V22 * arma::solve(
-  //   V22.t(), V.tail_cols(n_returns - q).t(),
-  //   arma::solve_opts::likely_sympd
-  // );
 
   const arma::mat kron_BA_qperp = arma::kron(B_qperp, A_qperp.t());
 
@@ -77,7 +69,7 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,
-  const double level
+  const double target_level
 ) {
 
   const unsigned int n_returns = returns.n_cols;
@@ -140,7 +132,9 @@ Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   }
 
   // indices of p-values above `level`
-  const arma::uvec idx_accept = arma::find(output.row(1) > level);
+  const arma::uvec idx_accept = arma::find(
+    output.row(1) > target_level / factors.n_cols
+  );
 
   // the estimate of the rank is the first value `q` with associated
   // p-value above `level`. If there is no p-value above `level`, the rank is
@@ -164,7 +158,7 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const unsigned int n_bootstrap,
-  const double level_kp_test
+  const double target_level_kp2006_rank_test
 ) {
 
   const unsigned int n_returns = returns.n_cols;
@@ -195,13 +189,13 @@ arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
   // to be the number of singular values above `n_observations^(-1/3)`.
   // If `level_kp_test > 0`, the initial rank estimator is based on
   // the iterative Kleibergen Paap 2006 test with `level = level_kp_test`.
-  const unsigned int rank_estimate = level_kp_test > 0. ?
+  const unsigned int rank_estimate = target_level_kp2006_rank_test > 0. ?
   IterativeKleibergenPaap2006BetaRankTestCpp(
       returns,
       factors,
-      level_kp_test
+      target_level_kp2006_rank_test
     )["rank"] :
-    arma::sum(sv >= std::pow(n_observations, -1./3));
+    arma::sum(sv >= std::pow(n_observations, -1./4));
 
   // if full rank, set p-value to 0
   if (rank_estimate == n_factors) {
