@@ -21,8 +21,27 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::mat U22 = U.submat(q, q, n_factors - 1, n_factors - 1);
   const arma::mat V22 = V.submat(q, q, n_returns - 1, n_returns - 1);
 
-  const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
-  const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
+  // construct of symmetric square-roots of matrices (U22 U22') and (V22 V22')
+  // need to clamp the eigenvalues to avoid spurious complex numbers
+  // const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
+  // const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
+  arma::vec U22_eval(n_factors - q);
+  arma::vec V22_eval(n_factors - q);
+  arma::mat U22_evec(n_factors - q, n_factors - q);
+  arma::mat V22_evec(n_factors - q, n_factors - q);
+
+  eig_sym(U22_eval, U22_evec, U22 * U22.t());
+  eig_sym(V22_eval, V22_evec, V22 * V22.t());
+
+  const arma::vec sqrt_U22_eval = arma::sqrt(U22_eval);
+  const arma::vec sqrt_V22_eval = arma::sqrt(V22_eval);
+
+  const arma::mat sqrt_U22 = U22_evec * arma::diagmat(
+    arma::clamp(sqrt_U22_eval, 0., sqrt_U22_eval.max())
+  ) * U22_evec.t();
+  const arma::mat sqrt_V22 = V22_evec * arma::diagmat(
+    arma::clamp(sqrt_V22_eval, 0., sqrt_V22_eval.max())
+  ) * V22_evec.t();
 
   // see eq. (12) in Kleibergen Paap 2006
   const arma::mat A_qperp = U.tail_cols(n_factors - q) * arma::solve(
