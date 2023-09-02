@@ -355,7 +355,7 @@ arma::vec CVScoreAdaptiveIFRPCpp(
   const arma::uvec observation_indices =
     arma::regspace<arma::uvec>(0, n_observations - 1);
 
-  arma::vec model_score(penalty_parameters.n_elem);
+  arma::mat prediction_error(n_folds, penalty_parameters.n_elem);
 
   for (unsigned int fold = 0; fold < n_folds; ++fold) {
 
@@ -390,7 +390,7 @@ arma::vec CVScoreAdaptiveIFRPCpp(
 
     for (unsigned int par = 0; par < penalty_parameters.n_elem; ++par) {
 
-      model_score(par) += ComputePredictionErrorCpp(
+      prediction_error(fold, par) += ComputePredictionErrorCpp(
         aifrp_train.col(par),
         cov_fac_ret_train,
         var_ret_train,
@@ -402,7 +402,7 @@ arma::vec CVScoreAdaptiveIFRPCpp(
 
   }
 
-  return model_score;
+  return arma::mean(prediction_error);
 
 }
 
@@ -424,7 +424,7 @@ arma::vec RVScoreAdaptiveIFRPCpp(
   const unsigned int n_rolls =
     (n_observations - n_train_observations - n_test_observations) / 12 + 1;
 
-  arma::vec model_score(penalty_parameters.n_elem);
+  arma::mat prediction_error(n_rolls, penalty_parameters.n_elem);
 
   for (unsigned int roll=0; roll < n_rolls; ++roll) {
 
@@ -459,7 +459,7 @@ arma::vec RVScoreAdaptiveIFRPCpp(
 
     for (unsigned int par = 0; par < penalty_parameters.n_elem; ++par) {
 
-      model_score(par) += ComputePredictionErrorCpp(
+      prediction_error(roll, par) += ComputePredictionErrorCpp(
         aifrp_train.col(par),
         cov_fac_ret_train,
         var_ret_train,
@@ -471,7 +471,7 @@ arma::vec RVScoreAdaptiveIFRPCpp(
 
   }
 
-  return model_score;
+  return arma::mean(prediction_error);
 
 }
 
