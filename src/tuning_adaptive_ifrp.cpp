@@ -402,7 +402,7 @@ arma::vec CVScoreAdaptiveIFRPCpp(
 
   }
 
-  return arma::mean(prediction_error);
+  return arma::mean(prediction_error).t();
 
 }
 
@@ -471,7 +471,7 @@ arma::vec RVScoreAdaptiveIFRPCpp(
 
   }
 
-  return arma::mean(prediction_error);
+  return arma::mean(prediction_error).t();
 
 }
 
