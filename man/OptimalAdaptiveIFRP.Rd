@@ -14,8 +14,6 @@ OptimalAdaptiveIFRP(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = FALSE,
-  gcv_identification_check = FALSE,
-  target_level_kp2006_rank_test = 0.05,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -57,27 +55,6 @@ Default is \code{FALSE}.}
 \item{gcv_scaling_n_assets}{(only relevant for \code{tuning_type ='g'})
 boolean \code{TRUE} for sqrt(n_assets) scaling (\code{sqrt(n_assets) / n_observations});
 \code{FALSE} otherwise (\code{1 / n_observations}). Default is \code{FALSE}.}
-
-\item{gcv_identification_check}{(only relevant for \code{tuning_type ='g'})
-boolean \code{TRUE} for a loose check for model identification; \code{FALSE} otherwise.
-Default is \code{FALSE}.}
-
-\item{target_level_kp2006_rank_test}{(only relevant for \code{tuning_type ='g'} if
-\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen Paap
-2006 rank test. If it is strictly grater than zero, then the iterative
-Kleibergen Paap 2006 rank test at
-\code{level = target_level_kp2006_rank_test / n_factors} (as a correction for multiple testing) is used to
-compute an initial estimator of the rank of the factor loadings in the Chen
-Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
-the number of singular values above \code{n_observations^(-1/4)}. Default is
-\code{0.05} (as correction for multiple testing).
-\code{gcv_identification_check} is \code{TRUE}) numeric level of the Kleibergen
-Paap 2006 rank test. If it is strictly grater than zero, then the iterative
-Kleibergen Paap 2006 rank test at level \code{level_kp2005_test} is used to
-compute an initial estimator of the rank of the factor loadings in the
-Chen Fang 2019 rank test. Otherwise, the initial rank estimator is taken
-to be the number of singular values above \code{n_observations^(-1/3)}. Default
-is \code{0.005} (as correction for multiple testing).}
 
 \item{n_folds}{(only relevant for \code{tuning_type ='c'}) integer number of k-fold
 for cross validation. Default is \code{5}.}

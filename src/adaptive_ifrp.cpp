@@ -20,8 +20,6 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
   const bool one_stddev_rule,
   const bool gcv_vr_weighting,
   const bool gcv_scaling_n_assets,
-  const bool gcv_identification_check,
-  const double target_level_kp2006_rank_test,
   const bool include_standard_errors
 ) {
 
@@ -43,19 +41,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 
   if (gcv_vr_weighting) {
 
-    model_score = gcv_identification_check ?
-      WeightedIGCVScoreAdaptiveIFRPCpp(
-        aifrp,
-        returns,
-        factors,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        returns.n_rows,
-        gcv_scaling_n_assets,
-        target_level_kp2006_rank_test
-      ) :
-      WeightedGCVScoreAdaptiveIFRPCpp(
+    model_score = WeightedGCVScoreAdaptiveIFRPCpp(
         aifrp,
         covariance_factors_returns,
         variance_returns,
@@ -66,18 +52,7 @@ Rcpp::List OptimalAdaptiveIFRPGCVCpp(
 
   } else {
 
-    model_score = gcv_identification_check ?
-      IGCVScoreAdaptiveIFRPCpp(
-        aifrp,
-        returns,
-        factors,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        gcv_scaling_n_assets,
-        target_level_kp2006_rank_test
-      ) :
-      GCVScoreAdaptiveIFRPCpp(
+    model_score = GCVScoreAdaptiveIFRPCpp(
         aifrp,
         covariance_factors_returns,
         variance_returns,

@@ -42,25 +42,6 @@
 #' @param gcv_scaling_n_assets (only relevant for `tuning_type ='g'`)
 #' boolean `TRUE` for sqrt(n_assets) scaling (`sqrt(n_assets) / n_observations`);
 #' `FALSE` otherwise (`1 / n_observations`). Default is `FALSE`.
-#' @param gcv_identification_check (only relevant for `tuning_type ='g'`)
-#' boolean `TRUE` for a loose check for model identification; `FALSE` otherwise.
-#' Default is `FALSE`.
-#' @param target_level_kp2006_rank_test (only relevant for `tuning_type ='g'` if
-#' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen Paap
-#' 2006 rank test. If it is strictly grater than zero, then the iterative
-#' Kleibergen Paap 2006 rank test at
-#' `level = target_level_kp2006_rank_test / n_factors` (as a correction for multiple testing) is used to
-#' compute an initial estimator of the rank of the factor loadings in the Chen
-#' Fang 2019 rank test. Otherwise, the initial rank estimator is taken to be
-#' the number of singular values above `n_observations^(-1/4)`. Default is
-#' `0.05`.
-#' `gcv_identification_check` is `TRUE`) numeric level of the Kleibergen
-#' Paap 2006 rank test. If it is strictly grater than zero, then the iterative
-#' Kleibergen Paap 2006 rank test at level `level_kp2005_test` is used to
-#' compute an initial estimator of the rank of the factor loadings in the
-#' Chen Fang 2019 rank test. Otherwise, the initial rank estimator is taken
-#' to be the number of singular values above `n_observations^(-1/3)`. Default
-#' is `0.05` (as correction for multiple testing).
 #' @param n_folds (only relevant for `tuning_type ='c'`) integer number of k-fold
 #' for cross validation. Default is `5`.
 #' @param n_train_observations (only relevant for `tuning_type ='r'`) number of
@@ -107,8 +88,6 @@ OptimalAdaptiveFRP = function(
   one_stddev_rule = FALSE,
   gcv_vr_weighting = FALSE,
   gcv_scaling_n_assets = FALSE,
-  gcv_identification_check = FALSE,
-  target_level_kp2006_rank_test = 0.05,
   n_folds = 5,
   n_train_observations = 120,
   n_test_observations = 12,
@@ -129,8 +108,6 @@ OptimalAdaptiveFRP = function(
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_vr_weighting` must be boolean" = is.logical(gcv_vr_weighting))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
-    stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
-    stopifnot("`target_level_kp2006_rank_test` contains non-numeric values" = is.numeric(target_level_kp2006_rank_test))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
@@ -155,8 +132,6 @@ OptimalAdaptiveFRP = function(
         one_stddev_rule,
         gcv_vr_weighting,
         gcv_scaling_n_assets,
-        gcv_identification_check,
-        target_level_kp2006_rank_test,
         include_standard_errors
       )
 

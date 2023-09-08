@@ -82,20 +82,6 @@ test_that("Test OptimalAdaptiveFRP", {
       t(returns),
       t(factors),
       penalty_parameters,
-      gcv_scaling_n_assets = "r"
-    ))
-  expect_error(
-    OptimalAdaptiveIFRP(
-      t(returns),
-      t(factors),
-      penalty_parameters,
-      gcv_identifiation_check = "r"
-    ))
-  expect_error(
-    OptimalAdaptiveIFRP(
-      t(returns),
-      t(factors),
-      penalty_parameters,
       n_folds = "r"
     ))
   expect_error(
@@ -149,72 +135,62 @@ test_that("Test OptimalAdaptiveFRP", {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (gcv_vr_weighting in c(TRUE, FALSE)) {
         for (gcv_scaling_n_assets in c(TRUE, FALSE)) {
-          for (gcv_identification_check in c(TRUE, FALSE)) {
-            for (target_level_kp2006_rank_test in c(0., 0.005)) {
 
-              adaptive_frp = OptimalAdaptiveFRP(
-                returns,
-                factors,
-                penalty_parameters,
-                weighting_type = weighting_type,
-                tuning_type = 'g',
-                include_standard_errors = TRUE,
-                one_stddev_rule = one_stddev_rule,
-                gcv_vr_weighting = gcv_vr_weighting,
-                gcv_scaling_n_assets = gcv_scaling_n_assets,
-                gcv_identification_check = gcv_identification_check,
-                target_level_kp2006_rank_test = target_level_kp2006_rank_test
-              )
+          adaptive_frp = OptimalAdaptiveFRP(
+            returns,
+            factors,
+            penalty_parameters,
+            weighting_type = weighting_type,
+            tuning_type = 'g',
+            include_standard_errors = TRUE,
+            one_stddev_rule = one_stddev_rule,
+            gcv_vr_weighting = gcv_vr_weighting,
+            gcv_scaling_n_assets = gcv_scaling_n_assets,
+          )
 
-              expect_length(adaptive_frp$risk_premia, n_factors)
-              expect_length(adaptive_frp$standard_errors, n_factors)
-              expect_length(adaptive_frp$penalty_parameter, 1)
+          expect_length(adaptive_frp$risk_premia, n_factors)
+          expect_length(adaptive_frp$standard_errors, n_factors)
+          expect_length(adaptive_frp$penalty_parameter, 1)
 
 
-              adaptive_frp0 = OptimalAdaptiveFRP(
-                returns,
-                factors,
-                penalty_parameters = 0.,
-                weighting_type = weighting_type,
-                tuning_type = 'g',
-                include_standard_errors = TRUE,
-                one_stddev_rule = one_stddev_rule,
-                gcv_vr_weighting = gcv_vr_weighting,
-                gcv_scaling_n_assets = gcv_scaling_n_assets,
-                gcv_identification_check = gcv_identification_check,
-                target_level_kp2006_rank_test = target_level_kp2006_rank_test
-              )
+          adaptive_frp0 = OptimalAdaptiveFRP(
+            returns,
+            factors,
+            penalty_parameters = 0.,
+            weighting_type = weighting_type,
+            tuning_type = 'g',
+            include_standard_errors = TRUE,
+            one_stddev_rule = one_stddev_rule,
+            gcv_vr_weighting = gcv_vr_weighting,
+            gcv_scaling_n_assets = gcv_scaling_n_assets,
+          )
 
-              expect_equal(
-                matrix(adaptive_frp0$risk_premia, n_factors, 1),
-                frp$risk_premia
-              )
+          expect_equal(
+            matrix(adaptive_frp0$risk_premia, n_factors, 1),
+            frp$risk_premia
+          )
 
-              if (weighting_type == 'c') {
+          if (weighting_type == 'c') {
 
-                adaptive_frp1 = OptimalAdaptiveFRP(
-                  returns,
-                  factors,
-                  penalty_parameters = .1,
-                  weighting_type = weighting_type,
-                  tuning_type = 'g',
-                  include_standard_errors = TRUE,
-                  one_stddev_rule = one_stddev_rule,
-                  gcv_vr_weighting = gcv_vr_weighting,
-                  gcv_scaling_n_assets = gcv_scaling_n_assets,
-                  gcv_identification_check = gcv_identification_check,
-                  target_level_kp2006_rank_test = target_level_kp2006_rank_test
-                )
+            adaptive_frp1 = OptimalAdaptiveFRP(
+              returns,
+              factors,
+              penalty_parameters = .1,
+              weighting_type = weighting_type,
+              tuning_type = 'g',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              gcv_vr_weighting = gcv_vr_weighting,
+              gcv_scaling_n_assets = gcv_scaling_n_assets,
+            )
 
-                expect_equal(
-                  matrix(adaptive_frp1$risk_premia, n_factors, 1),
-                  afrp1$risk_premia
-                )
+            expect_equal(
+              matrix(adaptive_frp1$risk_premia, n_factors, 1),
+              afrp1$risk_premia
+            )
 
-              }
-
-            }
           }
+
         }
       }
     }
