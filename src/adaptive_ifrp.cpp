@@ -168,7 +168,7 @@ Rcpp::List OptimalAdaptiveIFRPCVCpp(
       Rcpp::Named("model_score") = model_score
     ) :
     Rcpp::List::create(
-      Rcpp::Named("risk_premia") = aifrp.col(idx_optimal_parameter),
+      Rcpp::Named("risk_premia") = aifrp,
       Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
       Rcpp::Named("model_score") = model_score
     );
