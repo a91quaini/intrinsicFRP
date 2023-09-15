@@ -183,60 +183,64 @@ test_that("Test OracleTFRP", {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (gcv_scaling_n_assets in c(TRUE, FALSE)) {
         for (gcv_identification_check in c(TRUE, FALSE)) {
+          for (relaxed in c(TRUE, FALSE)) {
 
-          oracle_tfrp = OracleTFRP(
-            returns,
-            factors,
-            penalty_parameters,
-            weighting_type = weighting_type,
-            tuning_type = 'g',
-            include_standard_errors = TRUE,
-            one_stddev_rule = one_stddev_rule,
-            gcv_scaling_n_assets = gcv_scaling_n_assets,
-            gcv_identification_check = gcv_identification_check
-          )
-
-          expect_length(oracle_tfrp$risk_premia, n_factors)
-          expect_length(oracle_tfrp$standard_errors, n_factors)
-          expect_length(oracle_tfrp$penalty_parameter, 1)
-
-
-          oracle_tfrp0 = OracleTFRP(
-            returns,
-            factors,
-            penalty_parameters = 0.,
-            weighting_type = weighting_type,
-            tuning_type = 'g',
-            include_standard_errors = TRUE,
-            one_stddev_rule = one_stddev_rule,
-            gcv_scaling_n_assets = gcv_scaling_n_assets,
-            gcv_identification_check = gcv_identification_check
-          )
-
-          expect_equal(
-            matrix(oracle_tfrp0$risk_premia, n_factors, 1),
-            tfrp$risk_premia
-          )
-
-          if (weighting_type == 'c') {
-
-            oracle_tfrp1 = OracleTFRP(
+            oracle_tfrp = OracleTFRP(
               returns,
               factors,
-              penalty_parameters = .1,
+              penalty_parameters,
               weighting_type = weighting_type,
               tuning_type = 'g',
               include_standard_errors = TRUE,
               one_stddev_rule = one_stddev_rule,
               gcv_scaling_n_assets = gcv_scaling_n_assets,
-              gcv_identification_check = gcv_identification_check
+              gcv_identification_check = gcv_identification_check,
+              relaxed = relaxed
+            )
+
+            expect_length(oracle_tfrp$risk_premia, n_factors)
+            expect_length(oracle_tfrp$standard_errors, n_factors)
+            expect_length(oracle_tfrp$penalty_parameter, 1)
+
+
+            oracle_tfrp00 = OracleTFRP(
+              returns,
+              factors,
+              penalty_parameters = 0.,
+              weighting_type = weighting_type,
+              tuning_type = 'g',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              gcv_scaling_n_assets = gcv_scaling_n_assets,
+              gcv_identification_check = gcv_identification_check,
+              relaxed = relaxed
             )
 
             expect_equal(
-              oracle_tfrp1$risk_premia,
-              oracle_tfrp1$risk_premia
+              matrix(oracle_tfrp00$risk_premia, n_factors, 1),
+              tfrp$risk_premia
             )
 
+            if (weighting_type == 'c') {
+
+              oracle_tfrp1 = OracleTFRP(
+                returns,
+                factors,
+                penalty_parameters = .1,
+                weighting_type = weighting_type,
+                tuning_type = 'g',
+                include_standard_errors = TRUE,
+                one_stddev_rule = one_stddev_rule,
+                gcv_scaling_n_assets = gcv_scaling_n_assets,
+                gcv_identification_check = gcv_identification_check
+              )
+
+              expect_equal(
+                oracle_tfrp1$risk_premia,
+                oracle_tfrp1$risk_premia
+              )
+
+            }
           }
         }
       }
@@ -247,57 +251,61 @@ test_that("Test OracleTFRP", {
   for (weighting_type in c('c', 'b', 'a', 'n')) {
     for (one_stddev_rule in c(TRUE, FALSE)) {
       for (n_folds in c(5, 10)) {
+        for (relaxed in c(TRUE, FALSE)) {
 
-        oracle_tfrp = OracleTFRP(
-          returns,
-          factors,
-          penalty_parameters,
-          weighting_type = weighting_type,
-          tuning_type = 'c',
-          include_standard_errors = TRUE,
-          one_stddev_rule = one_stddev_rule,
-          n_folds = n_folds
-        )
-
-        expect_length(oracle_tfrp$risk_premia, n_factors)
-        expect_length(oracle_tfrp$standard_errors, n_factors)
-        expect_length(oracle_tfrp$penalty_parameter, 1)
-
-
-        oracle_tfrp0 = OracleTFRP(
-          returns,
-          factors,
-          penalty_parameters = 0.,
-          weighting_type = weighting_type,
-          tuning_type = 'c',
-          include_standard_errors = TRUE,
-          one_stddev_rule = one_stddev_rule,
-          n_folds = n_folds
-        )
-
-        expect_equal(
-          matrix(oracle_tfrp0$risk_premia, n_factors, 1),
-          tfrp$risk_premia
-        )
-
-        if (weighting_type == 'c') {
-
-          oracle_tfrp11 = OracleTFRP(
+          oracle_tfrp = OracleTFRP(
             returns,
             factors,
-            penalty_parameters = .1,
+            penalty_parameters,
             weighting_type = weighting_type,
             tuning_type = 'c',
             include_standard_errors = TRUE,
             one_stddev_rule = one_stddev_rule,
-            n_folds = n_folds
+            n_folds = n_folds,
+            relaxed = relaxed
+          )
+
+          expect_length(oracle_tfrp$risk_premia, n_factors)
+          expect_length(oracle_tfrp$standard_errors, n_factors)
+          expect_length(oracle_tfrp$penalty_parameter, 1)
+
+
+          oracle_tfrp00 = OracleTFRP(
+            returns,
+            factors,
+            penalty_parameters = 0.,
+            weighting_type = weighting_type,
+            tuning_type = 'c',
+            include_standard_errors = TRUE,
+            one_stddev_rule = one_stddev_rule,
+            n_folds = n_folds,
+            relaxed = relaxed
           )
 
           expect_equal(
-            oracle_tfrp11$risk_premia,
-            oracle_tfrp1$risk_premia
+            matrix(oracle_tfrp00$risk_premia, n_factors, 1),
+            tfrp$risk_premia
           )
 
+          if (weighting_type == 'c') {
+
+            oracle_tfrp11 = OracleTFRP(
+              returns,
+              factors,
+              penalty_parameters = .1,
+              weighting_type = weighting_type,
+              tuning_type = 'c',
+              include_standard_errors = TRUE,
+              one_stddev_rule = one_stddev_rule,
+              n_folds = n_folds
+            )
+
+            expect_equal(
+              oracle_tfrp11$risk_premia,
+              oracle_tfrp1$risk_premia
+            )
+
+          }
         }
       }
     }
@@ -309,64 +317,67 @@ test_that("Test OracleTFRP", {
       for (n_train_observations in c(120, 240)) {
         for (n_test_observations in c(120, 240)) {
           for (roll_shift in c(10, 12)) {
+            for (relaxed in c(TRUE, FALSE)) {
 
-            oracle_tfrp = OracleTFRP(
-              returns,
-              factors,
-              penalty_parameters,
-              weighting_type = weighting_type,
-              tuning_type = 'r',
-              include_standard_errors = TRUE,
-              one_stddev_rule = one_stddev_rule,
-              n_train_observations = n_train_observations,
-              n_test_observations = n_test_observations,
-              roll_shift = roll_shift
-            )
-
-            expect_length(oracle_tfrp$risk_premia, n_factors)
-            expect_length(oracle_tfrp$standard_errors, n_factors)
-            expect_length(oracle_tfrp$penalty_parameter, 1)
-
-
-            oracle_tfrp0 = OracleTFRP(
-              returns,
-              factors,
-              penalty_parameters = 0.,
-              weighting_type = weighting_type,
-              tuning_type = 'r',
-              include_standard_errors = TRUE,
-              one_stddev_rule = one_stddev_rule,
-              n_train_observations = n_train_observations,
-              n_test_observations = n_test_observations,
-              roll_shift = roll_shift
-            )
-
-            expect_equal(
-              matrix(oracle_tfrp0$risk_premia, n_factors, 1),
-              tfrp$risk_premia
-            )
-
-            if (weighting_type == 'c') {
-
-              oracle_tfrp11 = OracleTFRP(
+              oracle_tfrp = OracleTFRP(
                 returns,
                 factors,
-                penalty_parameters = .1,
+                penalty_parameters,
                 weighting_type = weighting_type,
                 tuning_type = 'r',
                 include_standard_errors = TRUE,
                 one_stddev_rule = one_stddev_rule,
                 n_train_observations = n_train_observations,
                 n_test_observations = n_test_observations,
-                roll_shift = roll_shift
+                roll_shift = roll_shift,
+                relaxed = relaxed
+              )
+
+              expect_length(oracle_tfrp$risk_premia, n_factors)
+              expect_length(oracle_tfrp$standard_errors, n_factors)
+              expect_length(oracle_tfrp$penalty_parameter, 1)
+
+
+              oracle_tfrp00 = OracleTFRP(
+                returns,
+                factors,
+                penalty_parameters = 0.,
+                weighting_type = weighting_type,
+                tuning_type = 'r',
+                include_standard_errors = TRUE,
+                one_stddev_rule = one_stddev_rule,
+                n_train_observations = n_train_observations,
+                n_test_observations = n_test_observations,
+                roll_shift = roll_shift,
+                relaxed = relaxed
               )
 
               expect_equal(
-                oracle_tfrp11$risk_premia,
-                oracle_tfrp1$risk_premia
+                matrix(oracle_tfrp00$risk_premia, n_factors, 1),
+                tfrp$risk_premia
               )
 
+              if (weighting_type == 'c') {
 
+                oracle_tfrp11 = OracleTFRP(
+                  returns,
+                  factors,
+                  penalty_parameters = .1,
+                  weighting_type = weighting_type,
+                  tuning_type = 'r',
+                  include_standard_errors = TRUE,
+                  one_stddev_rule = one_stddev_rule,
+                  n_train_observations = n_train_observations,
+                  n_test_observations = n_test_observations,
+                  roll_shift = roll_shift
+                )
+
+                expect_equal(
+                  oracle_tfrp11$risk_premia,
+                  oracle_tfrp1$risk_premia
+                )
+
+              }
             }
           }
         }
