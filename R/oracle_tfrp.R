@@ -110,7 +110,6 @@ OracleTFRP = function(
   check_arguments = TRUE
 ) {
 
-  stopifnot("`check_arguments` must be boolean" = is.logical(check_arguments))
   if (check_arguments) {
 
     CheckData(returns, factors)
@@ -123,15 +122,15 @@ OracleTFRP = function(
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
     stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
-    stopifnot("`target_level_kp2006_rank_test` contains non-numeric values" = is.numeric(target_level_kp2006_rank_test))
+    stopifnot("`target_level_kp2006_rank_test` must be numeric" = is.numeric(target_level_kp2006_rank_test))
     stopifnot("`target_level_kp2006_rank_test` must be between 0 and 1" = (target_level_kp2006_rank_test >= 0.) & (target_level_kp2006_rank_test <= 1.))
-    stopifnot("`n_folds` contains non-numeric values" = is.numeric(n_folds))
+    stopifnot("`n_folds` must be numeric" = is.numeric(n_folds))
     stopifnot("`n_folds` should be between 2 and n_returns" = n_folds > 2 || n_folds < nrow(returns))
-    stopifnot("`n_train_observations` contains non-numeric values" = is.numeric(n_train_observations))
+    stopifnot("`n_train_observations` must be numeric" = is.numeric(n_train_observations))
     stopifnot("`n_train_observations` should be between 10 and n_obervations - n_test_observations" = n_train_observations > 10 || n_train_observations < nrow(returns) - n_test_observations)
-    stopifnot("`n_test_observations` contains non-numeric values" = is.numeric(n_test_observations))
+    stopifnot("`n_test_observations` must be numeric" = is.numeric(n_test_observations))
     stopifnot("`n_test_observations` should be between 10 and n_observations/2" = n_test_observations > 10 || n_test_observations < nrow(returns) / 2)
-    stopifnot("`roll_shift` contains non-numeric values" = is.numeric(roll_shift))
+    stopifnot("`roll_shift` must be numeric" = is.numeric(roll_shift))
     stopifnot("`roll_shift` should be between 1 and n_test_observations" = roll_shift >= 1 || roll_shift < n_test_observations)
     stopifnot("`plot_score` must be boolean" = is.logical(plot_score))
     penalty_parameters = sort(penalty_parameters)

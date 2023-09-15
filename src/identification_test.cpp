@@ -1,6 +1,98 @@
 // Author: Alberto Quaini
 
-#include "rank_tests.h"
+#include "identification_tests.h"
+
+///////////////////////////////////////
+///// ChenFang2019BetaRankTestCpp /////
+
+Rcpp::List ChenFang2019BetaRankTestCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const unsigned int n_bootstrap,
+  const double target_level_kp2006_rank_test
+) {
+
+  const unsigned int n_returns = returns.n_cols;
+  const unsigned int n_factors = factors.n_cols;
+
+  if (n_factors >= n_returns) Rcpp::stop("Chen Fang 2019 test: n_factors must be < n_returns");
+
+  const unsigned int n_observations = returns.n_rows;
+
+  const arma::mat beta = ScaledFactorLoadingsCpp(
+    returns,
+    factors
+  ).t();
+
+  // SVD of beta
+  arma::mat U(n_returns, n_returns);
+  arma::mat V(n_factors, n_factors);
+  arma::vec sv(n_factors);
+
+  arma::svd(U, sv, V, beta);
+
+  // test statistic
+  const double statistic = n_observations * sv(n_factors - 1) * sv(n_factors - 1);
+
+  // If `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken
+  // to be the number of singular values above `n_observations^(-1/4)`.
+  // If `target_level_kp2006_rank_test > 0`, the initial rank estimator is based on
+  // the iterative Kleibergen Paap 2006 test with
+  // `level = target_level_kp2006_rank_test / n_factors`.
+  const unsigned int rank_estimate = target_level_kp2006_rank_test > 0. ?
+  IterativeKleibergenPaap2006BetaRankTestCpp(
+    returns,
+    factors,
+    target_level_kp2006_rank_test
+  )["rank"] :
+    arma::sum(sv >= std::pow(n_observations, -1./4));
+
+  // if full rank, set p-value to 0
+  if (rank_estimate == n_factors) {
+
+    return Rcpp::List::create(
+      Rcpp::Named("statistic") = statistic,
+      Rcpp::Named("p-value") = 0.
+    );
+
+  }
+
+  const arma::mat U22 = U.tail_cols(n_returns - rank_estimate);
+  const arma::mat V22 = V.tail_cols(n_factors - rank_estimate);
+  arma::vec min_sv_boot(n_bootstrap);
+
+  const double sqrt_n_obs = std::sqrt(n_observations);
+
+  for (unsigned int boot = 0; boot < n_bootstrap; ++boot) {
+
+    // bootstrap indices
+    const arma::uvec boot_indices = arma::randi<arma::uvec>(
+      n_observations,
+      arma::distr_param(0, n_observations - 1)
+    );
+
+    // bootstrap beta estimate
+    const arma::mat beta_boot = ScaledFactorLoadingsCpp(
+      returns.rows(boot_indices),
+      factors.rows(boot_indices)
+    ).t();
+
+    // bootstrap minimum singular values
+    min_sv_boot(boot) = arma::min(arma::svd(
+      sqrt_n_obs * U22.t() * (beta_boot - beta) * V22
+    ));
+
+  }
+
+  return Rcpp::List::create(
+    Rcpp::Named("statistic") = statistic,
+    Rcpp::Named("p-value") = (double)arma::sum(
+      min_sv_boot % min_sv_boot >= statistic
+    ) / n_bootstrap
+  );
+
+}
+
 
 ///////////////////////////////////////////////////////////////
 ///// KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp /////
@@ -167,93 +259,6 @@ Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
     Rcpp::Named("statistics") = output.row(0),
     Rcpp::Named("pvalues") = output.row(1)
   );
-
-}
-
-/////////////////////////////////////////////////////////
-///// ChenFang2019BetaRankTestStatisticAndPvalueCpp /////
-
-arma::vec2 ChenFang2019BetaRankTestStatisticAndPvalueCpp(
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const unsigned int n_bootstrap,
-  const double target_level_kp2006_rank_test
-) {
-
-  const unsigned int n_returns = returns.n_cols;
-  const unsigned int n_factors = factors.n_cols;
-
-  if (n_factors >= n_returns) Rcpp::stop("Chen Fang 2019 test: n_factors must be < n_returns");
-
-  const unsigned int n_observations = returns.n_rows;
-
-  const arma::mat beta = ScaledFactorLoadingsCpp(
-    returns,
-    factors
-  ).t();
-
-  // SVD of beta
-  arma::mat U(n_returns, n_returns);
-  arma::mat V(n_factors, n_factors);
-  arma::vec sv(n_factors);
-
-  arma::svd(U, sv, V, beta);
-
-  arma::vec2 output;
-
-  // test statistic
-  output(0) = n_observations * sv(n_factors - 1) * sv(n_factors - 1);
-
-  // If `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken
-  // to be the number of singular values above `n_observations^(-1/4)`.
-  // If `target_level_kp2006_rank_test > 0`, the initial rank estimator is based on
-  // the iterative Kleibergen Paap 2006 test with
-  // `level = target_level_kp2006_rank_test / n_factors`.
-  const unsigned int rank_estimate = target_level_kp2006_rank_test > 0. ?
-  IterativeKleibergenPaap2006BetaRankTestCpp(
-      returns,
-      factors,
-      target_level_kp2006_rank_test
-    )["rank"] :
-    arma::sum(sv >= std::pow(n_observations, -1./4));
-
-  // if full rank, set p-value to 0
-  if (rank_estimate == n_factors) {
-    output(1) = 0.;
-    return output;
-  }
-
-  const arma::mat U22 = U.tail_cols(n_returns - rank_estimate);
-  const arma::mat V22 = V.tail_cols(n_factors - rank_estimate);
-  arma::vec min_sv_boot(n_bootstrap);
-
-  const double sqrt_n_obs = std::sqrt(n_observations);
-
-  for (unsigned int boot = 0; boot < n_bootstrap; ++boot) {
-
-    // bootstrap indices
-    const arma::uvec boot_indices = arma::randi<arma::uvec>(
-      n_observations,
-      arma::distr_param(0, n_observations - 1)
-    );
-
-    // bootstrap beta estimate
-    const arma::mat beta_boot = ScaledFactorLoadingsCpp(
-      returns.rows(boot_indices),
-      factors.rows(boot_indices)
-    ).t();
-
-    // bootstrap minimum singular values
-    min_sv_boot(boot) = arma::min(arma::svd(
-      sqrt_n_obs * U22.t() * (beta_boot - beta) * V22
-    ));
-
-  }
-
-  // p-value
-  output(1) = (double)arma::sum(min_sv_boot % min_sv_boot >= output(0)) / n_bootstrap;
-
-  return output;
 
 }
 

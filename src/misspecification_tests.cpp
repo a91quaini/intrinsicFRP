@@ -3,41 +3,37 @@
 #include "misspecification_tests.h"
 #include "hac_standard_errors.h"
 
-double HJDistanceCpp(
-    const arma::mat& beta,
-    const arma::mat& variance_returns,
-    const arma::vec& mean_returns
+////////////////////////////////////
+//// HJMisspecificationTestCpp ////
+
+Rcpp::List HJMisspecificationTestCpp(
+  const arma::mat& returns,
+  const arma::mat& factors
 ) {
 
-  const arma::mat variance_returns_inverse_beta = arma::solve(
-    variance_returns, beta, arma::solve_opts::likely_sympd
-  );
-
-  const arma::vec krs_rp = arma::solve(
-    beta.t() * variance_returns_inverse_beta,
-    variance_returns_inverse_beta.t(),
-    arma::solve_opts::likely_sympd
-  ) * mean_returns;
-
-  const arma::vec pricing_error = mean_returns - beta * krs_rp;
-
-  const arma::vec variance_returns_inverse_pricing_error = arma::solve(
-    variance_returns, pricing_error, arma::solve_opts::likely_sympd
-  );
-
-  return arma::dot(
-    pricing_error,
-    variance_returns_inverse_pricing_error
+  return HJMisspecificationStatisticAndPvalueCpp(
+    returns,
+    factors,
+    arma::solve(
+      arma::cov(factors),
+      arma::cov(factors, returns),
+      arma::solve_opts::likely_sympd
+    ).t(),
+    arma::cov(returns),
+    arma::mean(returns).t()
   );
 
 }
 
-arma::vec2 HJMisspecificationStatisticAndPvalueCpp(
-    const arma::mat& returns,
-    const arma::mat& factors,
-    const arma::mat& beta,
-    const arma::mat& variance_returns,
-    const arma::vec& mean_returns
+/////////////////////////////////////////////////
+//// HJMisspecificationStatisticAndPvalueCpp ////
+
+Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const arma::mat& beta,
+  const arma::mat& variance_returns,
+  const arma::vec& mean_returns
 ) {
 
   const arma::mat variance_returns_inverse_beta = arma::solve(
@@ -71,14 +67,41 @@ arma::vec2 HJMisspecificationStatisticAndPvalueCpp(
 
   const double variance_q = NeweyWestVarianceOfScalarSeriesCpp(q);
 
-  arma::vec2 results;
+  const double statistic = returns.n_rows * hj_distance * hj_distance / variance_q;
 
-  results(0) = returns.n_rows * hj_distance * hj_distance / variance_q;
-
-  results(1) = R::pchisq(results(0), 1, false, false);
-
-  return results;
+  return Rcpp::List::create(
+    Rcpp::Named("statistic") = statistic,
+    Rcpp::Named("p-value") = R::pchisq(statistic, 1, false, false)
+  );
 
 }
 
+// double HJDistanceCpp(
+//   const arma::mat& beta,
+//   const arma::mat& variance_returns,
+//   const arma::vec& mean_returns
+// ) {
+//
+//   const arma::mat variance_returns_inverse_beta = arma::solve(
+//     variance_returns, beta, arma::solve_opts::likely_sympd
+//   );
+//
+//   const arma::vec krs_rp = arma::solve(
+//     beta.t() * variance_returns_inverse_beta,
+//     variance_returns_inverse_beta.t(),
+//     arma::solve_opts::likely_sympd
+//   ) * mean_returns;
+//
+//   const arma::vec pricing_error = mean_returns - beta * krs_rp;
+//
+//   const arma::vec variance_returns_inverse_pricing_error = arma::solve(
+//     variance_returns, pricing_error, arma::solve_opts::likely_sympd
+//   );
+//
+//   return arma::dot(
+//     pricing_error,
+//     variance_returns_inverse_pricing_error
+//   );
+//
+// }
 

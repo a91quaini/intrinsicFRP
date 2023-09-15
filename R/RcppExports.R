@@ -161,6 +161,63 @@ FRPCpp <- function(returns, factors, misspecification_robust = TRUE, include_sta
     .Call(`_intrinsicFRP_FRPCpp`, returns, factors, misspecification_robust, include_standard_errors)
 }
 
+#' Compute the Chen Fang 2019 beta rank test
+#'
+#' @name ChenFang2019BetaRankTestCpp
+#' @description Computes the Chen fang 2019 rank statistic and p-value of the
+#' null that the matrix of regression loadings of test asset excess returns on
+#' risk factors has reduced rank. If `target_level_kp2006_rank_test > 0`,
+#' it uses the iterative Kleibergen Paap 2006 rank test to estimate the initial
+#' rank, with `level = target_level_kp2006_rank_test / n_factors`. If
+#' `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken to
+#' be the number of singular values above `n_observations^(-1/4)`. It assumes
+#' n_factors < n_returns.
+#'
+#' @param returns `n_observations x n_returns`-dimensional matrix of test asset
+#' excess returns.
+#' @param factors `n_observations x n_factors`-dimensional matrix of risk
+#' factors.
+#' @param n_bootstrap numeric integer indicating the number of bootstrap
+#' samples used to compute the Chen fang 2019 test.
+#' @param target_level_kp2006_rank_test numeric level of the Kleibergen Paap
+#' 2006 rank test. If it is strictly grater than zero, then the iterative
+#' Kleibergen Paap 2006 rank test at `level = target_level_kp2006_rank_test /
+#' n_factors` is used to compute an initial estimator of the rank of the factor
+#' loadings in the Chen Fang 2019 rank test. Otherwise, the initial rank
+#' estimator is taken to be the number of singular values above
+#' `n_observations^(-1/4)`. Default is `0.05` (as correction for multiple
+#' testing).
+#'
+#' @return a list containing the Chen fang 2019 rank statistic
+#' and the corresponding p-value.
+#'
+#' @noRd
+#'
+ChenFang2019BetaRankTestCpp <- function(returns, factors, n_bootstrap = 500L, target_level_kp2006_rank_test = 0.05) {
+    .Call(`_intrinsicFRP_ChenFang2019BetaRankTestCpp`, returns, factors, n_bootstrap, target_level_kp2006_rank_test)
+}
+
+#' Compute the Hansen-Jagannatan misspecification test
+#'
+#' @name HJMisspecificationTestCpp
+#' @description Computes the Hansen-Jagannatan misspecification statistic and
+#' p-value of an asset pricing model from test asset excess returns and
+#' risk factors.
+#'
+#' @param returns `n_observations x n_returns`-dimensional matrix of test asset
+#' excess returns.
+#' @param factors `n_observations x n_factors`-dimensional matrix of risk
+#' factors.
+#'
+#' @return a list containing the HJ test statistic and the corresponding
+#' p-value.
+#'
+#' @noRd
+#'
+HJMisspecificationTestCpp <- function(returns, factors) {
+    .Call(`_intrinsicFRP_HJMisspecificationTestCpp`, returns, factors)
+}
+
 #' Compute oracle tradable factor risk premia
 #'
 #' @name OracleTFRPCpp

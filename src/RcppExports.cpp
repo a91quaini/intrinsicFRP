@@ -38,6 +38,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ChenFang2019BetaRankTestCpp
+Rcpp::List ChenFang2019BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const unsigned int n_bootstrap, const double target_level_kp2006_rank_test);
+RcppExport SEXP _intrinsicFRP_ChenFang2019BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP n_bootstrapSEXP, SEXP target_level_kp2006_rank_testSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const unsigned int >::type n_bootstrap(n_bootstrapSEXP);
+    Rcpp::traits::input_parameter< const double >::type target_level_kp2006_rank_test(target_level_kp2006_rank_testSEXP);
+    rcpp_result_gen = Rcpp::wrap(ChenFang2019BetaRankTestCpp(returns, factors, n_bootstrap, target_level_kp2006_rank_test));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HJMisspecificationTestCpp
+Rcpp::List HJMisspecificationTestCpp(const arma::mat& returns, const arma::mat& factors);
+RcppExport SEXP _intrinsicFRP_HJMisspecificationTestCpp(SEXP returnsSEXP, SEXP factorsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    rcpp_result_gen = Rcpp::wrap(HJMisspecificationTestCpp(returns, factors));
+    return rcpp_result_gen;
+END_RCPP
+}
 // OracleTFRPGCVCpp
 Rcpp::List OracleTFRPGCVCpp(const arma::mat& returns, const arma::mat& factors, const arma::mat& covariance_factors_returns, const arma::mat& variance_returns, const arma::vec& mean_returns, const arma::vec& penalty_parameters, const char weighting_type, const bool one_stddev_rule, const bool gcv_scaling_n_assets, const bool gcv_identification_check, const double target_level_kp2006_rank_test, const bool relaxed, const bool include_standard_errors);
 RcppExport SEXP _intrinsicFRP_OracleTFRPGCVCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP covariance_factors_returnsSEXP, SEXP variance_returnsSEXP, SEXP mean_returnsSEXP, SEXP penalty_parametersSEXP, SEXP weighting_typeSEXP, SEXP one_stddev_ruleSEXP, SEXP gcv_scaling_n_assetsSEXP, SEXP gcv_identification_checkSEXP, SEXP target_level_kp2006_rank_testSEXP, SEXP relaxedSEXP, SEXP include_standard_errorsSEXP) {
@@ -122,6 +148,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_AdaptiveWeightsCpp", (DL_FUNC) &_intrinsicFRP_AdaptiveWeightsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 4},
+    {"_intrinsicFRP_ChenFang2019BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestCpp, 4},
+    {"_intrinsicFRP_HJMisspecificationTestCpp", (DL_FUNC) &_intrinsicFRP_HJMisspecificationTestCpp, 2},
     {"_intrinsicFRP_OracleTFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPGCVCpp, 13},
     {"_intrinsicFRP_OracleTFRPCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPCVCpp, 11},
     {"_intrinsicFRP_OracleTFRPRVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPRVCpp, 13},

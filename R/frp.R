@@ -49,7 +49,6 @@ FRP = function(
   check_arguments = TRUE
 ) {
 
-  stopifnot("`check_arguments` must be boolean" = is.logical(check_arguments))
   if (check_arguments) {
 
     CheckData(returns, factors)

@@ -4,7 +4,7 @@
 #include "tfrp.h"
 #include "oracle_tfrp.h"
 #include "adaptive_weights.h"
-#include "rank_tests.h"
+#include "identification_tests.h"
 
 /////////////////////////////////
 ///// GCVTuningOracleTFRPCpp /////
