@@ -46,12 +46,13 @@ Windows](https://cran.r-project.org/bin/windows/Rtools/).
 
 ### Main functions:
 
-- `TFRP()`: Computes tradable factor risk premia from data on factors
+- `TFRP()` [Prevously: `IFRP`]: Computes tradable factor risk premia from data on factors
   and test asset excess returns. Optionally computes the 
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
   relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
-- `OracleTFRP()`: Computes optimal Oracle tradable factor risk 
+- `OracleTFRP()` [Prevously: `OptimalAdaptiveIFRP`]: Computes optimal Oracle 
+tradable factor risk 
   premia for various penalty parameter values from data on factors and test 
   asset excess returns. Tuning is performed via Generalized Cross Validation (GCV),
   Cross Validation (CV) or Rolling Validation (RV). Adaptive weights are based 
