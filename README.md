@@ -44,7 +44,7 @@ for MacOS](https://cran.r-project.org/bin/macosx/tools/) or the
 [necessary tools for
 Windows](https://cran.r-project.org/bin/windows/Rtools/).
 
-### Main functionality:
+### Main functions:
 
 - `TFRP()`: Computes tradable factor risk premia from data on factors
   and test asset excess returns. Optionally computes the 
@@ -66,6 +66,10 @@ Windows](https://cran.r-project.org/bin/windows/Rtools/).
   corresponding heteroskedasticity and autocorrelation robust standard errors 
   using the Newey-West (1994) plug-in procedure to select the number of 
   relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+- `ChenFang2019BetaRankTest()`: Computes the Chen fang 2019 rank statistic and p-value of the
+null that the matrix of regression loadings of test asset excess returns on
+risk factors has reduced rank.
+- `HJMisspecificationTest()`: Computes the Hansen-Jagannatan misspecification statistic and p-value of an asset pricing model from test asset excess returns and risk factors.
   
 For usage details, type `?FunctionName` in the R console, e.g.:
 
