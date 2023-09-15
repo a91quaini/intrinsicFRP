@@ -8,14 +8,16 @@ Authors@R:
            email = "alberto91quaini@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-1251-0599"))
-Description: Efficient computation of intrinsic and adaptive intrinsic factor 
-    risk premia and their standard errors. Intrinsic factor risk premia are
-    defined as the negative factor covariance with the SDF projection on 
-    test asset returns. As opposed to benchmark notions of factor risk premia,
-    they are well-defined even in presence of useless and weak factors, they do
-    not depend on the degree of misspecification of the factor model, and are
-    one-to-one linked to two-pass mimicking factor risk premia coefficients,
-    whenever the latter are also well-defined.
+Description: Efficient computation of tradable and Oracle tradable factor 
+    risk premia and their standard errors. Tradable factor risk premia are 
+    defined by the negative factor covariance with the Stochastic Discount 
+    Factor projection on returns. They are robust to misspecification or weak 
+    identification in asset pricing models, and they are zero for any factor 
+    weakly correlated with returns. We propose a simple estimator of tradable 
+    factor risk premia that enjoys the Oracle Properties, i.e., it performs as 
+    well as if the weak or useless factors were known. This means it not only 
+    consistently removes useless factors and factors weakly correlated with 
+    returns but also gives rise to reliable tests of asset pricing models.
 License: GPL (>= 3)
 URL: https://github.com/a91quaini/intrinsicFRP
 BugReports: https://github.com/a91quaini/intrinsicFRP/issues

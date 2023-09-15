@@ -1,4 +1,4 @@
-test_that("Test IFRP, IFRPFromMoments and IFRPStandardErrorsFromMoments", {
+test_that("Test TFRP", {
 
   factors = factors[,-1]
   returns = returns[,-1]
@@ -15,12 +15,12 @@ test_that("Test IFRP, IFRPFromMoments and IFRPStandardErrorsFromMoments", {
   )
   risk_premia = unname(risk_premia)
 
-  expect_no_error(IFRP(returns, factors, include_standard_errors = TRUE))
-  expect_error(IFRP(t(returns), factors, include_standard_errors = TRUE))
-  expect_error(IFRP(returns, t(factors), include_standard_errors = TRUE))
-  expect_error(IFRP(t(returns), t(factors), include_standard_errors = TRUE))
+  expect_no_error(TFRP(returns, factors, include_standard_errors = TRUE))
+  expect_error(TFRP(t(returns), factors, include_standard_errors = TRUE))
+  expect_error(TFRP(returns, t(factors), include_standard_errors = TRUE))
+  expect_error(TFRP(t(returns), t(factors), include_standard_errors = TRUE))
 
-  ifrp = IFRP(returns, factors, include_standard_errors = TRUE)
+  ifrp = TFRP(returns, factors, include_standard_errors = TRUE)
 
   expect_length(ifrp$risk_premia, n_factors)
   expect_length(ifrp$standard_errors, n_factors)
@@ -28,7 +28,7 @@ test_that("Test IFRP, IFRPFromMoments and IFRPStandardErrorsFromMoments", {
   expect_equal(ifrp$risk_premia, risk_premia, tolerance = 1e-8)
   expect_equal(
     ifrp$risk_premia,
-    IFRP(returns, factors, include_standard_errors = FALSE)$risk_premia,
+    TFRP(returns, factors, include_standard_errors = FALSE)$risk_premia,
     tolerance = 1e-8
   )
 

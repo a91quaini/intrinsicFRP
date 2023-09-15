@@ -46,8 +46,8 @@ i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns
-factors = factors[,-1]
-returns = returns[,-1]
+factors = intrinsicFRP::factors[,-1]
+returns = intrinsicFRP::returns[,-1]
 
 # compute KRS factor risk premia and their standard errors
 frp = FRP(returns, factors, include_standard_errors = TRUE)

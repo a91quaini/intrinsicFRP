@@ -41,6 +41,6 @@ arma::vec AdaptiveWeightsFromMatrixCpp(const arma::mat& matrix) {
 
 arma::vec AdaptiveWeightsFromVectorCpp(const arma::vec& vector) {
 
-  return 1. / vector % vector;
+  return 1. / (vector % vector);
 
 }

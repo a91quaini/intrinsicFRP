@@ -3,42 +3,38 @@ factors = intrinsicFRP::factors[,c(2,3,4)]
 returns = intrinsicFRP::returns[,-1]
 
 # simulate a useless factor and add it to the matrix of factors
+set.seed(23)
 factors = cbind(factors, stats::rnorm(nrow(factors), sd = stats::sd(factors[,1])))
 colnames(factors) = c(colnames(intrinsicFRP::factors[,c(2,3,4)]), "Usless")
 
-# compute intrinsic factor risk premia and their standard errors
-ifrp = IFRP(returns, factors, include_standard_errors = TRUE)
+# compute tradable factor risk premia and their standard errors
+tfrp = TFRP(returns, factors, include_standard_errors = TRUE)
 
 # compute the GLS factor risk premia of Kan Robotti and Shanken (2013) and their
 # standard errors
 krs_frp = FRP(returns, factors, include_standard_errors = TRUE)
 
 # set penalty parameters
-penalty_parameters = seq(1e-4, 1e-1, length.out = 1000)
+penalty_parameters = seq(1e-4, 1e-2, length.out = 1000)
 
-# compute optimal adaptive intrinsic factor risk premia and their standard
-# errors
-aifrp = OptimalAdaptiveIFRP(
+# compute Oracle tradable factor risk premia and their standard errors
+oracle_tfrp = OracleTFRP(
   returns,
   factors,
   penalty_parameters,
   include_standard_errors = TRUE,
 )
 
-afrp = OptimalAdaptiveFRP(
-  returns,
-  factors,
-  penalty_parameters,
-  include_standard_errors = TRUE
-)
-
 # create dataframe
 df <- data.frame(
-  Factor = rep(colnames(factors[,1:4]), 3),
-  Estimator = rep(c("IFRP", "A-IFRP", "KRS"), each=ncol(factors[,1:4])),
-  risk_premia = c(ifrp$risk_premia, aifrp$risk_premia, krs_frp$risk_premia),
+  Factor = factor(
+    rep(colnames(factors[,1:4]), 3),
+    levels = colnames(factors[,1:4])
+  ),
+  Estimator = rep(c("TFRP", "O-TFRP", "KRS"), each=ncol(factors[,1:4])),
+  risk_premia = c(tfrp$risk_premia, oracle_tfrp$risk_premia, krs_frp$risk_premia),
   standard_errors = c(
-    ifrp$standard_errors, aifrp$standard_errors, krs_frp$standard_errors
+    tfrp$standard_errors, oracle_tfrp$standard_errors, krs_frp$standard_errors
   )
 )
 

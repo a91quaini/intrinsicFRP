@@ -1,12 +1,12 @@
 // Author: Alberto Quaini
 
-#include "ifrp.h"
+#include "tfrp.h"
 #include "hac_standard_errors.h"
 
 //////////////////
-///// IFRPCpp ////
+///// TFRPCpp ////
 
-Rcpp::List IFRPCpp(
+Rcpp::List TFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const bool include_standard_errors
@@ -18,16 +18,13 @@ Rcpp::List IFRPCpp(
     const arma::mat variance_returns = arma::cov(returns);
     const arma::vec mean_returns = arma::mean(returns).t();
 
-    const arma::vec ifrp = IFRPCpp(
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns
-    );
-
     return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = ifrp,
-      Rcpp::Named("standard_errors") = StandardErrorsIFRPCpp(
-        ifrp,
+      Rcpp::Named("risk_premia") = TFRPCpp(
+        covariance_factors_returns,
+        variance_returns,
+        mean_returns
+      ),
+      Rcpp::Named("standard_errors") = StandardErrorsTFRPCpp(
         returns,
         factors,
         covariance_factors_returns,
@@ -39,7 +36,7 @@ Rcpp::List IFRPCpp(
   } else {
 
     return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = IFRPCpp(
+      Rcpp::Named("risk_premia") = TFRPCpp(
         arma::cov(factors, returns),
         arma::cov(returns),
         arma::mean(returns).t()
@@ -50,7 +47,7 @@ Rcpp::List IFRPCpp(
 
 }
 
-arma::vec IFRPCpp(
+arma::vec TFRPCpp(
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns
@@ -64,11 +61,10 @@ arma::vec IFRPCpp(
 
 }
 
-////////////////////////////////
-///// StandardErrorsIFRPCpp ////
+/////////////////////////////////
+///// StandardErrorsTTFRPCpp ////
 
-arma::vec StandardErrorsIFRPCpp(
-  const arma::vec& ifrp,
+arma::vec StandardErrorsTFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
