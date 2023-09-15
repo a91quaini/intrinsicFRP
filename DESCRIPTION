@@ -1,6 +1,6 @@
 Package: intrinsicFRP
-Title: Adaptive Estimation of Intrinsic Factor Risk Premia
-Version: 0.1.0
+Title: Oracle Estimation and Inference for Tradable Factor Risk Premia
+Version: 0.2.0
 Date: 2023-05-12
 Maintainer: Alberto Quaini <alberto91quaini@gmail.com>
 Authors@R: 
@@ -8,12 +8,12 @@ Authors@R:
            email = "alberto91quaini@gmail.com", 
            role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-1251-0599"))
-Description: Efficient computation of tradable and Oracle tradable factor 
-    risk premia and their standard errors. Tradable factor risk premia are 
-    defined by the negative factor covariance with the Stochastic Discount 
-    Factor projection on returns. They are robust to misspecification or weak 
-    identification in asset pricing models, and they are zero for any factor 
-    weakly correlated with returns. We propose a simple estimator of tradable 
+Description: Efficient computation of tradable and Oracle tradable factor risk 
+    premia and their standard errors. Tradable factor risk premia are defined by 
+    the negative factor covariance with the Stochastic Discount Factor projection 
+    on returns. They are robust to misspecification or weak identification in 
+    asset pricing models, and they are zero for any factor weakly correlated 
+    with returns. We propose a simple estimator of tradable 
     factor risk premia that enjoys the Oracle Properties, i.e., it performs as 
     well as if the weak or useless factors were known. This means it not only 
     consistently removes useless factors and factors weakly correlated with 
