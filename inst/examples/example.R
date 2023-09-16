@@ -31,10 +31,13 @@ df <- data.frame(
     rep(colnames(factors[,1:4]), 3),
     levels = colnames(factors[,1:4])
   ),
-  Estimator = rep(c("TFRP", "O-TFRP", "KRS"), each=ncol(factors[,1:4])),
-  risk_premia = c(tfrp$risk_premia, oracle_tfrp$risk_premia, krs_frp$risk_premia),
+  Estimator = factor(
+    rep(c("KRS", "TFRP", "O-TFRP"), each=ncol(factors[,1:4])),
+    levels = c("KRS", "TFRP", "O-TFRP")
+  ),
+  risk_premia = c(krs_frp$risk_premia, tfrp$risk_premia, oracle_tfrp$risk_premia),
   standard_errors = c(
-    tfrp$standard_errors, oracle_tfrp$standard_errors, krs_frp$standard_errors
+    krs_frp$standard_errors, tfrp$standard_errors, oracle_tfrp$standard_errors
   )
 )
 
@@ -50,3 +53,9 @@ ggplot2::ggplot(df, ggplot2::aes(
     ymax=risk_premia + stats::qnorm(0.975) * standard_errors),
     linewidth=.8, position = ggplot2::position_dodge(0.5), width = 0.25)
 
+ggplot2::ggsave(
+  "inst/examples/risk_premia.png",
+  width = 6,
+  height = 5,
+  dpi=600
+)
