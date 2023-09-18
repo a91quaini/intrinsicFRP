@@ -6,7 +6,7 @@
 
 * (15/05/2023) Version 0.1.0 published on CRAN (The Comprehensive R Archive Network).
 
-# intrinsicFRP 0.2.0
+# intrinsicFRP 1.0.0
 
 * Function `IFRP` extended and renamed `TFRP`.
 * Function `OptimalAdaptiveIFRP` extended and renamed `OracleTFRP`.

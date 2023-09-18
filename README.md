@@ -10,9 +10,9 @@
 
 Author: Alberto Quaini
 
-Efficient implementation of the sample and Oracle tradable factor risk premia estimators based on the methods developed in Quaini, Trojani and
-Yuan 2023 “Tradable Factor Risk Premia and Oracle Tests of Asset Pricing
-Models”.
+Efficient implementation of the sample and Oracle tradable factor risk premia estimators based on the methods developed in A. Quaini, F. Trojani and
+M. Yuan (2023) [Tradable Factor Risk Premia and Oracle Tests of Asset Pricing
+Models](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574683).
 
 ## Installation
 
@@ -153,8 +153,8 @@ Compare risk premia estimates of misspecification-robust factor risk premia (KRS
 
 ## References
 
-Quaini, A., Trojani, F. and Yuan, M., 2023. Tradable Factor Risk Premia
-and Oracle Tests of Asset Pricing Models. Working paper.
+Quaini, A., Trojani, F. and Yuan, M., 2023. [Tradable Factor Risk Premia
+and Oracle Tests of Asset Pricing Models](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574683).
 
 Kan, R., Robotti, C. and Shanken, J., 2013. Pricing model performance and the two‐pass cross‐sectional regression methodology. The Journal of Finance, 68(6), pp.2617-2649.
 
