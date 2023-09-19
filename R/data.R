@@ -15,7 +15,7 @@
 #' Factors - monthly observations from `01/1970` to `12/2021`
 #'
 #' Monthly observations from `01/1970` to `12/2021` of
-#' the Fama-French `5` factors the momentum factor.
+#' the Fama-French `5` factors and the momentum factor.
 #'
 #' @format ## `factors`
 #' A data frame with `624` rows and `7` columns:

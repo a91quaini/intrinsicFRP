@@ -380,21 +380,160 @@ estimation and inference of tradable factor risk premia</h1>
 
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p><code>intrinsicFRP</code> <span class="citation">(Quaini, Trojani,
-and Yuan 2023)</span></p>
+<p><code>intrinsicFRP</code> is an R package providing an efficient
+implementation of the methods developed in <span class="citation">(Quaini, Trojani, and Yuan 2023)</span> for the
+estimation and testing of asset pricing models based on the notion of
+tradable factor risk premia. Tradable factor risk premia are defined as
+the negative factor covariance with the Stochastic Discount Factor
+projected on returns. Theoretically, they possess many desirable
+properties, namely they are well-identified even in the presence of
+factors that are weakly correlated with returns (so-called weak
+factors), robust to potential misspecification of the underlying asset
+pricing model, and invariant to simple repackaging of the test assets. A
+simple estimator of tradable factor risk premia, obtained by replacing
+population moments with their empirical counterparts, is consistent and
+asymptotically Gaussian, even for weak factors having a correlation with
+returns vanishing at the rate <span class="math inline">\(1/T^\alpha\)</span> with <span class="math inline">\(\alpha&gt;1/2\)</span>, where <span class="math inline">\(T\)</span> is the sample size. For
+slowly-vanishing weak factors, i.e., with rate <span class="math inline">\(1/T^{1/2}\)</span>, it’s asymptotic distribution
+displays a bias term, which does not propagate to the other factor risk
+premia, and it does not impair the overall asymptotic mean squared error
+of the estimator. <span class="citation">(Quaini, Trojani, and Yuan
+2023)</span> further develop an Oracle estimator, which improves on the
+simple estimator by employing an adaptively weighted lasso penalization
+to consistently remove the problematic weak factors, and it performs as
+well as if the weak or useless factors were known. More precisely, it
+consistently removes the risk premium of any weak factor, and it possess
+an efficient asymptotic Gaussian distribution for the remaining
+factors.</p>
+<p>The aforementioned properties possessed by the simple and the Oracle
+tradable factor risk premia estimators are remarkable, especially when
+compared to those of the commonly used risk premia estimators in the
+literature, which are based on usual notions of risk premia based on the
+Stochastic Discount Factor projected on the factors; see, e.g., the
+Fama-MacBeth <span class="citation">(Fama and MacBeth 1973)</span> and
+the misspecification-robust <span class="citation">(Kan, Robotti, and
+Shanken 2013)</span> factor risk premia estimators. In presence of weak
+factors, these estimators may be characterized by non-Gaussian
+asymptotic distributions, and they may not even converge to zero for the
+weak factors. Gaussian asymptotic distributions, and in some settings
+may even not be consistent; see, e.g., <span class="citation">(Kan and
+Zhang 1999)</span>, <span class="citation">(Kleibergen 2009)</span> and
+<span class="citation">(Gospodinov, Kan, and Robotti 2014)</span>.</p>
+<p><code>intrinsicFRP</code> implements the methods for computing point
+estimates and standard errors for the simple and the Oracle tradable
+factor risk premia estimators, as well as those of the commonly used
+Fama-MacBeth <span class="citation">(Fama and MacBeth 1973)</span> and
+misspecification-robust <span class="citation">(Kan, Robotti, and
+Shanken 2013)</span> factor risk premia. In order to maximize computing
+performances, all the methods are implemented in c++ and rely on the <a href="https://arma.sourceforge.net/">Armadillo</a> library for fast
+linear algebra calculations. However, all methods are accessible from R
+functions, for ease of utilization.</p>
+<p><code>intrinsicFRP</code> is an R package Tradable factor risk premia
+are given by the negative factor covariance with the Stochastic Discount
+Factor projection on returns. This package provides efficient
+computation of tradable and Oracle tradable factor risk premia
+estimators and their standard errors; see A. Quaini, F. Trojani and M.
+Yuan (2023) <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574683" class="uri">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574683</a>.
+Tradable factor risk premia are robust to misspecification or weak
+identification in asset pricing models, and they are zero for any factor
+weakly correlated with returns. Their Oracle estimator performs as well
+as if the weak or useless factors were known in advance. This means it
+not only consistently removes useless factors and factors weakly
+correlated with returns but also gives rise to reliable tests of asset
+pricing models. <span class="citation">(Quaini, Trojani, and Yuan
+2023)</span> <span class="citation">(Kan, Robotti, and Shanken
+2013)</span> [fama1973risk]</p>
 </div>
 <div id="statement-of-need" class="section level1">
 <h1>Statement of need</h1>
 </div>
 <div id="features" class="section level1">
 <h1>Features</h1>
+<p>The R package <code>intrinsicFRP</code> comes with the following two
+datasets, which are sourced from the <a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html">Kenneth
+French data library</a>:</p>
+<ul>
+<li><code>returns</code>: monthly observations from <code>01/1970</code>
+to <code>12/2021</code> of the excess returns on the 25
+Size/Book-to-Market and the 17 industry portfolios.</li>
+<li><code>factors</code>: monthly observations from <code>01/1970</code>
+to <code>12/2021</code> of the Fama-French 5 factors and the momentum
+factor.</li>
+</ul>
+<p>The main functions in <code>intrinsicFRP</code> are:</p>
+<ul>
+<li><code>TFRP()</code>: Computes tradable factor risk premia from data
+on factors and test asset excess returns. Optionally computes the
+corresponding heteroskedasticity and autocorrelation robust standard
+errors.</li>
+<li><code>OracleTFRP()</code>: Computes optimal Oracle tradable factor
+risk premia from data on factors and test asset excess returns. Tuning
+is performed via Generalized Cross Validation (GCV), Cross Validation
+(CV) or Rolling Validation (RV). Optionally computes the corresponding
+heteroskedasticity and autocorrelation robust standard errors.</li>
+<li><code>FRP()</code>: Computes Fama MachBeth (1973) or
+misspecification-robust factor risk premia of Kan Robotti Shanken (2013)
+from data on factors and test asset excess returns. Optionally computes
+the corresponding heteroskedasticity and autocorrelation robust standard
+errors.</li>
+<li><code>ChenFang2019BetaRankTest()</code>: Computes an asset pricing
+model identification test from data on factors and test asset excess
+returns. It employs a combination of the rank tests in <span class="citation">(Chen and Fang 2019)</span> and <span class="citation">(Kleibergen and Paap 2006)</span> on the matrix of
+regression coefficients of test asset excess returns on risk
+factors.</li>
+<li><code>HJMisspecificationTest()</code>: Computes an asset pricing
+model misspecification test from data on factors and test asset excess
+returns. It employs the Hansen-Jagannatan test; see <span class="citation">(Hansen and Jagannathan 1997)</span>.</li>
+</ul>
 </div>
 <div id="acknowledgments" class="section level1">
 <h1>Acknowledgments</h1>
+<p>The author would like to thank Fabio Trojani and Ming Yuan,
+co-creators together with the author of the methodologies underlying the
+R library <code>intrinsicFRP</code>.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
-<h1 class="unnumbered">References—</h1>
+<h1 class="unnumbered">References</h1>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-chen2019improved" class="csl-entry">
+Chen, Qihui, and Zheng Fang. 2019. <span>“Improved Inference on the Rank
+of a Matrix.”</span> <em>Quantitative Economics</em> 10 (4): 1787–1824.
+</div>
+<div id="ref-fama1973risk" class="csl-entry">
+Fama, Eugene F, and James D MacBeth. 1973. <span>“Risk, Return, and
+Equilibrium: Empirical Tests.”</span> <em>Journal of Political
+Economy</em> 81 (3): 607–36.
+</div>
+<div id="ref-gospodinov2014misspecification" class="csl-entry">
+Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2014.
+<span>“Misspecification-Robust Inference in Linear Asset-Pricing Models
+with Irrelevant Risk Factors.”</span> <em>The Review of Financial
+Studies</em> 27 (7): 2139–70.
+</div>
+<div id="ref-hansen1997assessing" class="csl-entry">
+Hansen, Lars Peter, and Ravi Jagannathan. 1997. <span>“Assessing
+Specification Errors in Stochastic Discount Factor Models.”</span>
+<em>The Journal of Finance</em> 52 (2): 557–90.
+</div>
+<div id="ref-kan2013pricing" class="csl-entry">
+Kan, Raymond, Cesare Robotti, and Jay Shanken. 2013. <span>“Pricing
+Model Performance and the Two-Pass Cross-Sectional Regression
+Methodology.”</span> <em>The Journal of Finance</em> 68 (6): 2617–49.
+</div>
+<div id="ref-kan1999two" class="csl-entry">
+Kan, Raymond, and Chu Zhang. 1999. <span>“Two-Pass Tests of Asset
+Pricing Models with Useless Factors.”</span> <em>The Journal of
+Finance</em> 54 (1): 203–35.
+</div>
+<div id="ref-kleibergen2009tests" class="csl-entry">
+Kleibergen, Frank. 2009. <span>“Tests of Risk Premia in Linear Factor
+Models.”</span> <em>Journal of Econometrics</em> 149 (2): 149–73.
+</div>
+<div id="ref-kleibergen2006generalized" class="csl-entry">
+Kleibergen, Frank, and Richard Paap. 2006. <span>“Generalized Reduced
+Rank Tests Using the Singular Value Decomposition.”</span> <em>Journal
+of Econometrics</em> 133 (1): 97–126.
+</div>
 <div id="ref-quaini2023tradable" class="csl-entry">
 Quaini, Alberto, Fabio Trojani, and Ming Yuan. 2023. <span>“Tradable
 Factor Risk Premia and Oracle Tests of Asset Pricing Models.”</span>
