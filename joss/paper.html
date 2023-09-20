@@ -380,22 +380,20 @@ Estimation and Inference of Asset Pricing Models</h1>
 
 <div id="summary" class="section level1">
 <h1>Summary</h1>
-<p>intrinsicFRP is a lightweight R package providing an efficient
-implementation of methods from <span class="citation">(Quaini, Trojani,
-and Yuan 2023)</span> for estimating and testing asset pricing models
-based on tradable factor risk premia. These premia are given by the
-negative factor covariance with the Stochastic Discount Factor projected
-onto returns. They are robust to model misspecification, asset
+<p><code>intrinsicFRP</code> is a lightweight R package providing an
+efficient implementation of methods from <span class="citation">(Quaini,
+Trojani, and Yuan 2023)</span> for estimating and testing asset pricing
+models based on tradable factor risk premia. These risk premia are given
+by the negative factor covariance with the Stochastic Discount Factor
+projected on returns. They are robust to model misspecification, asset
 repackaging and to the presence of factors that are weakly correlated
-with returns (weak factors).</p>
+with returns (called weak factors from here on).</p>
 <p>A simple estimator for tradable factor risk premia, replacing
 population moments with empirical ones, remains consistent and
-asymptotically Gaussian, even for weak factors with correlations
-vanishing at a rate of <span class="math inline">\(1/T^\alpha\)</span>,
-where <span class="math inline">\(T\)</span> is the sample size (for
-<span class="math inline">\(\alpha&gt;1/2\)</span>). For slowly
-vanishing weak factors (<span class="math inline">\(1/T^{1/2}\)</span>),
-it exhibits a bias term, but this doesn’t affect other factor risk
+asymptotically Gaussian, even for weak factors having correlations with
+returns that vanish at a rate of <span class="math inline">\(1/T^\alpha\)</span>, where <span class="math inline">\(T\)</span> is the sample size (for <span class="math inline">\(\alpha&gt;1/2\)</span>). For slowly vanishing weak
+factors (<span class="math inline">\(1/T^{1/2}\)</span>), the simple
+exhibits a bias term, but this doesn’t affect other factor risk
 premia.</p>
 <p><span class="citation">(Quaini, Trojani, and Yuan 2023)</span>
 further introduces an Oracle estimator that enhances the simple one by
@@ -411,18 +409,18 @@ These latter estimators, even in standard settings, may exhibit
 non-Gaussian asymptotic distributions and may not converge to zero for
 weak factors, as shown by in <span class="citation">(Kan and Zhang
 1999)</span>, <span class="citation">(Kleibergen 2009)</span>, and <span class="citation">(Gospodinov, Kan, and Robotti 2014)</span>.</p>
-<p>An illustrative figure below shows point estimates and standard
-errors for misspecification-robust (KRS), simple tradable (TFRP), and
-Oracle (O-TFRP) factor risk premia estimators. The computations use
-monthly observations from 01/1970 to 12/2021 for excess returns on 25
-Size/Book-to-Market and 17 industry portfolios as test assets, along
-with the Fama-French 3 factors. An artificial useless factor is
-included, simulated from a standard normal distribution independent of
-asset returns.</p>
-<p>In the figure, the misspecification-robust risk premium on the
-useless factor has the highest absolute value, with a wide 95%
-confidence interval. This reflects the poor statistical properties of
-the misspecification-robust estimator in the presence of weak factors.
+<p>As an illustration, Figure 1 below shows point estimates and 95%
+confidence intervals for misspecification-robust (KRS), simple tradable
+(TFRP), and Oracle (O-TFRP) factor risk premia estimators. The
+computations use monthly observations from 01/1970 to 12/2021 for excess
+returns on 25 Size/Book-to-Market and 17 industry portfolios as test
+assets, along with the Fama-French 3 factors. An artificial useless
+factor is included, simulated from a standard normal distribution
+independent of asset returns.</p>
+<p>In Figure 1, the misspecification-robust risk premium on the useless
+factor has the highest absolute value, with a wide 95% confidence
+interval. This reflects the poor statistical properties of the
+misspecification-robust estimator in the presence of weak factors.
 Conversely, the point estimate of the tradable risk premium on the
 useless factor remains close to zero, with a more concentrated 95%
 confidence interval. Finally, the point estimate of the Oracle tradable
@@ -443,11 +441,11 @@ factor.</em></p>
 and practitioners in finance due to the following pressing issues:</p>
 <ul>
 <li><p>Lack of Existing Code for Cutting-Edge Methods: The field of
-financial econometrics rapidly advancing. However, one major challenge
-is the absence of readily available code, especially in R, to implement
-the state-of-the-art methods. The <code>intrinsicFRP</code> package
-directly addresses this gap by providing a comprehensive and efficient
-implementation of the novel techniques established in <span class="citation">(Quaini, Trojani, and Yuan 2023)</span>.</p></li>
+financial econometrics is rapidly advancing. However, one major
+challenge is the absence of readily available code, especially in R, to
+implement the state-of-the-art methods. The <code>intrinsicFRP</code>
+package directly addresses this gap by providing a comprehensive and
+efficient implementation of the novel techniques established in <span class="citation">(Quaini, Trojani, and Yuan 2023)</span>.</p></li>
 <li><p>Dependency on Closed-Source Software: Historically, legacy code
 for factor models in finance has predominantly been written in
 proprietary programming languages like MATLAB. This dependence on
@@ -474,8 +472,8 @@ develop and validate the suggested approaches.</p></li>
 </div>
 <div id="features" class="section level1">
 <h1>Features</h1>
-<p>The intrinsicFRP R package includes two datasets sourced from the
-Kenneth French data library <span class="citation">(French
+<p>The <code>intrinsicFRP</code> R package includes two datasets sourced
+from the Kenneth French data library <span class="citation">(French
 2012)</span>:</p>
 <ul>
 <li><code>returns</code>: Monthly observations from January 1970 to
@@ -485,15 +483,15 @@ portfolios and 17 industry portfolios.</li>
 December 2021, containing data for the Fama-French 5 factors and the
 momentum factor.</li>
 </ul>
-<p>Additionally, intrinsicFRP implements methods for computing point
-estimates and standard errors for the simple and Oracle tradable factor
-risk premia estimators, as well as the Fama-MacBeth and
+<p>Additionally, <code>intrinsicFRP</code> implements methods for
+computing point estimates and standard errors for the simple and Oracle
+tradable factor risk premia estimators, as well as the Fama-MacBeth and
 misspecification-robust factor risk premia. The package also provides
 functions for conducting model identification tests developed in <span class="citation">(Kleibergen and Paap 2006)</span> and their bootstrap
 improvement in <span class="citation">(Chen and Fang 2019)</span>, along
 with the model misspecification test from <span class="citation">(Hansen
-and Jagannathan 1997)</span>. The key functions in intrinsicFRP
-include:</p>
+and Jagannathan 1997)</span>. The key functions in
+<code>intrinsicFRP</code> include:</p>
 <ul>
 <li><code>TFRP()</code>: Computes tradable factor risk premia from data
 on factors and test asset excess returns. Optionally Optionally it
