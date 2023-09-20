@@ -3,6 +3,6 @@
 ^LICENSE\.md$
 ^\.github$
 ^inst/examples$
-^joss$
+^paper$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
