@@ -32,10 +32,7 @@ As an illustration, Figure 1 below shows point estimates and 95% confidence inte
 
 In Figure 1, the misspecification-robust risk premium on the useless factor has the highest absolute value, with a wide 95% confidence interval. This reflects the poor statistical properties of the misspecification-robust estimator in the presence of weak factors. Conversely, the point estimate of the tradable risk premium on the useless factor remains close to zero, with a more concentrated 95% confidence interval. Finally, the point estimate of the Oracle tradable risk premium estimator on the useless factor is exactly zero, showcasing its variable selection capabilities.
 
-<p float="left">
-<img src="../inst/examples/risk_premia.png" width="600" />
-</p>
-***Figure 1: **Estimates and 95% confidence intervals of the misspecification-robust (KRS), tradable (TFRP) and Oracle (O-TFRP) factor risk premia estimators for the market excess return (Mkt-RF), SMB, HML Fama-French factors and the simulated useless factor.*
+![**Figure 1**: Estimates and 95% confidence intervals of the misspecification-robust (KRS), tradable (TFRP) and Oracle (O-TFRP) factor risk premia estimators for the market excess return (Mkt-RF), SMB, HML Fama-French factors and the simulated useless factor.](../inst/examples/risk_premia.png){width="600"}
 
 # Statement of need
 
@@ -75,9 +72,5 @@ The `intrinsicFRP` library is a lightweight package with minimal dependencies, i
 - `Rcpp` [@eddelbuettel2018extending] and `RcppArmadillo` [@eddelbuettel2014rcpparmadillo]: They facilitate seamless integration between R, C++, and the armadillo C++ library.
 - `graphics`: Provides R functions for creating basic graphics.
 - `stats`: Offers R functions for performing statistical calculations and random number generation.
-
-# Acknowledgments
-The author extends gratitude to Fabio Trojani and Ming Yuan, who, along with the author, developed the methodologies underpinning the `intrinsicFRP` R library.
-
 
 # References
