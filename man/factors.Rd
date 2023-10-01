@@ -22,6 +22,6 @@ factors
 }
 \description{
 Monthly observations from \code{01/1970} to \code{12/2021} of
-the Fama-French \code{5} factors the momentum factor.
+the Fama-French \code{5} factors and the momentum factor.
 }
 \keyword{datasets}

@@ -1,5 +1,5 @@
 
-# intrinsicFRP: Oracle tradable factor risk premia
+# intrinsicFRP: Oracle Estimation and Inference for Tradable Factor Risk Premia
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/intrinsicFRP)](https://CRAN.R-project.org/package=intrinsicFRP)
@@ -13,6 +13,10 @@ Author: Alberto Quaini
 Efficient implementation of the sample and Oracle tradable factor risk premia estimators based on the methods developed in A. Quaini, F. Trojani and
 M. Yuan (2023) [Tradable Factor Risk Premia and Oracle Tests of Asset Pricing
 Models](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574683).
+
+To cite `intrinsicFRP` in publications, please use:
+
+> Quaini, A. (2023). `intrinsicFRP`: Oracle Estimation and Inference for Tradable Factor Risk Premia. `R` package version 1.0.0. URL: https://cran.r-project.org/web/packages/intrinsicFRP/index.html.
 
 ## Installation
 
