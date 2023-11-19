@@ -7,19 +7,23 @@ test_that("Test OracleTFRP", {
   n_returns = ncol(returns)
   n_observations = nrow(returns)
 
+  # Calculating necessary statistics for the expected risk premia.
   covariance_factors_returns = stats::cov(factors, returns)
   variance_returns = stats::cov(returns)
   mean_returns = colMeans(returns)
   mean_factors = colMeans(factors)
 
+  # Generating a range of penalty parameters for testing.
   penalty_parameters = c(
     0.,
     exp(seq(from=log(1.0e-8), to=log(1e-2), length.out=100)),
     seq(1e-2, 1e2, 100)
   )
 
+  # Computing tradable factor risk premia for comparison.
   tfrp = TFRP(returns, factors, include_standard_errors = TRUE)
 
+  # Testing basic functionality of OracleTFRP without errors including standard errors.
   expect_no_error(
     OracleTFRP(
       returns,
@@ -28,6 +32,7 @@ test_that("Test OracleTFRP", {
       include_standard_errors = TRUE
   ))
 
+  # Testing error handling for incorrect dimensions (transposed matrices).
   expect_error(OracleTFRP(
     t(returns),
     factors,
@@ -43,6 +48,8 @@ test_that("Test OracleTFRP", {
     t(factors),
     penalty_parameters
   ))
+
+  # Testing error handling for invalid types or values of arguments.
   expect_error(
     OracleTFRP(
       returns,
@@ -136,6 +143,7 @@ test_that("Test OracleTFRP", {
       target_level_kp2006_rank_test = 1.5
   ))
 
+  # Checking consistency of risk premia across different parameter settings.
   expect_equal(
     OracleTFRP(
       returns,
@@ -153,8 +161,10 @@ test_that("Test OracleTFRP", {
     )$risk_premia
   )
 
-  weights =  intrinsicFRP:::AdaptiveWeightsCpp(returns, factors, 'c')
+  # Weights calculation based on the correlation between factors and returns.
+  weights = 1. / colMeans(stats::cor(returns, factors)^2)
 
+  # Comparing OracleTFRP with zero penalty parameters to TFRP.
   oracle_tfrp0 = OracleTFRP(
     returns,
     factors,
@@ -163,20 +173,25 @@ test_that("Test OracleTFRP", {
 
   expect_equal(oracle_tfrp0$risk_premia, tfrp$risk_premia)
 
+  # Testing OracleTFRP with a non-zero penalty parameter.
   oracle_tfrp1 = OracleTFRP(
     returns,
     factors,
     penalty_parameters = .1
   )
 
+  # Testing OracleTFRP across a range of penalty parameters.
   oracle_tfrpm =  OracleTFRP(
     returns,
     factors,
     penalty_parameters
   )
 
+  # Validating the length of risk premia vectors.
   expect_length(oracle_tfrp0$risk_premia, n_factors)
   expect_length(oracle_tfrp1$risk_premia, n_factors)
+
+  #### Additional tests for different GCV, CV, and RV settings.
 
   ### GCV
   for (weighting_type in c('c', 'b', 'a', 'n')) {

@@ -11,23 +11,33 @@ arma::vec AdaptiveWeightsCpp(
   const char type
 ) {
 
+  // Choose the type of adaptive weights based on input 'type'
   switch (type) {
 
-    case 'c' : return AdaptiveWeightsFromMatrixCpp(arma::cor(factors, returns));
+  case 'c' :
+    // Type 'c': Compute weights based on the correlation matrix between factors and returns
+    return AdaptiveWeightsFromMatrixCpp(arma::cor(factors, returns));
 
-    case 'a' : return AdaptiveWeightsFromVectorCpp(
-        arma::cov(factors, returns) * arma::solve(
+  case 'a' :
+    // Type 'a': Compute weights based on the first-step intrinsic factor risk premia estimates
+    return AdaptiveWeightsFromVectorCpp(
+      arma::cov(factors, returns) * arma::solve(
         arma::cov(returns),
         arma::mean(returns).t(),
         arma::solve_opts::likely_sympd
-      ));
+    ));
 
-    case 'b' : return AdaptiveWeightsFromMatrixCpp(arma::solve(
-        arma::cov(factors),
-        arma::cov(factors, returns)
-      ));
+  case 'b' :
+    // Type 'b': Compute weights based on the matrix of factors regression coefficients on test asset excess returns
+    return AdaptiveWeightsFromMatrixCpp(arma::solve(
+      arma::cov(factors),
+      arma::cov(factors, returns),
+      arma::solve_opts::likely_sympd
+    ));
 
-    default : return arma::ones(factors.n_cols);
+  default :
+    // Other types: Return unit vector (equal weights)
+    return arma::ones(factors.n_cols);
 
   }
 
@@ -35,12 +45,14 @@ arma::vec AdaptiveWeightsCpp(
 
 arma::vec AdaptiveWeightsFromMatrixCpp(const arma::mat& matrix) {
 
-  return 1. / arma::sum(matrix % matrix, 1);
+  // Return the inverse of the sum of squares of each row in the matrix
+  return 1. / arma::sum(arma::square(matrix), 1);
 
 }
 
 arma::vec AdaptiveWeightsFromVectorCpp(const arma::vec& vector) {
 
-  return 1. / (vector % vector);
+  // Return the inverse of the element-wise square of the vector
+  return 1. / arma::square(vector);
 
 }

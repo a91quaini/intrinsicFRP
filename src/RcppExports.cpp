@@ -11,19 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// AdaptiveWeightsCpp
-arma::vec AdaptiveWeightsCpp(const arma::mat& returns, const arma::mat& factors, const char type);
-RcppExport SEXP _intrinsicFRP_AdaptiveWeightsCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP typeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
-    Rcpp::traits::input_parameter< const char >::type type(typeSEXP);
-    rcpp_result_gen = Rcpp::wrap(AdaptiveWeightsCpp(returns, factors, type));
-    return rcpp_result_gen;
-END_RCPP
-}
 // FRPCpp
 Rcpp::List FRPCpp(const arma::mat& returns, const arma::mat& factors, const bool misspecification_robust, const bool include_standard_errors);
 RcppExport SEXP _intrinsicFRP_FRPCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP misspecification_robustSEXP, SEXP include_standard_errorsSEXP) {
@@ -38,6 +25,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// HACCovarianceMatrixCpp
+arma::mat HACCovarianceMatrixCpp(arma::mat& series, int n_lags, const bool prewhite);
+RcppExport SEXP _intrinsicFRP_HACCovarianceMatrixCpp(SEXP seriesSEXP, SEXP n_lagsSEXP, SEXP prewhiteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type series(seriesSEXP);
+    Rcpp::traits::input_parameter< int >::type n_lags(n_lagsSEXP);
+    Rcpp::traits::input_parameter< const bool >::type prewhite(prewhiteSEXP);
+    rcpp_result_gen = Rcpp::wrap(HACCovarianceMatrixCpp(series, n_lags, prewhite));
+    return rcpp_result_gen;
+END_RCPP
+}
+// HACVarianceCpp
+double HACVarianceCpp(arma::vec& series, int n_lags, const bool prewhite);
+RcppExport SEXP _intrinsicFRP_HACVarianceCpp(SEXP seriesSEXP, SEXP n_lagsSEXP, SEXP prewhiteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec& >::type series(seriesSEXP);
+    Rcpp::traits::input_parameter< int >::type n_lags(n_lagsSEXP);
+    Rcpp::traits::input_parameter< const bool >::type prewhite(prewhiteSEXP);
+    rcpp_result_gen = Rcpp::wrap(HACVarianceCpp(series, n_lags, prewhite));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ChenFang2019BetaRankTestCpp
 Rcpp::List ChenFang2019BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const unsigned int n_bootstrap, const double target_level_kp2006_rank_test);
 RcppExport SEXP _intrinsicFRP_ChenFang2019BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP n_bootstrapSEXP, SEXP target_level_kp2006_rank_testSEXP) {
@@ -49,6 +62,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const unsigned int >::type n_bootstrap(n_bootstrapSEXP);
     Rcpp::traits::input_parameter< const double >::type target_level_kp2006_rank_test(target_level_kp2006_rank_testSEXP);
     rcpp_result_gen = Rcpp::wrap(ChenFang2019BetaRankTestCpp(returns, factors, n_bootstrap, target_level_kp2006_rank_test));
+    return rcpp_result_gen;
+END_RCPP
+}
+// IterativeKleibergenPaap2006BetaRankTestCpp
+Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(const arma::mat& returns, const arma::mat& factors, const double target_level);
+RcppExport SEXP _intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP target_levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const double >::type target_level(target_levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(IterativeKleibergenPaap2006BetaRankTestCpp(returns, factors, target_level));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -146,9 +172,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_intrinsicFRP_AdaptiveWeightsCpp", (DL_FUNC) &_intrinsicFRP_AdaptiveWeightsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 4},
+    {"_intrinsicFRP_HACCovarianceMatrixCpp", (DL_FUNC) &_intrinsicFRP_HACCovarianceMatrixCpp, 3},
+    {"_intrinsicFRP_HACVarianceCpp", (DL_FUNC) &_intrinsicFRP_HACVarianceCpp, 3},
     {"_intrinsicFRP_ChenFang2019BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestCpp, 4},
+    {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
     {"_intrinsicFRP_HJMisspecificationTestCpp", (DL_FUNC) &_intrinsicFRP_HJMisspecificationTestCpp, 2},
     {"_intrinsicFRP_OracleTFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPGCVCpp, 13},
     {"_intrinsicFRP_OracleTFRPCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPCVCpp, 11},

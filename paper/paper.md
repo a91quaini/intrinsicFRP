@@ -1,5 +1,5 @@
 ---
-title: 'intrinsicFRP: an R Package for Efficient Estimation and Inference of Asset Pricing Models'
+title: 'intrinsicFRP: R Package For Factor Model Asset Pricing'
 tags:
   - R
   - Factor Risk Premia
@@ -50,7 +50,7 @@ By addressing these two key issues, the `intrinsicFRP` R package empowers resear
 
 # Features
 
-The `intrinsicFRP` R package includes two datasets sourced from the Kenneth French data library [@french2012kenneth]:
+The `intrinsicFRP` R package includes two datasets sourced from the [Kenneth French data library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html):
 
 - `returns`: Monthly observations from January 1970 to December 2021, containing excess returns data for 25 Size/Book-to-Market portfolios and 17 industry portfolios.
 - `factors`: Monthly observations from January 1970 to December 2021, containing data for the Fama-French 5 factors and the momentum factor.

@@ -19,16 +19,16 @@ excess returns.}
 \item{factors}{\verb{n_observations x n_factors}-dimensional matrix of factors.}
 
 \item{misspecification_robust}{boolean \code{TRUE} for the
-"misspecification-robust" Kar Robotti Shanken GLS approach using the
-inverse covariance matrix of returns; \code{FALSE} for standard Fama-Mac-Beth
+"misspecification-robust" Kan-Robotti-Shanken (2013) GLS approach using the
+inverse covariance matrix of returns; \code{FALSE} for standard Fama-MacBeth
 risk premia. Default is \code{TRUE}.}
 
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
 factor risk premia HAC standard errors; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
 
-\item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
-\code{FALSE} otherwise. Default is \code{TRUE}.}
+\item{check_arguments}{boolean \code{TRUE} for internal check of all function
+arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
 a list containing \code{n_factors}-dimensional vector of factor
@@ -37,15 +37,21 @@ it further includes \code{n_factors}-dimensional vector of factor risk
 premia standard errors in \code{"standard_errors"}.
 }
 \description{
-Computes Fama MachBeth (1973) or misspecification-robust factor
-risk premia of Kan Robotti Shanken (2013) from data on factors and test
-asset excess returns. Optionally computes the corresponding
+Computes the Fama-MachBeth (1973) \url{doi:10.1086/260061} factor
+risk premia:
+\verb{FMFRP = (beta' * beta)^\{-1\} * beta' * E[R]} where
+\code{beta = Cov[R, F] * V[F]^{-1}}
+or the misspecification-robust factor risk premia of Kan-Robotti-Shanken (2013)
+\url{doi:10.1111/jofi.12035}:
+\verb{KRSFRP = (beta' * V[R]^\{-1\} * beta)^\{-1\} * beta' * V[R]^\{-1\} * E[R]}
+from data on factors \code{F} and test
+asset excess returns \code{R}. Optionally computes the corresponding
 heteroskedasticity and autocorrelation robust standard errors using the
-Newey-West (1994) plug-in procedure to select the number of relevant lags,
-i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
+Newey-West (1994) \url{doi:10.2307/2297912} plug-in procedure to select the
+number of relevant lags, i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 }
 \examples{
-# import package data on 15 risk factors and 42 test asset excess returns
+# import package data on 6 risk factors and 42 test asset excess returns
 factors = intrinsicFRP::factors[,-1]
 returns = intrinsicFRP::returns[,-1]
 

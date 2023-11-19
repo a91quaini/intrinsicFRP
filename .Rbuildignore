@@ -6,3 +6,4 @@
 ^paper$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^readme.bib

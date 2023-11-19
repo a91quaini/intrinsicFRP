@@ -2,35 +2,41 @@
 % Please edit documentation in R/misspecification_test.R
 \name{HJMisspecificationTest}
 \alias{HJMisspecificationTest}
-\title{Compute factor risk premia}
+\title{Asset Prciing HJ model misspecification test}
 \usage{
 HJMisspecificationTest(returns, factors, check_arguments = TRUE)
 }
 \arguments{
-\item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
+\item{returns}{An \verb{n_observations x n_returns}-dimensional matrix of test asset
 excess returns.}
 
-\item{factors}{\verb{n_observations x n_factors}-dimensional matrix of risk
+\item{factors}{An \verb{n_observations x n_factors}-dimensional matrix of risk
 factors.}
 
-\item{check_arguments}{boolean \code{TRUE} if you want to check function arguments;
+\item{check_arguments}{A boolean \code{TRUE} if you want to check function arguments;
 \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-a list containing the HJ test statistic and the corresponding
-p-value.
+A list containing the squared standardized HJ test statistic and
+the corresponding p-value.
 }
 \description{
-Computes the Hansen-Jagannatan misspecification statistic and
-p-value of an asset pricing model from test asset excess returns and
-risk factors.
+Computes the Hansen-Jagannathan (1997) \url{doi:10.1111/j.1540-6261.1997.tb04813.x}
+model misspecification statistic and
+p-value of an asset pricing model from test asset excess returns \code{R} and
+risk factors \code{F}. The statistic is defined as:
+\verb{HJDISTANCE = min_\{d\} (E[R] - beta * d)' * Var[R]^\{-1\} * (E[R] - beta * d)}
+where \code{beta = Cov[R, F] * Var[F]^{-1}} are the regression coefficients of
+test asset excess returns \code{R} on risk factors \code{F}.
+Detailed computations and p-value calculations can be found in
+Kan-Robotti (2009) \url{doi:10.1093/rfs/hhn094}.
 }
 \examples{
-# import package data on 15 risk factors and 42 test asset excess returns
+# Import package data on 6 risk factors and 42 test asset excess returns
 factors = intrinsicFRP::factors[,-1]
 returns = intrinsicFRP::returns[,-1]
 
-# compute the HJ model misspecification test
+# Compute the HJ model misspecification test
 hj_test = HJMisspecificationTest(returns, factors)
 
 }

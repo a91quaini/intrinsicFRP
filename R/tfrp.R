@@ -1,17 +1,20 @@
 # Author: Alberto Quaini
 
 #######################################
-######  Tradable Factor Risk Premia ##
+######  Tradable Factor Risk Premia ###
 #######################################
 
-#' Compute tradable factor risk premia
+#' Compute tradable factor risk premia from data
 #'
 #' @name TFRP
-#' @description Computes tradable factor risk premia from data on factors and
-#' test asset excess returns. Optionally computes the corresponding
-#' heteroskedasticity and autocorrelation robust standard errors using the
-#' Newey-West (1994) plug-in procedure to select the number of relevant lags,
-#' i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+#' @description Computes tradable factor risk premia from data on factors `F` and
+#' test asset excess returns `R`:
+#' `TFRP = Cov[F, R] * Var[R]^{-1} * E[R]`.
+#' Optionally computes the corresponding heteroskedasticity and autocorrelation
+#' robust standard errors using the Newey-West (1994) <doi:10.2307/2297912>
+#' plug-in procedure to select the number of relevant lags, i.e.,
+#' `n_lags = 4 * (n_observations/100)^(2/9)`.
+#' All details are found in Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683>.
 #'
 #' @param returns `n_observations x n_returns`-dimensional matrix of test asset
 #' excess returns.
@@ -19,8 +22,8 @@
 #' @param include_standard_errors boolean `TRUE` if you want to compute the
 #' tradable factor risk premia HAC standard errors; `FALSE` otherwise. Default
 #' is `FALSE`.
-#' @param check_arguments boolean `TRUE` if you want to check function arguments;
-#' `FALSE` otherwise. Default is `TRUE`.
+#' @param check_arguments boolean `TRUE` for internal check of all function
+#' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
 #' @return a list containing `n_factors`-dimensional vector of tradable factor
 #' risk premia in `"risk_premia"`; if `include_standard_errors=TRUE`, then
@@ -28,7 +31,7 @@
 #' premia standard errors in `"standard_errors"`.
 #'
 #' @examples
-#' # import package data on 15 risk factors and 42 test asset excess returns
+#' # import package data on 6 risk factors and 42 test asset excess returns
 #' factors = intrinsicFRP::factors[,-1]
 #' returns = intrinsicFRP::returns[,-1]
 #'
@@ -43,6 +46,7 @@ TFRP = function(
   check_arguments = TRUE
 ) {
 
+  # check function arguments
   if (check_arguments) {
 
     CheckData(returns, factors)
@@ -50,6 +54,7 @@ TFRP = function(
 
   }
 
+  # compute the TFRP estimate and, eventually, their standard errors
   return(.Call(`_intrinsicFRP_TFRPCpp`,
     returns,
     factors,
