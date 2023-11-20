@@ -326,6 +326,15 @@ test_that("Test OracleTFRP", {
     }
   }
 
+  # Expect error if n_folds > nrow(returns)
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'c',
+    n_folds = nrow(returns) + 1
+  ))
+
   ### RV
   for (weighting_type in c('c', 'b', 'a', 'n')) {
     for (one_stddev_rule in c(TRUE, FALSE)) {
@@ -399,5 +408,69 @@ test_that("Test OracleTFRP", {
       }
     }
   }
+
+  # expect error if n_train_observations == 0
+  expect_error(OracleTFRP(
+      returns,
+      factors,
+      penalty_parameters,
+      tuning_type = 'r',
+      n_train_observations = 0
+  ))
+  # expect error if n_train_observations > n_observations
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'r',
+    n_train_observations = nrow(returns) + 1
+  ))
+  # expect error if n_test_observations = 0
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'r',
+    n_train_observations = 10,
+    n_test_observations = 0
+  ))
+  # expect error if n_test_observations > nrow(returns) / 2
+  expect_error(OracleTFRP(
+      returns,
+      factors,
+      penalty_parameters,
+      tuning_type = 'r',
+      n_train_observations = 10,
+      n_test_observations = nrow(returns) + 1
+  ))
+  # expect error if n_train_observations + n_test_observations > n_observations
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'r',
+    n_train_observations = floow(nrow(returns) / 2) + 2,
+    n_test_observations = floow(nrow(returns) / 2) + 2
+  ))
+  # expect_error if roll_shift = 0
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'r',
+    n_train_observations = 10,
+    n_test_observations = 10,
+    roll_shift = 0
+  ))
+  # expect_error if roll_shift > n_test_observations
+  expect_error(OracleTFRP(
+    returns,
+    factors,
+    penalty_parameters,
+    tuning_type = 'r',
+    n_train_observations = 10,
+    n_test_observations = 10,
+    roll_shift = 15
+  ))
 
 })

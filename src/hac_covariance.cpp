@@ -89,13 +89,6 @@ arma::vec HACStandardErrorsCpp(
 
   }
 
-  // Ensure n_observations is greater than n_lags
-  if (n_observations <= std::max(n_lags, 0)) {
-
-    Rcpp::stop("Number of observations must be greater than the number of lags.");
-
-  }
-
   // Compute the diagonal elements of the covariance matrix for lag 0
   arma::rowvec diagonal_of_covariance = arma::sum(arma::square(series), 0) /
     static_cast<double>(n_observations);
