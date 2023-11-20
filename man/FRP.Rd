@@ -9,6 +9,7 @@ FRP(
   factors,
   misspecification_robust = TRUE,
   include_standard_errors = FALSE,
+  hac_prewhite = FALSE,
   check_arguments = TRUE
 )
 }
@@ -26,6 +27,10 @@ risk premia. Default is \code{TRUE}.}
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
 factor risk premia HAC standard errors; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
+
+\item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
+fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+robust covariance (HAC) estimation. Default is \code{false}.}
 
 \item{check_arguments}{boolean \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}

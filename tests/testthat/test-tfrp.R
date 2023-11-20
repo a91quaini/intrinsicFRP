@@ -18,10 +18,25 @@ test_that("Test TFRP", {
   # Testing basic functionality of TFRP without errors including standard errors.
   expect_no_error(TFRP(returns, factors, include_standard_errors = TRUE))
 
+  # Test if prewhite works
+  expect_no_error(TFRP(returns, factors, include_standard_errors = TRUE, hac_prewhite = TRUE))
+
   # Testing error handling for incorrect dimensions (transposed matrices).
   expect_error(TFRP(t(returns), factors, include_standard_errors = TRUE))
   expect_error(TFRP(returns, t(factors), include_standard_errors = TRUE))
   expect_error(TFRP(t(returns), t(factors), include_standard_errors = TRUE))
+
+  # Testing errors for wrong input types
+  expect_error(TFRP(c(), factors, include_standard_errors = TRUE))
+  expect_error(TFRP(returns, c(), include_standard_errors = TRUE, hac_prewhite = "c"))
+  expect_error(TFRP(returns, factors, include_standard_errors = "c"))
+  expect_error(TFRP(returns, factors, include_standard_errors = TRUE, hac_prewhite = "c"))
+
+  # Test if the function correctly throws an error when 'returns' has fewer rows than 'factors'.
+  expect_error(TFRP(returns[1:(nrow(returns)-5),], factors))
+
+  # Test if the function correctly throws an error when 'factors' has fewer rows than 'returns'.
+  expect_error(TFRP(returns, factors[1:(nrow(factors)-5),]))
 
   # Getting results from TFRP for further validations.
   ifrp = TFRP(returns, factors, include_standard_errors = TRUE)

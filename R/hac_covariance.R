@@ -10,16 +10,14 @@
 #' @description This function estimates the long-run covariance matrix of a multivariate
 #' centred time series accounting for heteroskedasticity and autocorrelation
 #' using the Newey-West estimator.
-#' If the number of lags is not provided, they are selected using the Newey-West (1994)
+#' The number of lags is selected using the Newey-West (1994)
 #' <doi:10.2307/2297912> plug-in procedure, where
 #' `n_lags = 4 * (n_observations/100)^(2/9)`.
 #' The function allows to internally prewhiten the series by fitting a VAR(1).
 #'
 #' @param series A matrix (or vector) of data where each column is a time series.
-#' @param n_lags An integer indicating the number of lags. If it is negative,
-#' then `n_lags = 4 * (n_observations/100)^(2/9)`. Default is -1.
 #' @param prewhite A boolean indicating if the series needs prewhitening by
-#' fitting an AR(1). Default is `false.`
+#' fitting an AR(1). Default is `FALSE`
 #' @param check_arguments boolean `TRUE` for internal check of all function
 #' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -46,7 +44,6 @@
 #' @export
 HACcovariance = function(
   series,
-  n_lags = -1,
   prewhite = FALSE,
   check_arguments = TRUE
 ) {
@@ -57,8 +54,6 @@ HACcovariance = function(
     stopifnot("`series` must contain numeric values" = is.numeric(series))
     stopifnot("`series` contains more assets (columns) than observations (rows)" = nrow(series) > ncol(series))
     stopifnot("`series` must not contain missing values (NA/NaN)" = !anyNA(series))
-    stopifnot("`n_lags` must be numeric" = is.numeric(n_lags))
-    stopifnot("`n_lags` must be an integer" = n_lags %% 1 == 0)
     stopifnot("`prewhite` must be boolean" = is.logical(prewhite))
 
   }
@@ -70,7 +65,6 @@ HACcovariance = function(
     # HAC variance of a scalar series.
     return(.Call(`_intrinsicFRP_HACVarianceCpp`,
       series,
-      n_lags,
       prewhite
     ))
 
@@ -79,7 +73,6 @@ HACcovariance = function(
   # HAC covariance of multiple series.
   return(.Call(`_intrinsicFRP_HACCovarianceMatrixCpp`,
     series,
-    n_lags,
     prewhite
   ))
 

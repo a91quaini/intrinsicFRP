@@ -61,12 +61,6 @@
 #' @param tuning_type character indicating the parameter tuning type:
 #' `'g'` for generalized cross validation; `'c'` for K-fold cross validation;
 #' `'r'` for rolling validation. Default is `'g'`.
-#' @param include_standard_errors boolean `TRUE` if you want to compute the
-#' adaptive tradable factor risk premia HAC standard errors; `FALSE` otherwise.
-#' Default is `FALSE`.
-#' @param relaxed boolean `TRUE` if you want to compute a post-selection
-#' unpenalized tradable factor risk premia to remove the bias due to shrinkage;
-#' FALSE` otherwise. Default is `FALSE`.
 #' @param one_stddev_rule boolean `TRUE` for picking the most parsimonious model
 #' whose score is not higher than one standard error above the score of the
 #' best model; `FALSE` for picking the best model. Default is `TRUE`.
@@ -93,6 +87,15 @@
 #' observations in the test set. Default is `12`.
 #' @param roll_shift (only relevant for `tuning_type ='r'`) number of observation
 #' shift when moving from the rolling window to the next one. Default is `12`.
+#' @param relaxed boolean `TRUE` if you want to compute a post-selection
+#' unpenalized tradable factor risk premia to remove the bias due to shrinkage;
+#' FALSE` otherwise. Default is `FALSE`.
+#' @param include_standard_errors boolean `TRUE` if you want to compute the
+#' adaptive tradable factor risk premia HAC standard errors; `FALSE` otherwise.
+#' Default is `FALSE`.
+#' @param hac_prewhite A boolean indicating if the series needs prewhitening by
+#' fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+#' robust covariance (HAC) estimation. Default is `false`.
 #' @param plot_score boolean `TRUE` for plotting the model score; `FALSE` otherwise.
 #' Default is `TRUE`.
 #' @param check_arguments boolean `TRUE` for internal check of all function
@@ -127,8 +130,6 @@ OracleTFRP = function(
   penalty_parameters,
   weighting_type = 'c',
   tuning_type = 'g',
-  relaxed = FALSE,
-  include_standard_errors = FALSE,
   one_stddev_rule = TRUE,
   gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
@@ -137,6 +138,9 @@ OracleTFRP = function(
   n_train_observations = 120,
   n_test_observations = 12,
   roll_shift = 12,
+  relaxed = FALSE,
+  include_standard_errors = FALSE,
+  hac_prewhite = FALSE,
   plot_score = TRUE,
   check_arguments = TRUE
 ) {
@@ -149,8 +153,6 @@ OracleTFRP = function(
     stopifnot("`penalty_parameters` contains missing values (NA/NaN)" = !anyNA(penalty_parameters))
     stopifnot("`weighting_type` must be a character value" = is.character(weighting_type))
     stopifnot("`tuning_type` must be a character value" = is.character(tuning_type))
-    stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
-    stopifnot("`include_standard_errors` must be boolean" = is.logical(include_standard_errors))
     stopifnot("`one_stddev_rule` must be boolean" = is.logical(one_stddev_rule))
     stopifnot("`gcv_scaling_n_assets` must be boolean" = is.logical(gcv_scaling_n_assets))
     stopifnot("`gcv_identification_check` must be boolean" = is.logical(gcv_identification_check))
@@ -160,6 +162,9 @@ OracleTFRP = function(
     stopifnot("`n_train_observations` must be numeric" = is.numeric(n_train_observations))
     stopifnot("`n_test_observations` must be numeric" = is.numeric(n_test_observations))
     stopifnot("`roll_shift` must be numeric" = is.numeric(roll_shift))
+    stopifnot("`relaxed` must be boolean" = is.logical(relaxed))
+    stopifnot("`include_standard_errors` must be boolean" = is.logical(include_standard_errors))
+    stopifnot("`hac_prewhite` must be boolean" = is.logical(hac_prewhite))
     stopifnot("`plot_score` must be boolean" = is.logical(plot_score))
     penalty_parameters = sort(penalty_parameters)
 
@@ -183,7 +188,8 @@ OracleTFRP = function(
         gcv_identification_check,
         target_level_kp2006_rank_test,
         relaxed,
-        include_standard_errors
+        include_standard_errors,
+        hac_prewhite
       )
 
     },
@@ -200,7 +206,8 @@ OracleTFRP = function(
         one_stddev_rule,
         n_folds,
         relaxed,
-        include_standard_errors
+        include_standard_errors,
+        hac_prewhite
       )
 
     },
@@ -219,7 +226,8 @@ OracleTFRP = function(
         n_test_observations,
         roll_shift,
         relaxed,
-        include_standard_errors
+        include_standard_errors,
+        hac_prewhite
       )
 
     },

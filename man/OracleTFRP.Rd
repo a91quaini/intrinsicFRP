@@ -10,8 +10,6 @@ OracleTFRP(
   penalty_parameters,
   weighting_type = "c",
   tuning_type = "g",
-  relaxed = FALSE,
-  include_standard_errors = FALSE,
   one_stddev_rule = TRUE,
   gcv_scaling_n_assets = FALSE,
   gcv_identification_check = FALSE,
@@ -20,6 +18,9 @@ OracleTFRP(
   n_train_observations = 120,
   n_test_observations = 12,
   roll_shift = 12,
+  relaxed = FALSE,
+  include_standard_errors = FALSE,
+  hac_prewhite = FALSE,
   plot_score = TRUE,
   check_arguments = TRUE
 )
@@ -42,14 +43,6 @@ character). Default is \code{'c'}.}
 \item{tuning_type}{character indicating the parameter tuning type:
 \code{'g'} for generalized cross validation; \code{'c'} for K-fold cross validation;
 \code{'r'} for rolling validation. Default is \code{'g'}.}
-
-\item{relaxed}{boolean \code{TRUE} if you want to compute a post-selection
-unpenalized tradable factor risk premia to remove the bias due to shrinkage;
-FALSE\verb{otherwise. Default is}FALSE`.}
-
-\item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
-adaptive tradable factor risk premia HAC standard errors; \code{FALSE} otherwise.
-Default is \code{FALSE}.}
 
 \item{one_stddev_rule}{boolean \code{TRUE} for picking the most parsimonious model
 whose score is not higher than one standard error above the score of the
@@ -84,6 +77,18 @@ observations in the test set. Default is \code{12}.}
 
 \item{roll_shift}{(only relevant for \code{tuning_type ='r'}) number of observation
 shift when moving from the rolling window to the next one. Default is \code{12}.}
+
+\item{relaxed}{boolean \code{TRUE} if you want to compute a post-selection
+unpenalized tradable factor risk premia to remove the bias due to shrinkage;
+FALSE\verb{otherwise. Default is}FALSE`.}
+
+\item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
+adaptive tradable factor risk premia HAC standard errors; \code{FALSE} otherwise.
+Default is \code{FALSE}.}
+
+\item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
+fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+robust covariance (HAC) estimation. Default is \code{false}.}
 
 \item{plot_score}{boolean \code{TRUE} for plotting the model score; \code{FALSE} otherwise.
 Default is \code{TRUE}.}

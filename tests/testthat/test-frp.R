@@ -30,6 +30,9 @@ test_that("Test FRP", {
   # Testing FRP with standard errors included.
   expect_no_error(FRP(returns, factors, include_standard_errors = TRUE))
 
+  # Test if prewhite works
+  expect_no_error(FRP(returns, factors, include_standard_errors = TRUE, hac_prewhite = TRUE))
+
   # Testing FRP without misspecification robustness but including standard errors.
   expect_no_error(FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE))
 
@@ -37,6 +40,18 @@ test_that("Test FRP", {
   expect_error(FRP(t(returns), factors, include_standard_errors = TRUE))
   expect_error(FRP(returns, t(factors), include_standard_errors = TRUE))
   expect_error(FRP(t(returns), t(factors), include_standard_errors = TRUE))
+
+  # Testing errors for wrong input types
+  expect_error(FRP(c(), factors, include_standard_errors = TRUE))
+  expect_error(FRP(returns, c(), include_standard_errors = TRUE, hac_prewhite = "c"))
+  expect_error(FRP(returns, factors, include_standard_errors = "c"))
+  expect_error(FRP(returns, factors, include_standard_errors = TRUE, hac_prewhite = "c"))
+
+  # Test if the function correctly throws an error when 'returns' has fewer rows than 'factors'.
+  expect_error(FRP(returns[1:(nrow(returns)-5),], factors))
+
+  # Test if the function correctly throws an error when 'factors' has fewer rows than 'returns'.
+  expect_error(FRP(returns, factors[1:(nrow(factors)-5),]))
 
   # Getting results from FRP for further validations.
   krs_frp = FRP(returns, factors, include_standard_errors = TRUE)

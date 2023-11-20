@@ -7,25 +7,19 @@
 
 arma::mat HACCovarianceMatrixCpp(
   arma::mat& series,
-  int n_lags,
   const bool prewhite
 ) {
 
   // Compute the number of observations from the input series
   const unsigned int n_observations = series.n_rows;
 
-  // If n_lags is negative
   // Determine the number of lags using the Newey-West plug-in procedure
-  if (n_lags < 0) {
-
-    n_lags = std::floor(
-      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-    );
-
-  }
+  const unsigned int n_lags =  std::floor(
+    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+  );
 
   // Ensure n_observations is greater than n_lags
-  if (n_observations <= std::max(n_lags, 0)) {
+  if (n_observations <= n_lags) {
 
     Rcpp::stop("Number of observations must be greater than the number of lags.");
 
@@ -73,21 +67,21 @@ arma::mat HACCovarianceMatrixCpp(
 //////// HACStandardErrorsCpp //////////
 
 arma::vec HACStandardErrorsCpp(
-  const arma::mat& series,
-  int n_lags
+  arma::mat& series,
+  const bool prewhite
 ) {
 
-  const arma::uword n_observations = series.n_rows;
+  const unsigned int n_observations = series.n_rows;
+  const unsigned int n_series = series.n_cols;
 
-  // If n_lags is negative
   // Determine the number of lags using the Newey-West plug-in procedure
-  if (n_lags < 0) {
+  const unsigned int n_lags =  std::floor(
+    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+  );
 
-    n_lags = std::floor(
-      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-    );
-
-  }
+  // If prewhite is selected, fit an AR(1) to prewhite each column of the series
+  arma::vec coefficients(n_series);
+  if (prewhite) HACPrewhiteningCpp(series, coefficients);
 
   // Compute the diagonal elements of the covariance matrix for lag 0
   arma::rowvec diagonal_of_covariance = arma::sum(arma::square(series), 0) /
@@ -110,6 +104,9 @@ arma::vec HACStandardErrorsCpp(
 
   }
 
+  // If prewhite was selected, revert it
+  if (prewhite) HACRevertPrewhiteningCpp(coefficients, diagonal_of_covariance);
+
   // Return the standard errors as the square root of the marginal variances
   return arma::sqrt(diagonal_of_covariance).t();
 
@@ -120,25 +117,19 @@ arma::vec HACStandardErrorsCpp(
 
 double HACVarianceCpp(
   arma::vec& series,
-  int n_lags,
   const bool prewhite
 ) {
 
   // Compute the number of observations in the series
   const unsigned int n_observations = series.n_elem;
 
-  // If n_lags is negative
   // Determine the number of lags using the Newey-West plug-in procedure
-  if (n_lags < 0) {
-
-    n_lags = std::floor(
-      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-    );
-
-  }
+  const unsigned int n_lags =  std::floor(
+    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+  );
 
   // Ensure n_observations is greater than n_lags
-  if (n_observations <= std::max(n_lags, 0)) {
+  if (n_observations <= n_lags) {
 
     Rcpp::stop("Number of observations must be greater than the number of lags.");
 
@@ -146,7 +137,7 @@ double HACVarianceCpp(
 
   // If prewhite was selected, fit an AR(1) to prewhite the series
   double coefficient = 0.0;
-  if (prewhite) HACPrewhiteningScalarCpp(series, coefficient);
+  if (prewhite) HACPrewhiteningCpp(series, coefficient);
 
   // Initialize variance with the sum of squared observations (lag 0)
   double variance = arma::dot(series, series) /
@@ -165,7 +156,7 @@ double HACVarianceCpp(
   }
 
   // Adjust the variance using the prewhitening coefficient if prewhite is true
-  if (prewhite) HACRevertPrewhiteningScalarCpp(coefficient, variance);
+  if (prewhite) HACRevertPrewhiteningCpp(coefficient, variance);
 
   // Adjust the variance by the number of observations
   return variance;
@@ -178,34 +169,76 @@ double HACVarianceCpp(
 // Matrix series
 void HACPrewhiteningCpp(arma::mat& series, arma::mat& coefficients) {
 
+  // Store the number of observations
   const unsigned int n_observations = series.n_rows;
 
+  // Store the first n_observations - 1 lags
   const arma::mat head = series.head_rows(n_observations - 1);
 
+  // Store the first n_observations - 1 lags
   const arma::mat tail = series.tail_rows(n_observations - 1);
 
   // compute the coefficients of an AR(1)
   coefficients = arma::solve(head, tail);
 
   // Prewhite the series using the coefficients
-  series = tail - head * coefficients;
+  series = arma::join_vert(
+    series.row(0),
+    tail - head * coefficients
+  );
+
+}
+
+// Matrix series (marginal pre-whitening)
+void HACPrewhiteningCpp(arma::mat& series, arma::vec& coefficients) {
+
+  // Store the number of observations
+  const unsigned int n_observations = series.n_rows;
+
+  // Loop over the colummns of the series
+  for (int col = 0; col < series.n_cols; ++col) {
+
+    // Store the first n_observations - 1 lags
+    const arma::vec head = series.col(col).head(n_observations - 1);
+
+    // Store the last n_observations - 1 lags
+    const arma::vec tail = series.col(col).tail(n_observations - 1);
+
+    // compute the coefficients of an AR(1)
+    coefficients(col) = arma::dot(head, tail) / arma::dot(head, head);
+
+    const arma::vec first_obs = series(arma::span(0), 0);
+
+    // Prewhite the series using the coefficients
+    series.col(col) = arma::join_vert(
+      series(arma::span(0), col),
+      tail - head * coefficients(col)
+    );
+
+  }
 
 }
 
 // Scalar series
-void HACPrewhiteningScalarCpp(arma::vec& series, double coefficient) {
+void HACPrewhiteningCpp(arma::vec& series, double coefficient) {
 
+  // Store the number of observations
   const unsigned int n_observations = series.n_rows;
 
+  // Store the first n_observations - 1 lags
   const arma::vec head = series.head(n_observations - 1);
 
+  // Store the last n_observations - 1 lags
   const arma::vec tail = series.tail(n_observations - 1);
 
-  // compute the coefficients of an AR(1)
+  // Compute the coefficients of an AR(1)
   coefficient = arma::dot(head, tail) / arma::dot(head, head);
 
   // Prewhite the series using the coefficients
-  series = tail - head * coefficient;
+  series = arma::join_vert(
+    series(arma::span(0)),
+    tail - head * coefficient
+  );
 
 }
 
@@ -215,8 +248,10 @@ void HACRevertPrewhiteningCpp(
   arma::mat& hac_covariance
 ) {
 
+  // Store the number of variables
   const unsigned int n_variables = coefficients.n_rows;
 
+  // Compute the inverse of the identity -  coefficients.t()
   const arma::mat inv_temp = arma::inv(
     arma::eye(n_variables, n_variables) - coefficients.t()
   );
@@ -226,15 +261,35 @@ void HACRevertPrewhiteningCpp(
 
 }
 
+// Matrix series (marginal pre-whitening)
+void HACRevertPrewhiteningCpp(
+  const arma::vec& coefficients,
+  arma::rowvec& hac_covariance
+) {
+
+  // Loop over the elements of hac_covariance
+  for (int idx = 0; idx < hac_covariance.n_elem; ++idx) {
+
+    // Compute 1 - the coefficient(idx)
+    const double temp = 1. - coefficients(idx);
+
+    // Adjust the HAC covariance element using the inverse of the prewhitening transformation
+    hac_covariance(idx) /= (temp * temp);
+
+  }
+
+}
+
 // Scalar series
-void HACRevertPrewhiteningScalarCpp(
+void HACRevertPrewhiteningCpp(
   const double coefficient,
   double hac_covariance
 ) {
 
-  const double temp = 1./(1. - coefficient);
+  // Compute 1 - the coefficient
+  const double temp = 1. - coefficient;
 
-  // Adjust the HAC covariance matrix using the inverse of the prewhitening transformation
-  hac_covariance = temp * temp * hac_covariance;
+  // Adjust the HAC covariance using the inverse of the prewhitening transformation
+  hac_covariance /= (temp * temp);
 
 }

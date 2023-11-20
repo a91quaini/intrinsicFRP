@@ -4,7 +4,13 @@
 \alias{TFRP}
 \title{Compute tradable factor risk premia from data}
 \usage{
-TFRP(returns, factors, include_standard_errors = FALSE, check_arguments = TRUE)
+TFRP(
+  returns,
+  factors,
+  include_standard_errors = FALSE,
+  hac_prewhite = FALSE,
+  check_arguments = TRUE
+)
 }
 \arguments{
 \item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
@@ -15,6 +21,10 @@ excess returns.}
 \item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
 tradable factor risk premia HAC standard errors; \code{FALSE} otherwise. Default
 is \code{FALSE}.}
+
+\item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
+fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+robust covariance (HAC) estimation. Default is \code{false}.}
 
 \item{check_arguments}{boolean \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}

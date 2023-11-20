@@ -32,6 +32,16 @@ test_that("Test OracleTFRP", {
       include_standard_errors = TRUE
   ))
 
+  # Test if prewhite works
+  expect_no_error(
+    OracleTFRP(
+      returns,
+      factors,
+      penalty_parameters,
+      include_standard_errors = TRUE,
+      hac_prewhite = TRUE
+    ))
+
   # Testing error handling for incorrect dimensions (transposed matrices).
   expect_error(OracleTFRP(
     t(returns),
@@ -141,6 +151,33 @@ test_that("Test OracleTFRP", {
       penalty_parameters,
       check_arguments = "r",
       target_level_kp2006_rank_test = 1.5
+  ))
+  expect_error(
+    OracleTFRP(
+      c(),
+      factors,
+      penalty_parameters
+  ))
+  expect_error(
+    OracleTFRP(
+      returns,
+      c(),
+      penalty_parameters
+  ))
+  expect_error(
+    OracleTFRP(
+      returns,
+      factors,
+      penalty_parameters,
+      include_standard_errors = "c"
+  ))
+  expect_error(
+    OracleTFRP(
+      returns,
+      factors,
+      penalty_parameters,
+      include_standard_errors = TRUE,
+      hac_prewhite = "c"
   ))
 
   # Checking consistency of risk premia across different parameter settings.

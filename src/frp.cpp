@@ -10,7 +10,8 @@ Rcpp::List FRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const bool misspecification_robust,
-  const bool include_standard_errors
+  const bool include_standard_errors,
+  const bool hac_prewhite
 ) {
 
   // Check if standard errors are to be included in the calculation
@@ -44,7 +45,8 @@ Rcpp::List FRPCpp(
       beta,
       covariance_factors_returns,
       variance_returns,
-      mean_returns
+      mean_returns,
+      hac_prewhite
     ) :
       StandardErrorsFRPCpp(
         frp,
@@ -53,7 +55,8 @@ Rcpp::List FRPCpp(
         beta,
         covariance_factors_returns,
         variance_returns,
-        mean_returns
+        mean_returns,
+        hac_prewhite
       )
     );
 
@@ -125,7 +128,8 @@ arma::vec StandardErrorsFRPCpp(
   const arma::mat& beta,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite
 ) {
 
   // Compute the matrix H as the inverse of beta' * beta
@@ -158,21 +162,23 @@ arma::vec StandardErrorsFRPCpp(
     returns_centred * (mean_returns - beta * frp)
   );
 
-  // Return the HAC standard errors of the estimator
-  return HACStandardErrorsCpp(
+  arma::mat series =
     // mean term
     (gamma.each_row() - (a_matrix * mean_returns).t()) -
     // beta term
     phi_centred.each_col() % (factors_centred * arma::solve(
-      variance_factors,
-      gamma_true,
-      arma::solve_opts::likely_sympd
+        variance_factors,
+        gamma_true,
+        arma::solve_opts::likely_sympd
     )) +
     // error term
     (fac_centred_var_fac_inv.each_col() % (
-      returns_centred * (mean_returns - beta * frp)
-    )) * h_matrix
-  ) / std::sqrt(static_cast<double>(returns.n_rows));
+        returns_centred * (mean_returns - beta * frp)
+    )) * h_matrix;
+
+  // Return the HAC standard errors of the estimator
+  return HACStandardErrorsCpp(series, hac_prewhite) /
+    std::sqrt(static_cast<double>(returns.n_rows));
 
 }
 
@@ -186,7 +192,8 @@ arma::vec StandardErrorsKRSFRPCpp(
   const arma::mat& beta,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite
 ) {
 
   // Compute the inverse of variance_returns and useful matrices that use it
@@ -227,8 +234,10 @@ arma::vec StandardErrorsKRSFRPCpp(
   const arma::mat term4 = akrs_ret_cen_minus_fac_cen.each_col() %
     (factors_centred * var_fac_inv * a_matrix * mean_returns);
 
+  arma::mat series = term1 + term2 - term3 - term4;
+
   // Return the HAC standard errors of the estimator
-  return HACStandardErrorsCpp(term1 + term2 - term3 - term4) /
+  return HACStandardErrorsCpp(series, hac_prewhite) /
     std::sqrt(static_cast<double>(returns.n_rows));
 
 }

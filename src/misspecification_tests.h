@@ -20,14 +20,18 @@
 //
 // @param returns A `n_observations x n_returns` matrix of test asset excess returns.
 // @param factors A `n_observations x n_factors` matrix of risk factors.
-// @param n_simulations The number of simulations to estimate the p-value.
+// @param hac_prewhite A boolean indicating if the series needs prewhitening by
+// fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+// robust covariance (HAC) estimation. Default is `false`.
+//
 // @return @return A list containing the squared standardized HJ test statistic and
 // the corresponding p-value.
 //
 // [[Rcpp::export]]
 Rcpp::List HJMisspecificationTestCpp(
   const arma::mat& returns,
-  const arma::mat& factors
+  const arma::mat& factors,
+  const bool hac_prewhite = false
 );
 
 // Function for internal use
@@ -38,7 +42,8 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite = false
 );
 
 #endif

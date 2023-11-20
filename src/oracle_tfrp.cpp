@@ -4,7 +4,6 @@
 #include "tfrp.h"
 #include "adaptive_weights.h"
 #include "tuning.h"
-#include "hac_covariance.h"
 
 ////////////////////////////////////
 ///// OracleTFRPGCVCpp ////
@@ -22,7 +21,8 @@ Rcpp::List OracleTFRPGCVCpp(
   const bool gcv_identification_check,
   const double target_level_kp2006_rank_test,
   const bool relaxed,
-  const bool include_standard_errors
+  const bool include_standard_errors,
+  const bool hac_prewhite
 ) {
 
   // Compute the Oracle TFRP for a range of penalty parameters
@@ -74,7 +74,8 @@ Rcpp::List OracleTFRPGCVCpp(
     factors,
     covariance_factors_returns,
     variance_returns,
-    mean_returns
+    mean_returns,
+    hac_prewhite
   ),
   Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
   Rcpp::Named("model_score") = score
@@ -107,7 +108,8 @@ Rcpp::List OracleTFRPCVCpp(
   const bool one_stddev_rule,
   const unsigned int n_folds,
   const bool relaxed,
-  const bool include_standard_errors
+  const bool include_standard_errors,
+  const bool hac_prewhite
 ) {
 
   // Compute CV scores for Oracle TFRP
@@ -154,7 +156,8 @@ Rcpp::List OracleTFRPCVCpp(
     factors,
     covariance_factors_returns,
     variance_returns,
-    mean_returns
+    mean_returns,
+    hac_prewhite
   ),
   Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
   Rcpp::Named("model_score") = score
@@ -189,7 +192,8 @@ Rcpp::List OracleTFRPRVCpp(
   const unsigned int n_test_observations,
   const unsigned int roll_shift,
   const bool relaxed,
-  const bool include_standard_errors
+  const bool include_standard_errors,
+  const bool hac_prewhite
 ) {
 
   // Compute RV scores for Oracle TFRP
@@ -238,7 +242,8 @@ Rcpp::List OracleTFRPRVCpp(
     factors,
     covariance_factors_returns,
     variance_returns,
-    mean_returns
+    mean_returns,
+    hac_prewhite
   ),
   Rcpp::Named("penalty_parameter") = penalty_parameters(idx_optimal_parameter),
   Rcpp::Named("model_score") = score
@@ -331,7 +336,8 @@ arma::vec StandardErrorsOracleTFRPCpp(
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite
 ) {
 
   // Return zeros if no non-zero indices are present (no premia to compute errors for)
@@ -346,7 +352,8 @@ arma::vec StandardErrorsOracleTFRPCpp(
     factors.cols(idx_nonzero),
     covariance_factors_returns.rows(idx_nonzero),
     variance_returns,
-    mean_returns
+    mean_returns,
+    hac_prewhite
   );
 
   // Return the standard errors for Oracle TFRP

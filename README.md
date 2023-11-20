@@ -2,7 +2,7 @@
 bibliography: readme.bib
 ---
 
-# intrinsicFRP: R Package For Factor Model Asset Pricing
+# intrinsicFRP: An R Package for Factor Model Asset Pricing
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/intrinsicFRP)](https://CRAN.R-project.org/package=intrinsicFRP)
@@ -14,7 +14,7 @@ bibliography: readme.bib
 
 Author: Alberto Quaini
 
-The `intrinsicFRP` library implements **functions designed for comprehensive evaluation and testing of asset pricing models**, focusing on the estimation and assessment of factor risk premia, selection of "useful" risk factors (those displaying non-zero population correlation with test asset returns), examination of model misspecification, and validation of model identification.
+The `intrinsicFRP` library implements **functions designed for comprehensive evaluation and testing of asset pricing models**, focusing on the estimation and assessment of factor risk premia, selection of "useful" risk factors (those displaying non-zero population correlation with test asset returns), heteroskedasticity and autocorrelation robust covariance matrix estimation, examination of model misspecification, and validation of model identification.
 
 For **estimating and testing factor risk premia**, our toolkit incorporates the classic two-pass approach outlined by [@fama1973risk], the misspecification-robust methodology proposed by [@kan2013pricing], and the tradable and "Oracle" tradable approaches introduced by [@quaini2023tradable].
 
@@ -25,7 +25,10 @@ it consistently selects the useful factors. More precisely, the
 probability that the factors selected by the estimator are indeed useful factors
 tends to 1 as the sample size tends to infinity.
 
-For **evaluating model misspecification**, the toolkit implements the HJ model misspecification test formulated by [@hansen1997assessing], along with the corresponding standard errors as provided by [@kan2009model].
+For **heteroskedasticity and autocorrelation robust covariance matrix estimation**, 
+the package implements the [@newey1994automatic] covariance estimator.
+
+For **evaluating model misspecification**, the toolkit implements the HJ model misspecification test formulated by [@hansen1997assessing], following the implementation of [@kan2008specification].
 
 Lastly, the functions for **testing model identification** are specialized versions of the rank tests proposed by [@kleibergen2006generalized] and [@chen2019improved]. These tests are specifically tailored to assess the regression coefficient matrix of test asset returns on risk factors.
   
@@ -71,11 +74,12 @@ Windows](https://cran.r-project.org/bin/windows/Rtools/).
 
 R package `intrinsicFRP` implements the following functions:
 
-- `FRP()`: Computes the Fama-MachBeth (1973) [<doi:10.1086/260061>] factor risk premia: `FMFRP = (beta' * beta)^{-1} * beta' * E[R]` where `beta = Cov[R, F] * V[F]^{-1}` or the misspecification-robust factor risk premia of [@kan2009model]: `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]` from data on factors `F` and test asset excess returns `R`. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+- `FRP()`: Computes the Fama-MachBeth (1973) [<doi:10.1086/260061>] factor risk premia: `FMFRP = (beta' * beta)^{-1} * beta' * E[R]` where `beta = Cov[R, F] * V[F]^{-1}` or the misspecification-robust factor risk premia of [@kan2008specification]: `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]` from data on factors `F` and test asset excess returns `R`. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 - `TFRP()`: Computes tradable factor risk premia from data on factors `F` and test asset excess returns `R`: `TFRP = Cov[F, R] * Var[R]^{-1} * E[R]`. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. All details are found in [@quaini2023tradable].
 - `OracleTFRP()`: Computes optimal adaptive tradable factor risk premia for various penalty parameter values `tau` from data on `K` factors `F = [F_1,...,F_K]'` and test asset excess returns `R`: `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|` where `TFRP` is the sample tradable factor risk premia estimator  and the "Oracle" weights are given by `w_k = 1/||corr[F_k, R]||_2^2`. Tuning of the penalty parameter is performed via Generalized Cross Validation (GCV), Cross Validation (CV) or Rolling Validation (RV).
 Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. All details are found in Quaini-Trojani-Yuan (2023) [<doi:10.2139/ssrn.4574683>].
-- `HJMisspecificationTest()`: Computes the [@hansen1997assessing] model misspecification statistic and p-value of an asset pricing model from test asset excess returns `R` and risk factors `F`: `HJDISTANCE = min_{d} (E[R] - beta * d)' * Var[R]^{-1} * (E[R] - beta * d)` where `beta = Cov[R, F] * Var[F]^{-1}` are the regression coefficients of test asset excess returns `R` on risk factors `F`. Details on the closed-form solution and computation of the p-values are found in [@kan2009model].
+- `HACcovariance()`: estimates the long-run covariance matrix of a multivariate centred time series accounting for heteroskedasticity and autocorrelation using the Newey-West estimator. If the number of lags is not provided, they are selected using the [@newey1994automatic] plug-in procedure, where `n_lags = 4 * (n_observations/100)^(2/9)`. The function allows to internally prewhiten the series by fitting a VAR(1).
+- `HJMisspecificationTest()`: Computes the [@hansen1997assessing] model misspecification statistic and p-value of an asset pricing model from test asset excess returns `R` and risk factors `F`: `HJDISTANCE = min_{d} (E[R] - beta * d)' * Var[R]^{-1} * (E[R] - beta * d)` where `beta = Cov[R, F] * Var[F]^{-1}` are the regression coefficients of test asset excess returns `R` on risk factors `F`. Details on the closed-form solution and computation of the p-values are found in [@kan2008specification].
 - `ChenFang2019BetaRankTest()`: Computes the test statistic and p-value of the [@chen2019improved] rank test of the null that the matrix of regression loadings of `N` test asset excess returns `R` on `K` risk factors `F`, with `N > K`, has reduced rank: `H: rank(beta) < K` where `beta = Cov[R, F] * Var[F]^{-1}` is the `N x K` matrix of regression coefficients. If `target_level_kp2006_rank_test > 0`, it uses the iterative [@kleibergen2009tests] rank test to estimate the initial rank, with `level = target_level_kp2006_rank_test / n_factors`. If `target_level_kp2006_rank_test <= 0`, the initial rank estimator is taken to be the number of singular values above `n_observations^(-1/4)`.
 - `IterativeKleibergenPaap2006BetaRankTest()`: Computes the test statistic and p-values of the iterative [@kleibergen2009tests] rank test of the null that the matrix of regression loadings of `N` test asset excess returns `R` on `K` risk factors `F`, with `N > K`, has reduced rank: `H: rank(beta) < K` where `beta = Cov[R, F] * Var[F]^{-1}` is the `N x K` matrix of regression coefficients. Since it is an iterative procedure, testing `H: rank(beta) = q` with `q=0,...,K-1`, it internally employs a Bonferroni correction for multiple testing. It also returns an estimate of the rank, computed as the first value `q` with associated p-value below the given `level = target_level / n_factors`.
   
@@ -120,6 +124,8 @@ factors = cbind(
 colnames(factors) = c(colnames(intrinsicFRP::factors[,1:6]), "Useless")
 
 # index set of specific factor models
+# Fama-French 3 factor model
+ff3 = 1:3
 # Fama-French 6 factor model
 ff6 = 1:6         # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom"
 # model comprising the Fama-French 6 factors and the simulated useless factor
@@ -194,7 +200,8 @@ Compute the HJ misspecification test of the Fama-French 6 factor model and ident
 model comprising the Fama-French 6 factors and the simulated useless factor.
 
 ```R
-# compute the HJ misspecification test of the Fama-French 6 factor model
+# compute the HJ misspecification test of the Fama-French 3 and 6 factor models
+intrinsicFRP::HJMisspecificationTest(returns, factors[,ff3])["p-value"]
 intrinsicFRP::HJMisspecificationTest(returns, factors[,ff6])["p-value"]
 
 # compute identification tests of the Fama-French 6 factor model
@@ -209,11 +216,14 @@ intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
 
 Result of the HJ misspecification test:
 ```R
+# HJ misspecification test p-value for the Fama-French 3 factor model
+1.526582e-07
+
 # HJ misspecification test p-value for the Fama-French 6 factor model
-1.845085e-05
+2.133855e-05
 ```
 
-Since the p-value of the HJ misspecification test is below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 6 factor model is correctly specified.
+Since the p-value of both HJ misspecification tests is below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 3 and 6 factor models are correctly specified.
 
 Results of the identification tests for the Fama-French 6 factor model:
 ```R
@@ -287,22 +297,3 @@ github repository [github.com/a91quaini/intrinsicFRP](github.com/a91quaini/intri
 For bug reports, you are kindly asked to make a small and self-contained program which exposes the bug.
 
 ## References
-
-Chen, Q., & Fang, Z. (2019). "Improved inference on the rank of a matrix". [<doi:10.1111/j.1540-6261.1997.tb04813.x>]
-
-Fama, E.F. and MacBeth, J.D., 1973. "Risk, return, and equilibrium: Empirical tests". [<doi:10.1086/260061>]
-
-Fan, J., & Li, R. (2001). Variable selection via nonconcave penalized likelihood and its oracle properties. Journal of the American statistical Association, 96(456), 1348-1360.
-
-Hansen, L.P. and Jagannathan, R., 1997. "Assessing specification errors in stochastic discount factor models". [<doi:10.1111/j.1540-6261.1997.tb04813.x>]
-
-Kan, R., & Robotti, C. (2009). "Model comparison using the Hansen-Jagannathan distance". [<doi:10.1093/rfs/hhn094>]
-
-Kan, R., Robotti, C. and Shanken, J., 2013. "Pricing model performance and the two‐pass cross‐sectional regression methodology". [<doi:10.1111/jofi.12035>]
-
-Kleibergen, F., & Paap, R. (2006). "Generalized reduced rank tests using the singular value decomposition". <doi:10.1016/j.jeconom.2005.02.011>
-
-Quaini, A., Trojani, F. and Yuan, M., 2023. "Tradable Factor Risk Premia
-and Oracle Tests of Asset Pricing Models". <doi:10.2139/ssrn.4574683>
-
-Sanderson, C., & Curtin, R. (2016). Armadillo: a template-based C++ library for linear algebra. Journal of Open Source Software, 1(2), 26.

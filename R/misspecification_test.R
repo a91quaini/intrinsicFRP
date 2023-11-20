@@ -15,12 +15,15 @@
 #' where `beta = Cov[R, F] * Var[F]^{-1}` are the regression coefficients of
 #' test asset excess returns `R` on risk factors `F`.
 #' Detailed computations and p-value calculations can be found in
-#' Kan-Robotti (2009) <doi:10.1093/rfs/hhn094>.
+#' Kan-Robotti (2008) <10.1016/j.jempfin.2008.03.003>.
 #'
 #' @param returns An `n_observations x n_returns`-dimensional matrix of test asset
 #' excess returns.
 #' @param factors An `n_observations x n_factors`-dimensional matrix of risk
 #' factors.
+#' @param hac_prewhite A boolean indicating if the series needs prewhitening by
+#' fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+#' robust covariance (HAC) estimation. Default is `false`.
 #' @param check_arguments A boolean `TRUE` if you want to check function arguments;
 #' `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -39,16 +42,23 @@
 HJMisspecificationTest = function(
   returns,
   factors,
+  hac_prewhite = FALSE,
   check_arguments = TRUE
 ) {
 
   # Check the function arguments if check_arguments is TRUE
-  if (check_arguments) {CheckData(returns, factors)}
+  if (check_arguments) {
+
+    CheckData(returns, factors)
+    stopifnot("`hac_prewhite` must be boolean" = is.logical(hac_prewhite))
+
+  }
 
   # Call the C++ implementation of the HJ Misspecification Test
   return(.Call(`_intrinsicFRP_HJMisspecificationTestCpp`,
     returns,
-    factors
+    factors,
+    hac_prewhite
   ))
 
 }

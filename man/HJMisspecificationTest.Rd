@@ -4,7 +4,12 @@
 \alias{HJMisspecificationTest}
 \title{Asset Prciing HJ model misspecification test}
 \usage{
-HJMisspecificationTest(returns, factors, check_arguments = TRUE)
+HJMisspecificationTest(
+  returns,
+  factors,
+  hac_prewhite = FALSE,
+  check_arguments = TRUE
+)
 }
 \arguments{
 \item{returns}{An \verb{n_observations x n_returns}-dimensional matrix of test asset
@@ -12,6 +17,10 @@ excess returns.}
 
 \item{factors}{An \verb{n_observations x n_factors}-dimensional matrix of risk
 factors.}
+
+\item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
+fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+robust covariance (HAC) estimation. Default is \code{false}.}
 
 \item{check_arguments}{A boolean \code{TRUE} if you want to check function arguments;
 \code{FALSE} otherwise. Default is \code{TRUE}.}
@@ -29,7 +38,7 @@ risk factors \code{F}. The statistic is defined as:
 where \code{beta = Cov[R, F] * Var[F]^{-1}} are the regression coefficients of
 test asset excess returns \code{R} on risk factors \code{F}.
 Detailed computations and p-value calculations can be found in
-Kan-Robotti (2009) \url{doi:10.1093/rfs/hhn094}.
+Kan-Robotti (2008) <10.1016/j.jempfin.2008.03.003>.
 }
 \examples{
 # Import package data on 6 risk factors and 42 test asset excess returns

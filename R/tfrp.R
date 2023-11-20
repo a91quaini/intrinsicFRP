@@ -22,6 +22,9 @@
 #' @param include_standard_errors boolean `TRUE` if you want to compute the
 #' tradable factor risk premia HAC standard errors; `FALSE` otherwise. Default
 #' is `FALSE`.
+#' @param hac_prewhite A boolean indicating if the series needs prewhitening by
+#' fitting an AR(1) in the internal heteroskedasticity and autocorrelation
+#' robust covariance (HAC) estimation. Default is `false`.
 #' @param check_arguments boolean `TRUE` for internal check of all function
 #' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -43,6 +46,7 @@ TFRP = function(
   returns,
   factors,
   include_standard_errors = FALSE,
+  hac_prewhite = FALSE,
   check_arguments = TRUE
 ) {
 
@@ -51,6 +55,7 @@ TFRP = function(
 
     CheckData(returns, factors)
     stopifnot("`include_standard_errors` must be boolean" = is.logical(include_standard_errors))
+    stopifnot("`hac_prewhite` must be boolean" = is.logical(hac_prewhite))
 
   }
 
@@ -58,7 +63,8 @@ TFRP = function(
   return(.Call(`_intrinsicFRP_TFRPCpp`,
     returns,
     factors,
-    include_standard_errors
+    include_standard_errors,
+    hac_prewhite
   ))
 
 }

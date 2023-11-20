@@ -1,11 +1,14 @@
 ---
-title: 'intrinsicFRP: R Package For Factor Model Asset Pricing'
+title: 'intrinsicFRP: An R Package for Factor Model Asset Pricing'
 tags:
   - R
+  - Factor Models
+  - Asset Pricing
   - Factor Risk Premia
-  - Testing Asset Pricing Models
   - Factor Selection
   - Oracle Estimation
+  - Misspecification Test
+  - Identfication Test
 authors:
   - name: Alberto Quaini
     orcid: 0000-0002-1251-0599

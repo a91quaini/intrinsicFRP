@@ -12,8 +12,6 @@ factors = cbind(
 colnames(factors) = c(colnames(intrinsicFRP::factors[,1:6]), "Useless")
 
 # index set of specific factor models
-# Fama-French 1 factor model
-ff1 = 2
 # Fama-French 3 factor model
 ff3 = 1:3
 # Fama-French 6 factor model
@@ -76,8 +74,7 @@ ggplot2::ggsave(
   dpi=600
 )
 
-# compute the HJ misspecification test of the Fama-French 6 factor model
-intrinsicFRP::HJMisspecificationTest(returns, factors[,ff1,drop=FALSE])["p-value"]
+# compute the HJ misspecification test of the Fama-French 3 and 6 factor models
 intrinsicFRP::HJMisspecificationTest(returns, factors[,ff3])["p-value"]
 intrinsicFRP::HJMisspecificationTest(returns, factors[,ff6])["p-value"]
 

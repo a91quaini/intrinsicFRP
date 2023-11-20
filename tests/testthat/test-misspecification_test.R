@@ -6,6 +6,9 @@ test_that("Test HJMisspecificationTest", {
   # Test if the function works without errors for valid inputs.
   expect_no_error(HJMisspecificationTest(returns, factors))
 
+  # Test if prewhite works
+  expect_no_error(HJMisspecificationTest(returns, factors, hac_prewhite = TRUE))
+
   # Test if the function correctly throws an error when an empty matrix is passed as 'returns'.
   expect_error(HJMisspecificationTest(
     matrix(numeric(0), nrow = nrow(returns), ncol = ncol(returns)),
@@ -35,5 +38,9 @@ test_that("Test HJMisspecificationTest", {
     HJMisspecificationTest(returns, factors),
     HJMisspecificationTest(returns, factors)
   )
+
+  # Test if function correctly throws an error when 'hac_prewhite' is not boolean.
+  expect_error(HJMisspecificationTest(returns, factors, hac_prewhite = "c"))
+
 
 })

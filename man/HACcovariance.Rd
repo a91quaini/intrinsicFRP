@@ -4,16 +4,13 @@
 \alias{HACcovariance}
 \title{Heteroskedasticity and Autocorrelation robust covariance estimator}
 \usage{
-HACcovariance(series, n_lags = -1, prewhite = FALSE, check_arguments = TRUE)
+HACcovariance(series, prewhite = FALSE, check_arguments = TRUE)
 }
 \arguments{
 \item{series}{A matrix (or vector) of data where each column is a time series.}
 
-\item{n_lags}{An integer indicating the number of lags. If it is negative,
-then \code{n_lags = 4 * (n_observations/100)^(2/9)}. Default is -1.}
-
 \item{prewhite}{A boolean indicating if the series needs prewhitening by
-fitting an AR(1). Default is \code{false.}}
+fitting an AR(1). Default is \code{FALSE}}
 
 \item{check_arguments}{boolean \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
@@ -26,7 +23,7 @@ representing the estimated HAC covariance.
 This function estimates the long-run covariance matrix of a multivariate
 centred time series accounting for heteroskedasticity and autocorrelation
 using the Newey-West estimator.
-If the number of lags is not provided, they are selected using the Newey-West (1994)
+The number of lags is selected using the Newey-West (1994)
 \url{doi:10.2307/2297912} plug-in procedure, where
 \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 The function allows to internally prewhiten the series by fitting a VAR(1).

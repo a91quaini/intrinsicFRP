@@ -8,7 +8,8 @@
 
 Rcpp::List HJMisspecificationTestCpp(
   const arma::mat& returns,
-  const arma::mat& factors
+  const arma::mat& factors,
+  const bool hac_prewhite
 ) {
 
   // Calculate the HJ misspecification statistic and p-value.
@@ -16,7 +17,8 @@ Rcpp::List HJMisspecificationTestCpp(
     returns,
     factors,
     arma::cov(returns),
-    arma::mean(returns).t()
+    arma::mean(returns).t(),
+    hac_prewhite
   );
 
 }
@@ -28,7 +30,8 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite
 ) {
 
   // Perform singular value decomposition on the variance of returns.
@@ -70,7 +73,7 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
   const arma::mat returns_centred = returns.each_row() - mean_returns.t();
   const arma::mat factors_centred = factors.each_row() - arma::mean(factors);
 
-  // Follow computation in eq. (61) of Kan-Robotti (2008)
+  // Follow computation in eq. (61) Kan-Robotti (2008)
   // <10.1016/j.jempfin.2008.03.003>.
   const arma::vec u = returns_centred * (
     var_ret_inv_mean_ret - var_ret_inv_cov_ret_fac * krs_sdf_coefficients
@@ -78,7 +81,7 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
   const arma::vec y =  1. - factors_centred * krs_sdf_coefficients;
   arma::vec q = 2. * u % y - arma::square(u) + hj_distance;
 
-  const double variance_q = HACVarianceCpp(q, -1, false);
+  const double variance_q = HACVarianceCpp(q, hac_prewhite);
 
   // Compute the squared standardized HJ test statistic.
   const double statistic = returns.n_rows * hj_distance * hj_distance / variance_q;

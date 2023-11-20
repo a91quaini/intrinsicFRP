@@ -9,7 +9,8 @@
 Rcpp::List TFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
-  const bool include_standard_errors
+  const bool include_standard_errors,
+  const bool hac_prewhite
 ) {
 
   // Check if standard errors should be included in the output
@@ -34,7 +35,8 @@ Rcpp::List TFRPCpp(
         factors,
         covariance_factors_returns,
         variance_returns,
-        mean_returns
+        mean_returns,
+        hac_prewhite
       )
     );
 
@@ -75,7 +77,8 @@ arma::vec StandardErrorsTFRPCpp(
   const arma::mat& factors,
   const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
-  const arma::vec& mean_returns
+  const arma::vec& mean_returns,
+  const bool hac_prewhite
 ) {
 
   // Compute the inverse of variance returns applied to two different matrices
@@ -93,15 +96,17 @@ arma::vec StandardErrorsTFRPCpp(
   const arma::mat ret_cen_var_ret_inv_cov_ret_fac = returns_centred *
     var_ret_inv_cov_ret_fac;
 
-  // Calculate the standard errors using HACStandardErrorsCpp function
-  return HACStandardErrorsCpp(
+  arma::mat series =
     // covariance term
     factors_centred.each_col() % ret_cen_var_ret_inv_mean_ret -
     // variance term
     ret_cen_var_ret_inv_cov_ret_fac.each_col() %
     ret_cen_var_ret_inv_mean_ret +
     // mean term
-    returns_centred * var_ret_inv_cov_ret_fac
-  ) / std::sqrt(static_cast<double>(returns.n_rows));
+    returns_centred * var_ret_inv_cov_ret_fac;
+
+  // Calculate the standard errors using HACStandardErrorsCpp function
+  return HACStandardErrorsCpp(series, hac_prewhite) /
+    std::sqrt(static_cast<double>(returns.n_rows));
 
 }
