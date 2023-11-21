@@ -10,6 +10,7 @@ FRP(
   misspecification_robust = TRUE,
   include_standard_errors = FALSE,
   hac_prewhite = FALSE,
+  target_level_gkr2014_screening = 0,
   check_arguments = TRUE
 )
 }
@@ -31,6 +32,15 @@ Default is \code{FALSE}.}
 \item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
 fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 robust covariance (HAC) estimation. Default is \code{false}.}
+
+\item{target_level_gkr2014_screening}{Number indicating the target level of
+the tests underlying the factor screening procedure in Gospodinov-Kan-Robotti
+(2014). If it's zero, then no factor screening procedure is
+implemented. Otherwise, it implements an iterative screening procedure
+based on the sequential removal of factors associated with the smallest insignificant
+t-test of a nonzero SDF coefficient. The threshold for the absolute t-test is
+\code{target_level_gkr2014_screening / n_factors}, where n_factors indicate the
+number of factors in the model at the current iteration. Default is \code{0.}.}
 
 \item{check_arguments}{boolean \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}

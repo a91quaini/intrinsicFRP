@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // FRPCpp
-Rcpp::List FRPCpp(const arma::mat& returns, const arma::mat& factors, const bool misspecification_robust, const bool include_standard_errors, const bool hac_prewhite);
-RcppExport SEXP _intrinsicFRP_FRPCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP misspecification_robustSEXP, SEXP include_standard_errorsSEXP, SEXP hac_prewhiteSEXP) {
+Rcpp::List FRPCpp(const arma::mat& returns, const arma::mat& factors, const bool misspecification_robust, const bool include_standard_errors, const bool hac_prewhite, const double target_level_gkr2014_screening);
+RcppExport SEXP _intrinsicFRP_FRPCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP misspecification_robustSEXP, SEXP include_standard_errorsSEXP, SEXP hac_prewhiteSEXP, SEXP target_level_gkr2014_screeningSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -22,7 +22,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const bool >::type misspecification_robust(misspecification_robustSEXP);
     Rcpp::traits::input_parameter< const bool >::type include_standard_errors(include_standard_errorsSEXP);
     Rcpp::traits::input_parameter< const bool >::type hac_prewhite(hac_prewhiteSEXP);
-    rcpp_result_gen = Rcpp::wrap(FRPCpp(returns, factors, misspecification_robust, include_standard_errors, hac_prewhite));
+    Rcpp::traits::input_parameter< const double >::type target_level_gkr2014_screening(target_level_gkr2014_screeningSEXP);
+    rcpp_result_gen = Rcpp::wrap(FRPCpp(returns, factors, misspecification_robust, include_standard_errors, hac_prewhite, target_level_gkr2014_screening));
+    return rcpp_result_gen;
+END_RCPP
+}
+// GKRFactorScreeningCpp
+Rcpp::List GKRFactorScreeningCpp(const arma::mat& returns, const arma::mat& factors, const double target_level, const bool hac_prewhite);
+RcppExport SEXP _intrinsicFRP_GKRFactorScreeningCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP target_levelSEXP, SEXP hac_prewhiteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const double >::type target_level(target_levelSEXP);
+    Rcpp::traits::input_parameter< const bool >::type hac_prewhite(hac_prewhiteSEXP);
+    rcpp_result_gen = Rcpp::wrap(GKRFactorScreeningCpp(returns, factors, target_level, hac_prewhite));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -176,7 +191,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 5},
+    {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 6},
+    {"_intrinsicFRP_GKRFactorScreeningCpp", (DL_FUNC) &_intrinsicFRP_GKRFactorScreeningCpp, 4},
     {"_intrinsicFRP_HACCovarianceMatrixCpp", (DL_FUNC) &_intrinsicFRP_HACCovarianceMatrixCpp, 2},
     {"_intrinsicFRP_HACVarianceCpp", (DL_FUNC) &_intrinsicFRP_HACVarianceCpp, 2},
     {"_intrinsicFRP_ChenFang2019BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestCpp, 4},

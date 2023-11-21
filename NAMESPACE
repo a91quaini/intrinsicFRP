@@ -2,6 +2,7 @@
 
 export(ChenFang2019BetaRankTest)
 export(FRP)
+export(GKRFactorScreening)
 export(HACcovariance)
 export(HJMisspecificationTest)
 export(IterativeKleibergenPaap2006BetaRankTest)

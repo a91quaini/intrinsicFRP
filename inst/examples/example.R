@@ -27,7 +27,7 @@ tfrp = intrinsicFRP::TFRP(returns, factors[,ff6usl], include_standard_errors = T
 krs_frp = intrinsicFRP::FRP(returns, factors[,ff6usl], include_standard_errors = TRUE)
 
 # set penalty parameters
-penalty_parameters = seq(1e-4, 1e-2, length.out = 1000)
+penalty_parameters = seq(1e-4, 4e-3, length.out = 1000)
 
 # compute Oracle tradable factor risk premia and their standard errors
 # for low factor models, no need for the "one standard deviation" tuning rule

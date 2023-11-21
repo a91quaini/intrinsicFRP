@@ -115,6 +115,30 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::mat U22 = U.submat(q, q, n_factors - 1, n_factors - 1);
   const arma::mat V22 = V.submat(q, q, n_returns - 1, n_returns - 1);
 
+  ///////////////////////////////////////////
+  // // construct of symmetric square-roots of matrices (U22 U22') and (V22 V22')
+  // // need to clamp the eigenvalues to avoid spurious complex numbers
+  // // const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
+  // // const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
+  // arma::vec U22_eval(n_factors - q);
+  // arma::vec V22_eval(n_factors - q);
+  // arma::mat U22_evec(n_factors - q, n_factors - q);
+  // arma::mat V22_evec(n_factors - q, n_factors - q);
+  //
+  // eig_sym(U22_eval, U22_evec, U22 * U22.t());
+  // eig_sym(V22_eval, V22_evec, V22 * V22.t());
+  //
+  // const arma::vec sqrt_U22_eval = arma::sqrt(U22_eval);
+  // const arma::vec sqrt_V22_eval = arma::sqrt(V22_eval);
+  //
+  // const arma::mat sqrt_U22 = U22_evec * arma::diagmat(
+  //   arma::clamp(sqrt_U22_eval, 0., sqrt_U22_eval.max())
+  // ) * U22_evec.t();
+  // const arma::mat sqrt_V22 = V22_evec * arma::diagmat(
+  //   arma::clamp(sqrt_V22_eval, 0., sqrt_V22_eval.max())
+  // ) * V22_evec.t();
+  //////////////////////////////////////////
+
   // Construct square roots directly using eigen decomposition results.
   const arma::mat sqrt_U22 = arma::sqrtmat_sympd(U22 * U22.t());
   const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
@@ -178,31 +202,31 @@ Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
   // Ensure the number of factors is less than the number of returns
   if (n_factors >= n_returns) Rcpp::stop("Kleibergen Paap test: n_factors must be < n_returns");
 
-  // Compute the cross-product of factors matrix (used for further computation)
-  const arma::mat fac_t_fac = factors.t() * factors;
+  // Perform Cholesky decomposition of factors.t() * factors.
+  // This is the transpose of matrix G in equation (16) in Kleibergen-Paap (2006)
+  const arma::mat L_fac = arma::chol(factors.t() * factors, "lower");
+
+  // Compute the Cholesky decomposition of returns.t() * returns.
+  // This is the transpose of matrix F_t_inv in equation (16) in Kleibergen-Paap (2006)
+  const arma::mat U_ret = arma::chol(returns.t() * returns);
 
   // Solve for the coefficients matrix (pi) using the factors and returns matrices
-  // This follows equation (16) in Kleibergen and Paap (2006)
-  const arma::mat pi = arma::solve(
-    fac_t_fac,
-    factors.t() * returns,
-    arma::solve_opts::likely_sympd
-  );
+  // This follows equation (16) in Kleibergen-Paap (2006)
+  const arma::mat pi = arma::solve(arma::trimatl(L_fac), factors.t() * returns);
 
-  // Construct F_t_inv and G matrices as per equation (16) for the computation of theta
-  const arma::mat F_t_inv = arma::chol(returns.t() * returns, "lower");
-  const arma::mat G = arma::chol(fac_t_fac);
-
-  // Compute the theta matrix used for the singular value decomposition (SVD) later on
-  const arma::mat theta = arma::solve(arma::trimatl(F_t_inv), pi.t()).t();
+  // Compute matrix theta of factor loadings that is proportional to matrix of
+  // t-statistics of the least squares estimator.
+  // That is, it is invariant to invertible transformations of the data that are
+  // identical over all observations.
+  const arma::mat theta = pi * arma::inv(arma::trimatu(U_ret));
 
   // Compute centred returns
   const arma::mat returns_centred = returns.each_row() - arma::mean(returns);
 
   // Calculate the residuals and then apply scaling by F_t_inv and G
   const arma::mat residuals = returns_centred - factors * pi;
-  const arma::mat err1 = arma::solve(arma::trimatl(F_t_inv), residuals.t()).t();
-  const arma::mat err2 = arma::solve(arma::trimatl(G.t()), factors.t()).t();
+  const arma::mat err1 = arma::solve(arma::trimatl(U_ret.t()), residuals.t()).t();
+  const arma::mat err2 = arma::solve(arma::trimatl(L_fac), factors.t()).t();
 
   // Element-wise multiplication of errors, repeated across the correct dimensions to match W
   const arma::mat err = arma::repelem(err1, 1, n_factors) % arma::repmat(err2, 1, n_returns);
@@ -249,8 +273,8 @@ Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(
 ///// ScaledFactorLoadingsCpp /////
 
 arma::mat ScaledFactorLoadingsCpp(
-    const arma::mat& returns,
-    const arma::mat& factors
+  const arma::mat& returns,
+  const arma::mat& factors
 ) {
 
   // Perform Cholesky decomposition of factors.t() * factors.

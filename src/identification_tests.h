@@ -41,7 +41,8 @@ Rcpp::List ChenFang2019BetaRankTestCpp(
 //
 // @param returns An `n_observations x n_returns` matrix of test asset excess returns.
 // @param factors An `n_observations x n_factors` matrix of risk factors.
-// @param target_level Double specifying the level used for rank estimation.
+// @param target_level Double specifying the target level of the test used for rank estimation.
+//
 // @return A list containing the iterative Kleibergen-Paap 2006 beta rank statistics and p-values.
 // [[Rcpp::export]]
 Rcpp::List IterativeKleibergenPaap2006BetaRankTestCpp(

@@ -35,7 +35,9 @@ A list containing the Chen-Fang (2019) rank statistic and the associated p-value
 \description{
 Tests the null hypothesis of reduced rank in the matrix of regression
 loadings for test asset excess returns on risk factors using the Chen-Fang (2019)
-beta rank test. The test applies the Kleibergen-Paap (2006) iterative rank test
+\url{doi:10.3982/QE1139}
+beta rank test. The test applies the Kleibergen-Paap (2006) \url{doi:10.1016/j.jeconom.2005.02.011}
+iterative rank test
 for initial rank estimation when \code{target_level_kp2006_rank_test > 0}, with an
 adjustment to \code{level = target_level_kp2006_rank_test / n_factors}. When
 \code{target_level_kp2006_rank_test <= 0}, the number of singular values above

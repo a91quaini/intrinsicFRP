@@ -14,16 +14,11 @@ arma::mat HACCovarianceMatrixCpp(
   const unsigned int n_observations = series.n_rows;
 
   // Determine the number of lags using the Newey-West plug-in procedure
-  const unsigned int n_lags =  std::floor(
-    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-  );
-
-  // Ensure n_observations is greater than n_lags
-  if (n_observations <= n_lags) {
-
-    Rcpp::stop("Number of observations must be greater than the number of lags.");
-
-  }
+  // as long as n_observations > 5. Otherwise set n_lags to 0
+  const unsigned int n_lags =  n_observations > 5 ?
+    std::floor(
+      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+    ) : 0;
 
   // If prewhite is selected, fit an AR(1) to prewhite the series
   arma::mat coefficients;
@@ -75,9 +70,11 @@ arma::vec HACStandardErrorsCpp(
   const unsigned int n_series = series.n_cols;
 
   // Determine the number of lags using the Newey-West plug-in procedure
-  const unsigned int n_lags =  std::floor(
-    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-  );
+  // as long as n_observations > 5. Otherwise set n_lags to 0
+  const unsigned int n_lags =  n_observations > 5 ?
+    std::floor(
+      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+    ) : 0;
 
   // If prewhite is selected, fit an AR(1) to prewhite each column of the series
   arma::vec coefficients(n_series);
@@ -124,16 +121,11 @@ double HACVarianceCpp(
   const unsigned int n_observations = series.n_elem;
 
   // Determine the number of lags using the Newey-West plug-in procedure
-  const unsigned int n_lags =  std::floor(
-    4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
-  );
-
-  // Ensure n_observations is greater than n_lags
-  if (n_observations <= n_lags) {
-
-    Rcpp::stop("Number of observations must be greater than the number of lags.");
-
-  }
+  // as long as n_observations > 5. Otherwise set n_lags to 0
+  const unsigned int n_lags =  n_observations > 5 ?
+    std::floor(
+      4 * std::pow(static_cast<double>(0.01 * n_observations), 2.0 / 9.0)
+    ) : 0;
 
   // If prewhite was selected, fit an AR(1) to prewhite the series
   double coefficient = 0.0;

@@ -19,8 +19,8 @@
 // or the misspecification-robust factor risk premia of Kan-Robotti-Shanken (2013)
 // <doi:10.1111/jofi.12035>:
 // `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]`
-// from data on factors `F` and test
-// asset excess returns `R`. Optionally computes the corresponding
+// from data on factors `F` and test asset excess returns `R`.
+// Optionally computes the corresponding
 // heteroskedasticity and autocorrelation robust standard errors using the
 // Newey-West (1994) <doi:10.2307/2297912> plug-in procedure to select the
 // number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
@@ -38,8 +38,16 @@
 // @param hac_prewhite A boolean indicating if the series needs prewhitening by
 // fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 // robust covariance (HAC) estimation. Default is `false`.
+// @param target_level_gkr2014_screening Number indicating the target level of
+// the tests underlying the factor screening procedure in Gospodinov-Kan-Robotti
+// (2014). If it's zero or negative, then no factor screening procedure is
+// implemented. Otherwise, it implements an iterative screening procedure
+// based on the sequential removal of factors associated with the smallest insignificant
+// t-test of a nonzero SDF coefficient. The threshold for the absolute t-test is
+// `target_level_gkr2014_screening / n_factors`, where n_factors indicate the
+// number of factors in the model at the current iteration. Default is `-1.`.
 //
-// @return a list containing `n_factors`-dimensional vector of factor
+// @return A list containing `n_factors`-dimensional vector of factor
 // risk premia in `"risk_premia"`; if `include_standard_errors=TRUE`, then
 // it further includes `n_factors`-dimensional vector of factor risk
 // premia standard errors in `"standard_errors"`.
@@ -50,7 +58,19 @@ Rcpp::List FRPCpp(
   const arma::mat& factors,
   const bool misspecification_robust = true,
   const bool include_standard_errors = false,
-  const bool hac_prewhite = false
+  const bool hac_prewhite = false,
+  const double target_level_gkr2014_screening = 0.
+);
+
+// Function for internal use
+// Compiles the list returned by `FRPCpp`.
+Rcpp::List ReturnFRPCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const bool misspecification_robust,
+  const bool include_standard_errors,
+  const bool hac_prewhite,
+  const arma::uvec selected_factor_indices = arma::uvec()
 );
 
 // Function for internal use

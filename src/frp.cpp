@@ -2,6 +2,7 @@
 
 #include "frp.h"
 #include "hac_covariance.h"
+#include "gkr_factor_screening.h"
 
 /////////////////
 ///// FRPCpp ////
@@ -11,7 +12,71 @@ Rcpp::List FRPCpp(
   const arma::mat& factors,
   const bool misspecification_robust,
   const bool include_standard_errors,
-  const bool hac_prewhite
+  const bool hac_prewhite,
+  const double target_level_gkr2014_screening
+) {
+
+  // If target_level_gkr2014_screening > 0, perform the GKR screening procedure
+  if (target_level_gkr2014_screening > 0.) {
+
+    // Store the indices of the selected factors
+    const arma::uvec selected_factor_indices = static_cast<arma::uvec>(
+      GKRFactorScreeningCpp(
+        returns,
+        factors,
+        target_level_gkr2014_screening,
+        hac_prewhite
+      )["selected_factor_indices"]
+    );
+
+    // If the GKR procedure removed all the factors, return a list containing empty vectors.
+    if (selected_factor_indices.empty()) return include_standard_errors ?
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = arma::vec(),
+        Rcpp::Named("standard_errors") = arma::vec(),
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
+      ) :
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = arma::vec(),
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
+      );
+
+    // Store the potentially new factors
+    const arma::mat factors_new = factors.cols(selected_factor_indices);
+
+    // return list of results, with selected factor indices
+    return ReturnFRPCpp(
+      returns,
+      factors_new,
+      misspecification_robust,
+      include_standard_errors,
+      hac_prewhite,
+      selected_factor_indices
+    );
+
+  }
+
+  // Otherwise, return list of results without selected factor indices
+  return ReturnFRPCpp(
+    returns,
+    factors,
+    misspecification_robust,
+    include_standard_errors,
+    hac_prewhite
+  );
+
+}
+
+////////////////////////
+////// ReturnFRPCpp ////
+
+Rcpp::List ReturnFRPCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const bool misspecification_robust,
+  const bool include_standard_errors,
+  const bool hac_prewhite,
+  const arma::uvec selected_factor_indices
 ) {
 
   // Check if standard errors are to be included in the calculation
@@ -35,29 +100,55 @@ Rcpp::List FRPCpp(
       FMFRPCpp(beta, mean_returns);
 
     // Return risk premia and standard errors in a list
-    return Rcpp::List::create(
-      Rcpp::Named("risk_premia") =  frp,
-      Rcpp::Named("standard_errors") = misspecification_robust ?
-    StandardErrorsKRSFRPCpp(
-      frp,
-      returns,
-      factors,
-      beta,
-      covariance_factors_returns,
-      variance_returns,
-      mean_returns,
-      hac_prewhite
-    ) :
-      StandardErrorsFRPCpp(
-        frp,
-        returns,
-        factors,
-        beta,
-        covariance_factors_returns,
-        variance_returns,
-        mean_returns,
-        hac_prewhite
-      )
+    return selected_factor_indices.empty() ?
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") =  frp,
+        Rcpp::Named("standard_errors") = misspecification_robust ?
+          StandardErrorsKRSFRPCpp(
+            frp,
+            returns,
+            factors,
+            beta,
+            covariance_factors_returns,
+            variance_returns,
+            mean_returns,
+            hac_prewhite
+          ) :
+          StandardErrorsFRPCpp(
+            frp,
+            returns,
+            factors,
+            beta,
+            covariance_factors_returns,
+            variance_returns,
+            mean_returns,
+            hac_prewhite
+          )
+      ) :
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") =  frp,
+        Rcpp::Named("standard_errors") = misspecification_robust ?
+          StandardErrorsKRSFRPCpp(
+            frp,
+            returns,
+            factors,
+            beta,
+            covariance_factors_returns,
+            variance_returns,
+            mean_returns,
+            hac_prewhite
+          ) :
+          StandardErrorsFRPCpp(
+            frp,
+            returns,
+            factors,
+            beta,
+            covariance_factors_returns,
+            variance_returns,
+            mean_returns,
+            hac_prewhite
+          ),
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
     );
 
   } else {
@@ -70,15 +161,25 @@ Rcpp::List FRPCpp(
     ).t();
 
     // Return risk premia only in a list
-    return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = misspecification_robust ?
-    KRSFRPCpp(beta, arma::mean(returns).t(), arma::cov(returns)) :
-      FMFRPCpp(beta, arma::mean(returns).t())
+    return selected_factor_indices.empty() ?
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = misspecification_robust ?
+          KRSFRPCpp(beta, arma::mean(returns).t(), arma::cov(returns)) :
+          FMFRPCpp(beta, arma::mean(returns).t())
+      ) :
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = misspecification_robust ?
+          KRSFRPCpp(beta, arma::mean(returns).t(), arma::cov(returns)) :
+          FMFRPCpp(beta, arma::mean(returns).t()),
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
     );
 
   }
 
 }
+
+////////////////////
+////// FMFRPCpp ////
 
 arma::vec FMFRPCpp(
   const arma::mat& beta,
@@ -221,7 +322,6 @@ arma::vec StandardErrorsKRSFRPCpp(
     var_fac_inv,
     arma::solve_opts::likely_sympd
   );
-
 
   // Compute terms used in the standard error calculation
   const arma::mat term1 = returns_centred * a_matrix.t();

@@ -31,11 +31,10 @@ test_that("Test HACcovariance", {
   # HACcovariance errors with invalid inputs
   expect_error(HACcovariance(NULL))
   expect_error(HACcovariance(matrix(NA, nrow = 10, ncol = 5)))
-  expect_error(HACcovariance(residuals, n_lags = "five"))
   expect_error(HACcovariance(residuals, prewhite = "yes"))
 
-  # HACcovariance errors if n_lags is is greater than n_observations
-  expect_error(HACcovariance(residuals, n_lags = nrow(residuals) + 1))
-  expect_error(HACcovariance(single_series, n_lags = nrow(residuals) + 1))
+  # HACcovariance for n_observations smaller than 5
+  expect_error(HACcovariance(residuals[1:3,]))
+  expect_error(HACcovariance(single_series[1:3, drop = FALSE]))
 
 })

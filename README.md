@@ -36,7 +36,7 @@ Lastly, the functions for **testing model identification** are specialized versi
 
 To cite `intrinsicFRP` in publications, please use:
 
-> Quaini, A. (2023). `intrinsicFRP`: R Package For Factor Model Asset Pricing. `R` package version 1.0.0. URL: https://cran.r-project.org/web/packages/intrinsicFRP/index.html.
+> Quaini, A. (2023). `intrinsicFRP`: An R Package for Factor Model Asset Pricing. `R` package version 1.0.0. URL: https://cran.r-project.org/web/packages/intrinsicFRP/index.html.
 
 ## Installation
 
@@ -217,10 +217,12 @@ intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
 Result of the HJ misspecification test:
 ```R
 # HJ misspecification test p-value for the Fama-French 3 factor model
-1.526582e-07
+$`p-value`
+[1] 1.526582e-07
 
 # HJ misspecification test p-value for the Fama-French 6 factor model
-2.133855e-05
+$`p-value`
+[1] 2.133855e-05
 ```
 
 Since the p-value of both HJ misspecification tests is below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 3 and 6 factor models are correctly specified.
@@ -236,10 +238,10 @@ $q
 [1,]    0    1    2    3    4    5
 
 $statistics
-[1] 425512.0961 156257.6897  36635.6923   1955.2522    486.3576    191.7194
+[1] 108162.2473  10291.4280   4710.5822   1015.9157    376.7892    112.8450
 
 $pvalues
-[1] 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 3.986757e-61 9.076916e-23
+[1]  0.000000e+00  0.000000e+00  0.000000e+00 3.510246e-143  2.062222e-41  1.340701e-09
 
 # p-value of the Chen Fang (2019) Beta Rank Test
 $`p-value`
@@ -267,23 +269,21 @@ $q
 [1,]    0    1    2    3    4    5    6
 
 $statistics
-[1] 505705.19553 171847.08238  42170.13669   2214.27454    591.29522    274.41845
-[7]     58.45019
+[1] 128024.51364  11595.52592   5480.53412   1127.71644    475.16366    190.55705     57.75449
 
 $pvalues
-[1] 0.000000e+00 0.000000e+00 0.000000e+00 0.000000e+00 1.600124e-65 8.255293e-25
-[7] 1.039242e-02
+[1]  0.000000e+00  0.000000e+00  0.000000e+00 7.265767e-147  1.346504e-45  3.134998e-12  1.216120e-02
 
 # p-value of the Chen Fang (2019) Beta Rank Test
 $`p-value`
-[1] 0.166
+[1] 0.178
 ```
 
-Since the largest p-value of the Iteraive Kleibergen Paap (2006) Beta Rank Test and the p-value of the Chen Fang (2019) Beta Rank Test are above the standard thresholds of $10\%$, $5\%$ and $1\%$, we do not reject the Null that the Fama-French 6 factor model is not identified.
+Since the largest p-value of the Iteraive Kleibergen Paap (2006) Beta Rank Test and the p-value of the Chen Fang (2019) Beta Rank Test are above the standard thresholds of $10\%$, $5\%$ and $1\%$, we do not reject the Null that the Fama-French 6 factor model augmented with a simulated useless factor is not identified.
 
 ## Dependencies
 
-To optimize computational performance, all methods implemented in package `intrinsicFRP` are written in C++ and make use of the [Armadillo](https://arma.sourceforge.net/) library for efficient linear algebra calculations. However, for user convenience, the interface of package `intrinsicFRP` is entirely implemented in R, with minimal dependencies, including:
+To optimize computational performance, all methods implemented in package `intrinsicFRP` are written in C++ and make use of the [Armadillo](https://arma.sourceforge.net/) [@sanderson2016armadillo] library for efficient linear algebra calculations. However, for user convenience, the interface of package `intrinsicFRP` is entirely implemented in R, with minimal dependencies, including:
 
 - `Rcpp` [@eddelbuettel2018extending] and `RcppArmadillo` [@eddelbuettel2014rcpparmadillo]: They facilitate seamless integration between R, C++, and the armadillo C++ library.
 - `graphics`: Provides R functions for creating basic graphics.

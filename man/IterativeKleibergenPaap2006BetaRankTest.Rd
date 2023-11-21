@@ -29,7 +29,8 @@ iterative Kleibergen-Paap 2006 beta rank statistics and p-values for each \code{
 }
 \description{
 Evaluates the rank of regression loadings in an asset pricing model using the
-iterative Kleibergen-Paap (2006) beta rank test. It systematically tests the null hypothesis
+iterative Kleibergen-Paap (2006) \url{doi:10.1016/j.jeconom.2005.02.011} beta rank test.
+It systematically tests the null hypothesis
 for each potential rank \verb{q = 0, ..., n_factors - 1} and estimates the rank as the smallest \code{q}
 that has a p-value below the significance level, adjusted for the number of factors.
 The function presupposes more returns than factors (\code{n_factors < n_returns}).

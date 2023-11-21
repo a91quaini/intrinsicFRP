@@ -33,6 +33,14 @@
 #' @param hac_prewhite A boolean indicating if the series needs prewhitening by
 #' fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 #' robust covariance (HAC) estimation. Default is `false`.
+#' @param target_level_gkr2014_screening Number indicating the target level of
+#' the tests underlying the factor screening procedure in Gospodinov-Kan-Robotti
+#' (2014). If it's zero, then no factor screening procedure is
+#' implemented. Otherwise, it implements an iterative screening procedure
+#' based on the sequential removal of factors associated with the smallest insignificant
+#' t-test of a nonzero SDF coefficient. The threshold for the absolute t-test is
+#' `target_level_gkr2014_screening / n_factors`, where n_factors indicate the
+#' number of factors in the model at the current iteration. Default is `0.`.
 #' @param check_arguments boolean `TRUE` for internal check of all function
 #' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -56,6 +64,7 @@ FRP = function(
   misspecification_robust = TRUE,
   include_standard_errors = FALSE,
   hac_prewhite = FALSE,
+  target_level_gkr2014_screening = 0.,
   check_arguments = TRUE
 ) {
 
@@ -66,6 +75,8 @@ FRP = function(
     stopifnot("`misspecification_robust` must be boolean" = is.logical(misspecification_robust))
     stopifnot("`include_standard_errors` must be boolean" = is.logical(include_standard_errors))
     stopifnot("`hac_prewhite` must be boolean" = is.logical(hac_prewhite))
+    stopifnot("`target_level_gkr2014_screening` must be numeric" = is.numeric(target_level_gkr2014_screening))
+    stopifnot("`target_level_gkr2014_screening` must be between 0 and 1" = (target_level_gkr2014_screening >= 0.) & (target_level_gkr2014_screening <= 1.))
 
   }
 
@@ -75,7 +86,8 @@ FRP = function(
     factors,
     misspecification_robust,
     include_standard_errors,
-    hac_prewhite
+    hac_prewhite,
+    target_level_gkr2014_screening
   ))
 
 }

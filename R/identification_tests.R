@@ -8,7 +8,9 @@
 #'
 #' @description Tests the null hypothesis of reduced rank in the matrix of regression
 #' loadings for test asset excess returns on risk factors using the Chen-Fang (2019)
-#' beta rank test. The test applies the Kleibergen-Paap (2006) iterative rank test
+#' <doi:10.3982/QE1139>
+#' beta rank test. The test applies the Kleibergen-Paap (2006) <doi:10.1016/j.jeconom.2005.02.011>
+#'  iterative rank test
 #' for initial rank estimation when `target_level_kp2006_rank_test > 0`, with an
 #' adjustment to `level = target_level_kp2006_rank_test / n_factors`. When
 #' `target_level_kp2006_rank_test <= 0`, the number of singular values above
@@ -68,7 +70,8 @@ ChenFang2019BetaRankTest = function(
 #' @title Iterative Kleibergen-Paap 2006 Beta Rank Test for Asset Pricing Models
 #'
 #' @description Evaluates the rank of regression loadings in an asset pricing model using the
-#' iterative Kleibergen-Paap (2006) beta rank test. It systematically tests the null hypothesis
+#' iterative Kleibergen-Paap (2006) <doi:10.1016/j.jeconom.2005.02.011> beta rank test.
+#' It systematically tests the null hypothesis
 #' for each potential rank `q = 0, ..., n_factors - 1` and estimates the rank as the smallest `q`
 #' that has a p-value below the significance level, adjusted for the number of factors.
 #' The function presupposes more returns than factors (`n_factors < n_returns`).
