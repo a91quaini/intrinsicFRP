@@ -2,8 +2,7 @@
 % Please edit documentation in R/gkr_factor_screening.R
 \name{GKRFactorScreening}
 \alias{GKRFactorScreening}
-\title{Perform the factor screening procedure of Gospodinov-Kan-Robotti (2014)
-from moments extracted from data}
+\title{Factor screening procedure of Gospodinov-Kan-Robotti (2014)}
 \usage{
 GKRFactorScreening(
   returns,
@@ -35,24 +34,29 @@ robust covariance (HAC) estimation. Default is \code{false}.}
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-A list contaning the GKR SDF coefficients, their standard errors and
-squared t-statistics. It further contain the indices of the selected factors.
+A list contaning the selected GKR SDF coefficients in \code{SDF_coefficients},
+their standard errors in \code{standard_errors},
+t-statistics in \code{t_statistics} and indices in the columns of the factor matrix \code{factors}
+supplied by the user in \code{selected_factor_indices}.
 }
 \description{
 Performs the factor screening procedure of
 Gospodinov-Kan-Robotti (2014) \url{doi:10.2139/ssrn.2579821}, which is
-an iterative screening procedure
+an iterative model screening procedure
 based on the sequential removal of factors associated with the smallest insignificant
 t-test of a nonzero misspecification-robust SDF coefficient. The significance threshold for the
-absolute t-test is given by \code{target_level_gkr2014_screening / n_factors},
-where n_factors indicate the number of factors in the model at the current iteration;
+absolute t-test is set to \code{target_level / n_factors},
+where n_factors indicates the number of factors in the model at the current iteration;
 that is, it takes care of the multiple testing problem via a conservative
 Bonferroni correction. Standard errors are computed with the
-heteroskedasticity and autocorrelation using the Newey-West estimator.
-The number is selected using the Newey-West (1994)
-\url{doi:10.2307/2297912} plug-in procedure, where
+heteroskedasticity and autocorrelation using the Newey-West (1994)
+\url{doi:10.2307/2297912} estimator, where the number of lags
+is selected using the Newey-West plug-in procedure:
 \code{n_lags = 4 * (n_observations/100)^(2/9)}.
-The function allows to internally prewhiten the series by fitting a VAR(1).
+For the standard error computations, the function allows to internally
+pre-whiten the series by fitting a VAR(1),
+i.e., a vector autoregressive model of order 1.
+All the details can be found in Gospodinov-Kan-Robotti (2014) \url{doi:10.2139/ssrn.2579821}.
 }
 \examples{
 # import package data on 6 risk factors and 42 test asset excess returns

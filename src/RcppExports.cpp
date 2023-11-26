@@ -93,15 +93,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // HJMisspecificationTestCpp
-Rcpp::List HJMisspecificationTestCpp(const arma::mat& returns, const arma::mat& factors, const bool hac_prewhite);
-RcppExport SEXP _intrinsicFRP_HJMisspecificationTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP hac_prewhiteSEXP) {
+Rcpp::List HJMisspecificationTestCpp(const arma::mat& returns, const arma::mat& factors, const double sqhj_distance_null_value, const bool hac_prewhite);
+RcppExport SEXP _intrinsicFRP_HJMisspecificationTestCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP sqhj_distance_null_valueSEXP, SEXP hac_prewhiteSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const double >::type sqhj_distance_null_value(sqhj_distance_null_valueSEXP);
     Rcpp::traits::input_parameter< const bool >::type hac_prewhite(hac_prewhiteSEXP);
-    rcpp_result_gen = Rcpp::wrap(HJMisspecificationTestCpp(returns, factors, hac_prewhite));
+    rcpp_result_gen = Rcpp::wrap(HJMisspecificationTestCpp(returns, factors, sqhj_distance_null_value, hac_prewhite));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -197,7 +198,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_HACVarianceCpp", (DL_FUNC) &_intrinsicFRP_HACVarianceCpp, 2},
     {"_intrinsicFRP_ChenFang2019BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestCpp, 4},
     {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
-    {"_intrinsicFRP_HJMisspecificationTestCpp", (DL_FUNC) &_intrinsicFRP_HJMisspecificationTestCpp, 3},
+    {"_intrinsicFRP_HJMisspecificationTestCpp", (DL_FUNC) &_intrinsicFRP_HJMisspecificationTestCpp, 4},
     {"_intrinsicFRP_OracleTFRPGCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPGCVCpp, 14},
     {"_intrinsicFRP_OracleTFRPCVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPCVCpp, 12},
     {"_intrinsicFRP_OracleTFRPRVCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPRVCpp, 14},

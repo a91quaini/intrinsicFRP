@@ -92,9 +92,8 @@ Rcpp::List GKRFactorScreeningCpp(
     // Rcpp::Rcout << "standard_errors = " << standard_errors << "\n";
 
     // Compute the t-statistic for each factor risk premia.
-    const arma::vec squared_t_stat = arma::square(
-      gkr_sdf_coefficients / standard_errors
-    );
+    const arma::vec t_stat = gkr_sdf_coefficients / standard_errors;
+    const arma::vec squared_t_stat = arma::square(t_stat);
     // Rcpp::Rcout << "squared_t_stat = " << squared_t_stat << "\n";
 
     // Store the index of the minimum absolute t-statistic
@@ -109,14 +108,16 @@ Rcpp::List GKRFactorScreeningCpp(
       return Rcpp::List::create(
         Rcpp::Named("sdf_coefficients") = gkr_sdf_coefficients,
         Rcpp::Named("standard_errors") = standard_errors,
-        Rcpp::Named("squared_t_stat") = squared_t_stat,
+        Rcpp::Named("t_statistics") = t_stat,
         Rcpp::Named("selected_factor_indices") = selected_factor_indices
       );
 
     }
 
-    // Otherwise, remove the factor from the data.
+    // Otherwise, remove the factor associated to the minimum t-statistic
+    // from the data.
     factors_new.shed_col(idx_min);
+
     // if n_factors is zero, exit the loop to avoid meaningless computations.
     if (factors_new.empty()) break;
     covariance_returns_factors_new.shed_col(idx_min);
@@ -128,7 +129,7 @@ Rcpp::List GKRFactorScreeningCpp(
   return Rcpp::List::create(
     Rcpp::Named("sdf_coefficients") = arma::vec(),
     Rcpp::Named("standard_errors") = arma::vec(),
-    Rcpp::Named("squared_t_stat") = arma::vec(),
+    Rcpp::Named("t_stat") = arma::vec(),
     Rcpp::Named("selected_factor_indices") = arma::uvec()
   );
 

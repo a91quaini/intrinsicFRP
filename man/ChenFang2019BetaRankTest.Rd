@@ -43,6 +43,8 @@ adjustment to \code{level = target_level_kp2006_rank_test / n_factors}. When
 \code{target_level_kp2006_rank_test <= 0}, the number of singular values above
 \code{n_observations^(-1/4)} is used instead. It presumes that the number of factors
 is less than the number of returns (\code{n_factors < n_returns}).
+All the details can be found in Chen-Fang (2019)
+\url{doi:10.3982/QE1139}.
 }
 \examples{
 # import package data on 6 risk factors and 42 test asset excess returns

@@ -2,43 +2,54 @@
 % Please edit documentation in R/misspecification_test.R
 \name{HJMisspecificationTest}
 \alias{HJMisspecificationTest}
-\title{Asset Prciing HJ model misspecification test}
+\title{Compute the HJ asset pricing model misspecification test.}
 \usage{
 HJMisspecificationTest(
   returns,
   factors,
+  sqhj_distance_null_value = 0,
   hac_prewhite = FALSE,
   check_arguments = TRUE
 )
 }
 \arguments{
-\item{returns}{An \verb{n_observations x n_returns}-dimensional matrix of test asset
-excess returns.}
+\item{returns}{A \verb{n_observations x n_returns} matrix of test asset excess returns.}
 
-\item{factors}{An \verb{n_observations x n_factors}-dimensional matrix of risk
-factors.}
+\item{factors}{A \verb{n_observations x n_factors} matrix of risk factors.}
 
-\item{hac_prewhite}{A boolean indicating if the series needs prewhitening by
+\item{sqhj_distance_null_value}{A number indicating the testing value under
+the null hypothesisfor the squared HJ model-misspecification distance.
+Default is zero.}
+
+\item{hac_prewhite}{A boolean indicating if the series needs pre-whitening by
 fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 robust covariance (HAC) estimation. Default is \code{false}.}
 
-\item{check_arguments}{A boolean \code{TRUE} if you want to check function arguments;
-\code{FALSE} otherwise. Default is \code{TRUE}.}
+\item{check_arguments}{A boolean: \code{TRUE} for internal check of all function
+arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-A list containing the squared standardized HJ test statistic and
-the corresponding p-value.
+@return A list containing the squared misspecification-robust HJ
+distance, the associated standardized test statistic
+\code{T * (sqhj_distance - sqhj_distance_null_value)^2 / AsySdErr(sqhj_distance)}
+and the corresponding p-value.
 }
 \description{
-Computes the Hansen-Jagannathan (1997) \url{doi:10.1111/j.1540-6261.1997.tb04813.x}
-model misspecification statistic and
-p-value of an asset pricing model from test asset excess returns \code{R} and
-risk factors \code{F}. The statistic is defined as:
-\verb{HJDISTANCE = min_\{d\} (E[R] - beta * d)' * Var[R]^\{-1\} * (E[R] - beta * d)}
-where \code{beta = Cov[R, F] * Var[F]^{-1}} are the regression coefficients of
-test asset excess returns \code{R} on risk factors \code{F}.
-Detailed computations and p-value calculations can be found in
-Kan-Robotti (2008) <10.1016/j.jempfin.2008.03.003>.
+Computes and tests the Kan-Robotti (2008) <10.1016/j.jempfin.2008.03.003>
+squared model misspecification distance:
+\verb{sqhj_distance = min_\{d\} (E[R] - Cov[R,F] * d)' * V[R]^\{-1\} * (E[R] - Cov[R,F] * d)},
+where \code{R} denotes test asset excess returns and \code{F} risk factors.
+This model misspecification distance is a modification of the prominent
+Hansen-Jagannathan (1997) \url{doi:10.1111/j.1540-6261.1997.tb04813.x}
+distance, adapted to the use of excess returns for the test asset, and a
+SDF that is a linear function of demeaned factors.
+The Null Hypothesis of the test is:
+\code{H0: sqhj_distance = sqhj_distance_null_value},
+where \code{sqhj_distance_null_value} is the user-supplied hypothesized value of
+the squared model misspecification distance.
+Computation of the p-values is obtained with asymptotic analysis under
+misspecified models; that is, without assuming correct specification.
+Details can be found in Kan-Robotti (2008) <10.1016/j.jempfin.2008.03.003>.
 }
 \examples{
 # Import package data on 6 risk factors and 42 test asset excess returns

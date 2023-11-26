@@ -30,7 +30,7 @@ test_that("Test GKRFactorScreening", {
   # More comprehensive tests can include checking the structure of the output
   screening_result <- GKRFactorScreening(returns, factors, target_level, hac_prewhite)
   expect_type(screening_result, "list")
-  expect_true(all(c("sdf_coefficients", "standard_errors", "squared_t_stat", "selected_factor_indices") %in% names(screening_result)))
+  expect_true(all(c("sdf_coefficients", "standard_errors", "t_statistics", "selected_factor_indices") %in% names(screening_result)))
 
   # Validate the length of the output lists
   expect_no_error(length(screening_result$sdf_coefficient) <= n_factors)

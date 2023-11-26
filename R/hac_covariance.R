@@ -7,18 +7,22 @@
 
 #' @title Heteroskedasticity and Autocorrelation robust covariance estimator
 #'
+#' @name HACcovariance
 #' @description This function estimates the long-run covariance matrix of a multivariate
 #' centred time series accounting for heteroskedasticity and autocorrelation
 #' using the Newey-West estimator.
 #' The number of lags is selected using the Newey-West (1994)
 #' <doi:10.2307/2297912> plug-in procedure, where
 #' `n_lags = 4 * (n_observations/100)^(2/9)`.
-#' The function allows to internally prewhiten the series by fitting a VAR(1).
+#' The function allows to internally prewhiten the series by fitting a VAR(1),
+#' i.e., a vector autoregressive model of order 1.
+#' All the details can be found in Newey-West (1994)
+#' <doi:10.2307/2297912>.
 #'
 #' @param series A matrix (or vector) of data where each column is a time series.
 #' @param prewhite A boolean indicating if the series needs prewhitening by
 #' fitting an AR(1). Default is `FALSE`
-#' @param check_arguments boolean `TRUE` for internal check of all function
+#' @param check_arguments A boolean `TRUE` for internal check of all function
 #' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
 #' @return A symmetric matrix (or a scalar if only one column series is provided)

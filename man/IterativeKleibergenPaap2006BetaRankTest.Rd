@@ -2,7 +2,7 @@
 % Please edit documentation in R/identification_tests.R
 \name{IterativeKleibergenPaap2006BetaRankTest}
 \alias{IterativeKleibergenPaap2006BetaRankTest}
-\title{Iterative Kleibergen-Paap 2006 Beta Rank Test for Asset Pricing Models}
+\title{Asset Pricing Model Identification via Iterative Kleibergen-Paap 2006 Beta Rank Test}
 \usage{
 IterativeKleibergenPaap2006BetaRankTest(
   returns,
@@ -34,6 +34,7 @@ It systematically tests the null hypothesis
 for each potential rank \verb{q = 0, ..., n_factors - 1} and estimates the rank as the smallest \code{q}
 that has a p-value below the significance level, adjusted for the number of factors.
 The function presupposes more returns than factors (\code{n_factors < n_returns}).
+All the details can be found in Kleibergen-Paap (2006) \url{doi:10.1016/j.jeconom.2005.02.011}.
 }
 \examples{
 # import package data on 15 risk factors and 42 test asset excess returns

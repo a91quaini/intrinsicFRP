@@ -86,3 +86,6 @@ intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6])["p-value"]
 # Fama-French 6 factors and the simulated useless factor
 intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6usl])
 intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
+
+# compute the GKR factor screening procedure
+intrinsicFRP::GKRFactorScreening(returns, factors)

@@ -9,6 +9,7 @@
 Rcpp::List HJMisspecificationTestCpp(
   const arma::mat& returns,
   const arma::mat& factors,
+  const double sqhj_distance_null_value,
   const bool hac_prewhite
 ) {
 
@@ -18,6 +19,7 @@ Rcpp::List HJMisspecificationTestCpp(
     factors,
     arma::cov(returns),
     arma::mean(returns).t(),
+    sqhj_distance_null_value,
     hac_prewhite
   );
 
@@ -31,6 +33,7 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
   const arma::mat& factors,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
+  const double sqhj_distance_null_value,
   const bool hac_prewhite
 ) {
 
@@ -62,9 +65,9 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
     arma::solve_opts::likely_sympd
   ) * var_ret_inv_mean_ret;
 
-  // Calculate the Hansen-Jagannathan (HJ) statistic.
-  const double hj_distance = arma::dot(mean_returns, var_ret_inv_mean_ret) -
-    arma::dot(
+  // Calculate the squared Hansen-Jagannathan (HJ) distance.
+  const double sqhj_distance =
+    arma::dot(mean_returns, var_ret_inv_mean_ret) - arma::dot(
       mean_returns.t() * var_ret_inv_cov_ret_fac,
       krs_sdf_coefficients
   );
@@ -79,15 +82,18 @@ Rcpp::List HJMisspecificationStatisticAndPvalueCpp(
     var_ret_inv_mean_ret - var_ret_inv_cov_ret_fac * krs_sdf_coefficients
   );
   const arma::vec y =  1. - factors_centred * krs_sdf_coefficients;
-  arma::vec q = 2. * u % y - arma::square(u) + hj_distance;
+  arma::vec q = 2. * u % y - arma::square(u) + sqhj_distance;
 
   const double variance_q = HACVarianceCpp(q, hac_prewhite);
 
   // Compute the squared standardized HJ test statistic.
-  const double statistic = returns.n_rows * hj_distance * hj_distance / variance_q;
+  const double statistic = static_cast<double>(returns.n_rows) * std::pow(
+    sqhj_distance - sqhj_distance_null_value, 2
+  ) / variance_q;
 
   // Return the test statistic and the corresponding p-value.
   return Rcpp::List::create(
+    Rcpp::Named("sqhj_distance") = sqhj_distance,
     Rcpp::Named("statistic") = statistic,
     Rcpp::Named("p-value") = R::pchisq(statistic, 1, false, false)
   );

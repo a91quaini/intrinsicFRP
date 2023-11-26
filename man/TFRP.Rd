@@ -2,7 +2,7 @@
 % Please edit documentation in R/tfrp.R
 \name{TFRP}
 \alias{TFRP}
-\title{Compute tradable factor risk premia from data}
+\title{Tradable factor risk premia.}
 \usage{
 TFRP(
   returns,
@@ -13,12 +13,12 @@ TFRP(
 )
 }
 \arguments{
-\item{returns}{\verb{n_observations x n_returns}-dimensional matrix of test asset
+\item{returns}{A \verb{n_observations x n_returns}-dimensional matrix of test asset
 excess returns.}
 
-\item{factors}{\verb{n_observations x n_factors}-dimensional matrix of factors.}
+\item{factors}{A \verb{n_observations x n_factors}-dimensional matrix of factors.}
 
-\item{include_standard_errors}{boolean \code{TRUE} if you want to compute the
+\item{include_standard_errors}{A boolean: \code{TRUE} if you want to compute the
 tradable factor risk premia HAC standard errors; \code{FALSE} otherwise. Default
 is \code{FALSE}.}
 
@@ -26,11 +26,11 @@ is \code{FALSE}.}
 fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 robust covariance (HAC) estimation. Default is \code{false}.}
 
-\item{check_arguments}{boolean \code{TRUE} for internal check of all function
+\item{check_arguments}{A boolean: \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
-a list containing \code{n_factors}-dimensional vector of tradable factor
+A list containing \code{n_factors}-dimensional vector of tradable factor
 risk premia in \code{"risk_premia"}; if \code{include_standard_errors=TRUE}, then
 it further includes \code{n_factors}-dimensional vector of tradable factor risk
 premia standard errors in \code{"standard_errors"}.
@@ -38,11 +38,16 @@ premia standard errors in \code{"standard_errors"}.
 \description{
 Computes tradable factor risk premia from data on factors \code{F} and
 test asset excess returns \code{R}:
-\code{TFRP = Cov[F, R] * Var[R]^{-1} * E[R]}.
+\code{TFRP = Cov[F, R] * Var[R]^{-1} * E[R]};
+which are by construction the negative covariance of factors \code{F} with
+the SDF projection on asset returns, i.e., the minimum variance SDF.
 Optionally computes the corresponding heteroskedasticity and autocorrelation
 robust standard errors using the Newey-West (1994) \url{doi:10.2307/2297912}
 plug-in procedure to select the number of relevant lags, i.e.,
 \code{n_lags = 4 * (n_observations/100)^(2/9)}.
+For the standard error computations, the function allows to internally
+pre-whiten the series by fitting a VAR(1),
+i.e., a vector autoregressive model of order 1.
 All details are found in Quaini-Trojani-Yuan (2023) \url{doi:10.2139/ssrn.4574683}.
 }
 \examples{

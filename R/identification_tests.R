@@ -6,6 +6,7 @@
 
 #' @title Asset Pricing Model Identification via Chen-Fang (2019) Beta Rank Test
 #'
+#' @name ChenFang2019BetaRankTest
 #' @description Tests the null hypothesis of reduced rank in the matrix of regression
 #' loadings for test asset excess returns on risk factors using the Chen-Fang (2019)
 #' <doi:10.3982/QE1139>
@@ -16,6 +17,8 @@
 #' `target_level_kp2006_rank_test <= 0`, the number of singular values above
 #' `n_observations^(-1/4)` is used instead. It presumes that the number of factors
 #' is less than the number of returns (`n_factors < n_returns`).
+#' All the details can be found in Chen-Fang (2019)
+#' <doi:10.3982/QE1139>.
 #'
 #' @param returns Matrix of test asset excess returns with dimensions `n_observations x n_returns`.
 #' @param factors Matrix of risk factors with dimensions `n_observations x n_factors`.
@@ -67,14 +70,16 @@ ChenFang2019BetaRankTest = function(
 
 }
 
-#' @title Iterative Kleibergen-Paap 2006 Beta Rank Test for Asset Pricing Models
+#' @title Asset Pricing Model Identification via Iterative Kleibergen-Paap 2006 Beta Rank Test
 #'
+#' @name IterativeKleibergenPaap2006BetaRankTest
 #' @description Evaluates the rank of regression loadings in an asset pricing model using the
 #' iterative Kleibergen-Paap (2006) <doi:10.1016/j.jeconom.2005.02.011> beta rank test.
 #' It systematically tests the null hypothesis
 #' for each potential rank `q = 0, ..., n_factors - 1` and estimates the rank as the smallest `q`
 #' that has a p-value below the significance level, adjusted for the number of factors.
 #' The function presupposes more returns than factors (`n_factors < n_returns`).
+#' All the details can be found in Kleibergen-Paap (2006) <doi:10.1016/j.jeconom.2005.02.011>.
 #'
 #' @param returns A matrix of test asset excess returns with dimensions `n_observations x n_returns`.
 #' @param factors A matrix of risk factors with dimensions `n_observations x n_factors`.

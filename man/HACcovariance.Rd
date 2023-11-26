@@ -12,7 +12,7 @@ HACcovariance(series, prewhite = FALSE, check_arguments = TRUE)
 \item{prewhite}{A boolean indicating if the series needs prewhitening by
 fitting an AR(1). Default is \code{FALSE}}
 
-\item{check_arguments}{boolean \code{TRUE} for internal check of all function
+\item{check_arguments}{A boolean \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 }
 \value{
@@ -26,7 +26,10 @@ using the Newey-West estimator.
 The number of lags is selected using the Newey-West (1994)
 \url{doi:10.2307/2297912} plug-in procedure, where
 \code{n_lags = 4 * (n_observations/100)^(2/9)}.
-The function allows to internally prewhiten the series by fitting a VAR(1).
+The function allows to internally prewhiten the series by fitting a VAR(1),
+i.e., a vector autoregressive model of order 1.
+All the details can be found in Newey-West (1994)
+\url{doi:10.2307/2297912}.
 }
 \examples{
 # Import package data on 6 risk factors and 42 test asset excess returns
