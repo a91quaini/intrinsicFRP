@@ -9,7 +9,7 @@ bibliography: readme.bib
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![R-CMD-check](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/a91quaini/intrinsicFRP/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/a91quaini/intrinsicFRP/branch/main/graph/badge.svg?token=0F8R40B0FP)](https://app.codecov.io/gh/a91quaini/intrinsicFRP)
-[![](https://cranlogs.r-pkg.org/badges/grand-total/intrinsicFRP)](https://cran.rstudio.com/web/packages/intrinsicFRP/index.html)
+[![](https://cranlogs.r-pkg.org/badges/grand-total/intrinsicFRP)](https://CRAN.R-project.org/package=intrinsicFRP)
 <!-- badges: end -->
 
 Author: Alberto Quaini
@@ -138,7 +138,7 @@ covariance matrix of the model's pricing errors $\varepsilon_t$.
 
 To cite `intrinsicFRP` in publications, please use:
 
-> Quaini, A. (2023). `intrinsicFRP`: An R Package for Factor Model Asset Pricing. `R` package version 1.0.0. URL: https://cran.r-project.org/web/packages/intrinsicFRP/index.html.
+> Quaini, A. (2023). `intrinsicFRP`: An R Package for Factor Model Asset Pricing. `R` package version 1.0.0. URL: https://CRAN.R-project.org/package=intrinsicFRP.
 
 ## Installation
 

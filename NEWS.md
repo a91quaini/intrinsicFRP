@@ -14,7 +14,7 @@
 * Function `ChenFang2019BetaRankTest` added.
 * Function `HJMisspecificationTest` added.
 
-# intrinsicFRP 1.0.1
+# intrinsicFRP 2.0.0
 
 * Function `HJMisspecificationTest` adapted to the use of excess returns.
 * Function `IterativeKleibergenPaap2006BetaRankTest` added.
