@@ -82,9 +82,9 @@ risk factors.
 The screening methodology in [@quaini2023tradable] removes the factors associated to a zero Oracle tradable factor risk premia estimates, which arise from the one-step 
 closed-form estimator:
 $$\check{\lambda}_k = \text{sign}(\hat\lambda_k)\max\{|\hat{\lambda}_k|-\tau/||\rho_k||_2^2,0\},$$
-where $\hat{\lambda}=\widehat{Cov}[R_t,F_t]\widehat{Var}[R_t]^{-1}\widehat{E}[R_t]$ is the sample
+where $\hat{\lambda}=\hat{Cov}[R_t,F_t]\hat{Var}[R_t]^{-1}\hat{E}[R_t]$ is the sample
 tradable factor risk premia estimator, which simply replaces population moments with
-empirical moments, $\tau$ is a penalty parameter that can be tuned via, e.g., cross validation, and $\rho_k=\widehat{\text{Corr}}[F_{tk}, R_t]$ is the estimated correlation
+empirical moments, $\tau$ is a penalty parameter that can be tuned via, e.g., cross validation, and $\rho_k=\hat{\text{Corr}}[F_{tk}, R_t]$ is the estimated correlation
 between factor $k$ and test asset excess returns.
 Borrowing the terminology of [@fan2001variable],
 this procedure achieves the so-called "Oracle" variable selection property, 
