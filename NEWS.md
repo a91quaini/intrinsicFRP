@@ -13,3 +13,11 @@
 * Function `AdaptiveIFRP` deleted.
 * Function `ChenFang2019BetaRankTest` added.
 * Function `HJMisspecificationTest` added.
+
+# intrinsicFRP 1.0.1
+
+* Function `HJMisspecificationTest` adapted to the use of excess returns.
+* Function `IterativeKleibergenPaap2006BetaRankTest` added.
+* Function `GKRFactorScreening` added.
+* Function `HACcovariance` added.
+* Function `HJMisspecificationTest` extended and renamed `HJMisspecificationDistance`.

@@ -75,4 +75,37 @@ test_that("Test ChenFang2019BetaRankTest and
     IterativeKleibergenPaap2006BetaRankTest(returns, factors, target_level = "r")
   )
 
-})
+  # Test with random factors
+  random_factors = matrix(rnorm(nrow(returns) * (ncol(returns) - 1)), ncol = ncol(returns) - 1)
+  expect_no_error(ChenFang2019BetaRankTest(returns, random_factors))
+
+  # Test output structure and type
+  cf_result <- ChenFang2019BetaRankTest(returns, factors)
+  expect_true(is.list(cf_result))
+  expect_true(all(c("statistic", "p-value") %in% names(cf_result)))
+
+  # Test edge cases for bootstrap and target level
+  expect_no_error(ChenFang2019BetaRankTest(returns, factors, n_bootstrap = 1))
+  expect_no_error(ChenFang2019BetaRankTest(returns, factors, target_level_kp2006_rank_test = 0))
+  expect_no_error(ChenFang2019BetaRankTest(returns, factors, target_level_kp2006_rank_test = 1))
+
+  # Test for consistency of output
+  expect_equal(
+    ChenFang2019BetaRankTest(returns, factors),
+    ChenFang2019BetaRankTest(returns, factors)
+  )
+
+  # Test for handling of NA or Inf values
+  returns_with_na <- returns
+  returns_with_na[1,1] <- NA
+  expect_error(ChenFang2019BetaRankTest(returns_with_na, factors))
+
+  # Test for input matrices with one column
+  expect_no_error(ChenFang2019BetaRankTest(returns[,1:2,drop=FALSE], factors[,1,drop=FALSE]))
+
+  # Test for incorrect dimensions
+  expect_error(ChenFang2019BetaRankTest(returns, factors[-(1:5),]))
+
+  # Test for invalid data types
+  expect_error(ChenFang2019BetaRankTest(returns, as.character(factors)))
+  })

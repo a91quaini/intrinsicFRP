@@ -12,7 +12,8 @@
 // Computes optimal adaptive tradable factor risk premia under generalized cross validation
 //
 // @name OracleTFRPGCVCpp
-// @description Computes optimal adaptive tradable factor risk premia for
+// @description Computes optimal adaptive tradable factor risk premia
+// of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683> for
 // various penalty parameter values `tau` from data on `K` factors
 // `F = [F_1,...,F_K]'` and test asset excess returns `R`:
 // `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|`
@@ -113,7 +114,8 @@ Rcpp::List OracleTFRPGCVCpp(
 // Compute optimal oracle tradable factor risk premia under cross validation
 //
 // @name OracleTFRPCVCpp
-// @description Computes optimal adaptive tradable factor risk premia for
+// @description Computes optimal adaptive tradable factor risk premia
+// of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683>for
 // various penalty parameter values `tau` from data on `K` factors
 // `F = [F_1,...,F_K]'` and test asset excess returns `R`:
 // `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|`
@@ -200,7 +202,8 @@ Rcpp::List OracleTFRPCVCpp(
 // Compute optimal oracle tradable factor risk premia under rolling validation
 //
 // @name OracleTFRPRVCpp
-// @description Computes optimal adaptive tradable factor risk premia for
+// @description Computes optimal adaptive tradable factor risk premia
+// of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683> for
 // various penalty parameter values `tau` from data on `K` factors
 // `F = [F_1,...,F_K]'` and test asset excess returns `R`:
 // `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|`

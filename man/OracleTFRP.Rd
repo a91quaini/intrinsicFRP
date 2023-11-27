@@ -107,7 +107,8 @@ it further includes \code{n_factors}-dimensional vector of tradable factor risk
 premia standard errors in \code{"standard_errors"}.
 }
 \description{
-Computes Oracle tradable factor risk premia from data on
+Computes Oracle tradable factor risk premia of
+Quaini-Trojani-Yuan (2023) \url{doi:10.2139/ssrn.4574683} from data on
 \code{K} factors \verb{F = [F_1,...,F_K]'} and test asset excess returns \code{R}:
 \verb{OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_\{k=1\}^K w_k * |x_k|},
 where \code{TFRP} is the tradable factor risk premia estimator, \code{tau > 0} is a

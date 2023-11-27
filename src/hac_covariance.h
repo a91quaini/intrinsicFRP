@@ -11,11 +11,13 @@
 //
 // This function estimates the long-run covariance matrix of a multivariate
 // centred time series accounting for heteroskedasticity and autocorrelation
-// using the Newey-West estimator.
-// The number is selected using the Newey-West (1994)
-// <doi:10.2307/2297912> plug-in procedure, where
+// using the Newey-West (1994)
+// <doi:10.2307/2297912> estimator.
+// The number is selected using the Newey-West plug-in procedure, where
 // `n_lags = 4 * (n_observations/100)^(2/9)`.
 // The function allows to internally prewhiten the series by fitting a VAR(1).
+// All the details can be found in Newey-West (1994)
+// <doi:10.2307/2297912>.
 //
 // @param series A matrix (or vector) of data where each column is a time series.
 // @param prewhite A boolean indicating if the series needs prewhitening by
@@ -50,7 +52,8 @@ arma::vec HACStandardErrorsCpp(
 
 // Function for internal use
 //
-// Computes the Heteroskedasticity and Autocorrelation robust variance.
+// Computes the Heteroskedasticity and Autocorrelation robust variance
+// of a scalar series.
 //
 // This function calculates the variance of a univariate time series,
 // adjusting for autocorrelation

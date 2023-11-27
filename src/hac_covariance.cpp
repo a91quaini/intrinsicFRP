@@ -109,8 +109,8 @@ arma::vec HACStandardErrorsCpp(
 
 }
 
-//////////////////////////////////
-//////// HACVarianceCpp //////////
+////////////////////////////////////////
+//////// HACStandardErrorsCpp //////////
 
 double HACVarianceCpp(
   arma::vec& series,
@@ -150,7 +150,7 @@ double HACVarianceCpp(
   // Adjust the variance using the prewhitening coefficient if prewhite is true
   if (prewhite) HACRevertPrewhiteningCpp(coefficient, variance);
 
-  // Adjust the variance by the number of observations
+  // Return the variance.
   return variance;
 
 }

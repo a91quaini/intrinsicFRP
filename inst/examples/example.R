@@ -89,3 +89,9 @@ intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
 
 # compute the GKR factor screening procedure
 intrinsicFRP::GKRFactorScreening(returns, factors)
+
+# compute the HAC covariance matrix of the residuals from a regression
+# of returns on factors
+residuals = stats::lm.fit(factors, returns)$residuals
+asy_cov_residuals = HACcovariance(residuals)
+

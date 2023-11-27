@@ -17,16 +17,16 @@ HACVarianceCpp <- function(series, prewhite = FALSE) {
     .Call(`_intrinsicFRP_HACVarianceCpp`, series, prewhite)
 }
 
+HJMisspecificationDistanceCpp <- function(returns, factors, ci_coverage = .95, hac_prewhite = FALSE) {
+    .Call(`_intrinsicFRP_HJMisspecificationDistanceCpp`, returns, factors, ci_coverage, hac_prewhite)
+}
+
 ChenFang2019BetaRankTestCpp <- function(returns, factors, n_bootstrap = 500L, target_level_kp2006_rank_test = 0.05) {
     .Call(`_intrinsicFRP_ChenFang2019BetaRankTestCpp`, returns, factors, n_bootstrap, target_level_kp2006_rank_test)
 }
 
 IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, target_level = .05) {
     .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, target_level)
-}
-
-HJMisspecificationTestCpp <- function(returns, factors, sqhj_distance_null_value = 0., hac_prewhite = FALSE) {
-    .Call(`_intrinsicFRP_HJMisspecificationTestCpp`, returns, factors, sqhj_distance_null_value, hac_prewhite)
 }
 
 OracleTFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, target_level_kp2006_rank_test = 0.05, relaxed = FALSE, include_standard_errors = FALSE, hac_prewhite = FALSE) {
