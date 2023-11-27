@@ -79,21 +79,12 @@ presence of useless factors, and not to weak factors or more general linear depe
 structures in the population correlation matrix between test asset returns and
 risk factors.
 
-The screening methodology in [@quaini2023tradable] removes the factors associated to a zero Oracle tradable factor risk premia estimates, which arise from the one-step closed-form estimator:
-
-$$
-\check{\lambda}_k = \text{sign}(\hat{\lambda}_k) \max \left\{ |\hat{\lambda}_k| - \frac{\tau}{\|\rho_k\|_2^2}, 0 \right\},
-$$
-
-where \(\hat{\lambda} = \widehat{\text{Cov}}[R_t, F_t] \widehat{\text{Var}}[R_t]^{-1} \widehat{E}[R_t]\) is the sample tradable factor risk premia estimator, which simply replaces population moments with empirical moments, \(\tau\) is a penalty parameter that can be tuned via, e.g., cross-validation, and \(\rho_k = \widehat{\text{Corr}}[F_{tk}, R_t]\) is the estimated correlation between factor \( k \) and test asset excess returns. Borrowing the terminology of [@fan2001variable], this procedure achieves the so-called "Oracle" variable selection property, i.e., it consistently selects the useful factors. More precisely, the probability that the factors selected by the estimator are indeed useful factors tends to 1 as the sample size tends to infinity.
-
-
 The screening methodology in [@quaini2023tradable] removes the factors associated to a zero Oracle tradable factor risk premia estimates, which arise from the one-step 
 closed-form estimator:
-$$\check{\lambda}_k = \text{sign}(\hat\lambda_k)\max\{|\hat{\lambda}_k|-\tau/||\rho_k||_2^2,0\},$$
+$$\check{\lambda}_k = sign(\hat\lambda_k)\max\{|\hat{\lambda}_k|-\tau/||\rho_k||_2^2,0\},$$
 where $\hat{\lambda}=\widehat{Cov}[R_t,F_t]\widehat{Var}[R_t]^{-1}\widehat{E}[R_t]$ is the sample
 tradable factor risk premia estimator, which simply replaces population moments with
-empirical moments, $\tau$ is a penalty parameter that can be tuned via, e.g., cross validation, and $\rho_k=\widehat{\text{Corr}}[F_{tk}, R_t]$ is the estimated correlation
+empirical moments, $\tau$ is a penalty parameter that can be tuned via, e.g., cross validation, and $\rho_k=\widehat{Corr}[F_{tk}, R_t]$ is the estimated correlation
 between factor $k$ and test asset excess returns.
 Borrowing the terminology of [@fan2001variable],
 this procedure achieves the so-called "Oracle" variable selection property, 
