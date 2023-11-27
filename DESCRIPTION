@@ -1,6 +1,6 @@
 Package: intrinsicFRP
 Title: An R Package for Factor Model Asset Pricing
-Version: 1.0.0
+Version: 1.0.1
 Date: 2023-09-18
 Maintainer: Alberto Quaini <alberto91quaini@gmail.com>
 Authors@R: 
@@ -19,17 +19,19 @@ Description: Functions for evaluating and testing asset pricing models, includin
     <doi:10.1111/jofi.12035>, and the approaches based on tradable factor risk
     premia of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683>. The 
     functions for selecting the "strong" risk factors are based on the Oracle
-    estimator of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683>. The
-    functions for testing model misspecification implement the HJ model
-    misspecification distance of Hansen-Jagannathan (1997)
-    <doi:10.1111/j.1540-6261.1997.tb04813.x>, following the implementation 
-    given in Kan-Robotti (2008) <doi:10.1016/j.jempfin.2008.03.003>.
-    The function for heteroskedasticity and autocorrelation robust 
-    covariance estimation implements the Newey-West (1994) <doi:10.2307/2297912>
-    covariance estimator. Finally, the functions for testing model identification 
+    estimator of Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683> and the 
+    factor screening procedure of Gospodinov-Kan-Robotti (2014) <doi:10.2139/ssrn.2579821>. 
+    The functions for evaluating model misspecification implement the HJ
+    model misspecification distance of Kan-Robotti (2008) <doi:10.1016/j.jempfin.2008.03.003>,
+    which is a modification of the prominent Hansen-Jagannathan (1997)
+    <doi:10.1111/j.1540-6261.1997.tb04813.x> distance.
+    The functions for testing model identification 
     specialize the Kleibergen-Paap (2006) <doi:10.1016/j.jeconom.2005.02.011> 
     and the Chen-Fang (2019) <doi:10.1111/j.1540-6261.1997.tb04813.x> rank test 
     to the regression coefficient matrix of test asset returns on risk factors.
+    Finally, the function for heteroskedasticity and autocorrelation robust 
+    covariance estimation implements the Newey-West (1994) <doi:10.2307/2297912>
+    covariance estimator.
 License: GPL (>= 3)
 URL: https://github.com/a91quaini/intrinsicFRP
 BugReports: https://github.com/a91quaini/intrinsicFRP/issues
@@ -41,8 +43,7 @@ LinkingTo:
     RcppArmadillo
 Imports: 
     graphics,
-    Rcpp,
-    stats
+    Rcpp
 Depends: 
     R (>= 2.10)
 LazyData: true

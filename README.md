@@ -265,7 +265,7 @@ of the risk-free rate.
 
 ## Real data example 1: estimation and inference of factor risk premia
 
-Compute various factor risk premia estimates and corresponding standard errors for the Fama-French 6 factors and a (simulated) "useless" factor.
+Let us ompute various factor risk premia estimates and corresponding 95% confidence intervals for the Fama-French 6 factors and a (simulated) "useless" factor.
 
 ```R
 # import package data on 6 risk factors and 42 test asset excess returns
@@ -279,7 +279,7 @@ factors = cbind(
   factors,
   stats::rnorm(n = nrow(factors), sd = stats::sd(factors[,3]))
 )
-colnames(factors) = c(colnames(intrinsicFRP::factors[,1:6]), "Useless")
+colnames(factors) = c(colnames(intrinsicFRP::factors[,2:7]), "Useless")
 
 # index set of specific factor models
 # Fama-French 3 factor model
@@ -297,7 +297,7 @@ tfrp = intrinsicFRP::TFRP(returns, factors[,ff6usl], include_standard_errors = T
 krs_frp = intrinsicFRP::FRP(returns, factors[,ff6usl], include_standard_errors = TRUE)
 
 # set penalty parameters
-penalty_parameters = seq(1e-4, 1e-2, length.out = 1000)
+penalty_parameters = seq(1e-4, 4e-3, length.out = 1000)
 
 # compute Oracle tradable factor risk premia and their standard errors
 # for low factor models, no need for the "one standard deviation" tuning rule
@@ -338,6 +338,12 @@ ggplot2::ggplot(df, ggplot2::aes(
     ymin=risk_premia - stats::qnorm(0.975) * standard_errors,
     ymax=risk_premia + stats::qnorm(0.975) * standard_errors),
     linewidth=.8, position = ggplot2::position_dodge(0.5), width = 0.25)
+
+ggplot2::ggsave(
+  "inst/examples/risk_premia.png",
+  width = 7,
+  height = 5,
+  dpi=600
 ```-->
 
 Tuning model score of the Oracle TFRP estimator:
@@ -352,40 +358,102 @@ Visualization of the misspecification-robust factor risk premia (KRS-FRP), trada
 <img src="inst/examples/risk_premia.png" width="600" />
 </p>
 
-## Real data example 2: testing misspecification and identification of asset pricing models
+In this plot, we notice a number of features:
 
-Compute the HJ misspecification test of the Fama-French 6 factor model and identification tests of the Fama-French 6 factor model and the (unidentified)
-model comprising the Fama-French 6 factors and the simulated useless factor.
+- The point estimates and associated confidence intervals
+under the misspecification-robust and the tradable risk premia notions for
+the market, SMB, HML and RMW factors are similar.
+- The point estimates (confidence intervals) of the misspecification-robust risk premia for the RMW and CMA factors are mildly larger (wider) than the point estimates (confidence intervals) their corresponding tradable risk premia. 
+- The point estimates (confidence intervals) of the misspecification-robust risk premia for the Mom and the simulated useless factor are much larger (wider) than the point estimates (confidence intervals) their corresponding tradable risk premia.
+- The only factors featuring a confidence interval for misspecification-robust
+(tradable) risk premium that does not include
+zero is the market, CMA and Mom (market and Mom) factors.
+- The Oracle factor risk premium of the simulated useless factor is exactly zero.
+
+## Real data example 2: factor screening
+
+Let us now focus on the factor screening procedures under the Oracle TFRP estimator
+and the approach of [@gospodinov2014misspecification].
 
 ```R
-# compute the HJ misspecification test of the Fama-French 3 and 6 factor models
-intrinsicFRP::HJMisspecificationTest(returns, factors[,ff3])["p-value"]
-intrinsicFRP::HJMisspecificationTest(returns, factors[,ff6])["p-value"]
+# recover the indices of the factors selected by the Oracle TFRP estimator
+which(oracle_tfrp$risk_premia != 0)
 
-# compute identification tests of the Fama-French 6 factor model
-intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6])
-intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6])["p-value"]
-
-# compute identification tests of unidentified factor model comprising the
-# Fama-French 6 factors and the simulated useless factor
-intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6usl])
-intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
+# compute the GKR factor screening procedure
+intrinsicFRP::GKRFactorScreening(returns, factors[,ff6])
 ```
 
-Result of the HJ misspecification test:
+The results are:
+```R
+# factor indices of the factors selected by the Oracle TFRP estimator
+[1] 1 2 3 4 5 6
+
+# results of the GKR factor screening procedure
+$sdf_coefficients
+         [,1]
+[1,] 3.136834
+
+$standard_errors
+        [,1]
+[1,] 1.13246
+
+$t_statistics
+         [,1]
+[1,] 2.769929
+
+$selected_factor_indices
+     [,1]
+[1,]    1
+```
+While the Oracle TFRP only removes the simulated useless factor, the
+procedure by [@gospodinov2014misspecification] only retains the market factor.
+
+## Real data example 3: asset pricing models' misspecification distance
+
+Let us compute the HJ misspecification distance of the Fama-French 3 and 6 factor models.
+
+```R
+# compute the HJ misspecification distance of the Fama-French 3 and 6 factor models
+intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff3])
+intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff6])
+```
+
+The result of the HJ misspecification distance is:
 ```R
 # HJ misspecification test p-value for the Fama-French 3 factor model
-$`p-value`
-[1] 1.526582e-07
+$squared_distance
+[1] 0.2488529
+
+$lower_bound
+[1] 0.1559376
+
+$upper_bound
+[1] 0.3417683
 
 # HJ misspecification test p-value for the Fama-French 6 factor model
-$`p-value`
-[1] 2.133855e-05
+$squared_distance
+[1] 0.1619658
+
+$lower_bound
+[1] 0.08727944
+
+$upper_bound
+[1] 0.2366521
 ```
 
 Since the p-value of both HJ misspecification tests is below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 3 and 6 factor models are correctly specified.
 
-Results of the identification tests for the Fama-French 6 factor model:
+## Real data example 4: testing asset pricing models' identification
+
+Let us compute the iterative [@kleibergen2006generalized] and the [@chen2019improved] beta rank identification tests for the Fama-French 6 factor model.
+
+```R
+# compute identification tests of the Fama-French 6 factor model
+intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6])
+intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6])
+```
+
+The results of the identification tests for the Fama-French 6 factor model are:
 ```R
 # output of the Iteraive Kleibergen Paap (2006) Beta Rank Test
 $rank
@@ -399,24 +467,29 @@ $statistics
 [1] 108162.2473  10291.4280   4710.5822   1015.9157    376.7892    112.8450
 
 $pvalues
-[1]  0.000000e+00  0.000000e+00  0.000000e+00 3.510246e-143  2.062222e-41  1.340701e-09
+[1]  0.000000e+00  0.000000e+00  0.000000e+00 3.510246e-143  2.062222e-41
+[6]  1.340701e-09
 
 # p-value of the Chen Fang (2019) Beta Rank Test
+$statistic
+[1] 143.1936
+
 $`p-value`
 [1] 0
 ```
 
-Since the largest p-value of the Iteraive Kleibergen Paap (2006) Beta Rank Test and the p-value of the Chen Fang (2019) Beta Rank Test are below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 6 factor model is not identified.
+Since the largest p-value of the Iteraive [@kleibergen2006generalized] Beta Rank Test and the p-value of the [@chen2019improved] Beta Rank Test are below the standard thresholds of $10\%$, $5\%$ and $1\%$, we reject the Null that the Fama-French 6 factor model is not identified.
 
-For sanity check, compute identification tests of the unidentified model comprising the Fama-French 6 factors and a (simulated) "useless" factor.
+For sanity check, let us compute the same identification tests for the unidentified model comprising the Fama-French 6 factors and a (simulated) "useless" factor.
 
 ```R
-# compute identification test of unidentified factor models
+# compute identification tests of unidentified factor model comprising the
+# Fama-French 6 factors and the simulated useless factor
 intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6usl])
-intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
+intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])
 ```
 
-Results:
+The results are:
 ```R
 # output of the Iteraive Kleibergen Paap (2006) Beta Rank Test
 $rank
@@ -427,25 +500,29 @@ $q
 [1,]    0    1    2    3    4    5    6
 
 $statistics
-[1] 128024.51364  11595.52592   5480.53412   1127.71644    475.16366    190.55705     57.75449
+[1] 128024.51364  11595.52592   5480.53412   1127.71644    475.16366
+[6]    190.55705     57.75449
 
 $pvalues
-[1]  0.000000e+00  0.000000e+00  0.000000e+00 7.265767e-147  1.346504e-45  3.134998e-12  1.216120e-02
+[1]  0.000000e+00  0.000000e+00  0.000000e+00 7.265767e-147  1.346504e-45
+[6]  3.134998e-12  1.216120e-02
 
 # p-value of the Chen Fang (2019) Beta Rank Test
+$statistic
+[1] 41.87344
+
 $`p-value`
-[1] 0.178
+[1] 0.188
 ```
 
-Since the largest p-value of the Iteraive Kleibergen Paap (2006) Beta Rank Test and the p-value of the Chen Fang (2019) Beta Rank Test are above the standard thresholds of $10\%$, $5\%$ and $1\%$, we do not reject the Null that the Fama-French 6 factor model augmented with a simulated useless factor is not identified.
+Since the largest p-value of the Iteraive [@kleibergen2006generalized] Beta Rank Test and the p-value of the [@chen2019improved] Beta Rank Test are above the standard thresholds of $10\%$, $5\%$ and $1\%$, we do not reject the Null that the Fama-French 6 factor model augmented with a simulated useless factor is not identified.
 
 ## Dependencies
 
 To optimize computational performance, all methods implemented in package `intrinsicFRP` are written in C++ and make use of the [Armadillo](https://arma.sourceforge.net/) [@sanderson2016armadillo] library for efficient linear algebra calculations. However, for user convenience, the interface of package `intrinsicFRP` is entirely implemented in R, with minimal dependencies, including:
 
 - `Rcpp` [@eddelbuettel2018extending] and `RcppArmadillo` [@eddelbuettel2014rcpparmadillo]: They facilitate seamless integration between R, C++, and the armadillo C++ library.
-- `graphics`: Provides R functions for creating basic graphics.
-- `stats`: Offers R functions for performing statistical calculations and random number generation.
+- `graphics`: It provides R functions for creating basic graphics.
 
 ## Issues, bug reports, contributions, further help
 

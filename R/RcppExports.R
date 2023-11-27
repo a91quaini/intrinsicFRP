@@ -29,16 +29,8 @@ IterativeKleibergenPaap2006BetaRankTestCpp <- function(returns, factors, target_
     .Call(`_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp`, returns, factors, target_level)
 }
 
-OracleTFRPGCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, gcv_scaling_n_assets = FALSE, gcv_identification_check = FALSE, target_level_kp2006_rank_test = 0.05, relaxed = FALSE, include_standard_errors = FALSE, hac_prewhite = FALSE) {
-    .Call(`_intrinsicFRP_OracleTFRPGCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, relaxed, include_standard_errors, hac_prewhite)
-}
-
-OracleTFRPCVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, n_folds = 5L, relaxed = FALSE, include_standard_errors = FALSE, hac_prewhite = FALSE) {
-    .Call(`_intrinsicFRP_OracleTFRPCVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, n_folds, relaxed, include_standard_errors, hac_prewhite)
-}
-
-OracleTFRPRVCpp <- function(returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type = 'c', one_stddev_rule = FALSE, n_train_observations = 120L, n_test_observations = 12L, roll_shift = 12L, relaxed = FALSE, include_standard_errors = FALSE, hac_prewhite = FALSE) {
-    .Call(`_intrinsicFRP_OracleTFRPRVCpp`, returns, factors, covariance_factors_returns, variance_returns, mean_returns, penalty_parameters, weighting_type, one_stddev_rule, n_train_observations, n_test_observations, roll_shift, relaxed, include_standard_errors, hac_prewhite)
+OracleTFRPCpp <- function(returns, factors, penalty_parameters, weighting_type, tuning_type, one_stddev_rule, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, n_folds, n_train_observations, n_test_observations, roll_shift, relaxed, include_standard_errors, hac_prewhite) {
+    .Call(`_intrinsicFRP_OracleTFRPCpp`, returns, factors, penalty_parameters, weighting_type, tuning_type, one_stddev_rule, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, n_folds, n_train_observations, n_test_observations, roll_shift, relaxed, include_standard_errors, hac_prewhite)
 }
 
 TFRPCpp <- function(returns, factors, include_standard_errors, hac_prewhite = FALSE) {

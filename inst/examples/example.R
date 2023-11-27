@@ -1,3 +1,6 @@
+# if you already have package `stats` installed, you can skip the next line
+install.packages("stats")
+
 # import package data on 6 risk factors and 42 test asset excess returns
 # remove the first column containing the date
 factors = intrinsicFRP::factors[,-1]
@@ -9,7 +12,7 @@ factors = cbind(
   factors,
   stats::rnorm(n = nrow(factors), sd = stats::sd(factors[,3]))
 )
-colnames(factors) = c(colnames(intrinsicFRP::factors[,1:6]), "Useless")
+colnames(factors) = c(colnames(intrinsicFRP::factors[,2:7]), "Useless")
 
 # index set of specific factor models
 # Fama-French 3 factor model
@@ -74,24 +77,26 @@ ggplot2::ggsave(
   dpi=600
 )
 
-# compute the HJ misspecification test of the Fama-French 3 and 6 factor models
-intrinsicFRP::HJMisspecificationTest(returns, factors[,ff3])["p-value"]
-intrinsicFRP::HJMisspecificationTest(returns, factors[,ff6])["p-value"]
+# recover the indices of the factors selected by the Oracle TFRP estimator
+which(oracle_tfrp$risk_premia != 0)
+
+# compute the GKR factor screening procedure
+intrinsicFRP::GKRFactorScreening(returns, factors[,ff6])
+
+# compute the HJ misspecification distance of the Fama-French 3 and 6 factor models
+intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff3])
+intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff6])
 
 # compute identification tests of the Fama-French 6 factor model
 intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6])
-intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6])["p-value"]
+intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6])
 
 # compute identification tests of unidentified factor model comprising the
 # Fama-French 6 factors and the simulated useless factor
 intrinsicFRP::IterativeKleibergenPaap2006BetaRankTest(returns, factors[,ff6usl])
-intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])["p-value"]
-
-# compute the GKR factor screening procedure
-intrinsicFRP::GKRFactorScreening(returns, factors)
+intrinsicFRP::ChenFang2019BetaRankTest(returns, factors[,ff6usl])
 
 # compute the HAC covariance matrix of the residuals from a regression
 # of returns on factors
 residuals = stats::lm.fit(factors, returns)$residuals
-asy_cov_residuals = HACcovariance(residuals)
-
+asy_cov_residuals = intrinsicFRP::HACcovariance(residuals)

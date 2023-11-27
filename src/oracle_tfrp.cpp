@@ -5,6 +5,87 @@
 #include "adaptive_weights.h"
 #include "tuning.h"
 
+Rcpp::List OracleTFRPCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const arma::vec& penalty_parameters,
+  const char weighting_type,
+  const char tuning_type,
+  const bool one_stddev_rule,
+  const bool gcv_scaling_n_assets,
+  const bool gcv_identification_check,
+  const double target_level_kp2006_rank_test,
+  const unsigned int n_folds,
+  const unsigned int n_train_observations,
+  const unsigned int n_test_observations,
+  const unsigned int roll_shift,
+  const bool relaxed,
+  const bool include_standard_errors,
+  const bool hac_prewhite
+) {
+
+  const Rcpp::List output = [&] {
+    // Switch case for different tuning types
+    switch (tuning_type) {
+    case 'g':
+     return OracleTFRPGCVCpp(
+        returns,
+        factors,
+        arma::cov(factors, returns),
+        arma::cov(returns),
+        arma::mean(returns).t(),
+        penalty_parameters,
+        weighting_type,
+        one_stddev_rule,
+        gcv_scaling_n_assets,
+        gcv_identification_check,
+        target_level_kp2006_rank_test,
+        relaxed,
+        include_standard_errors,
+        hac_prewhite
+      );
+    case 'c':
+      return OracleTFRPCVCpp(
+        returns,
+        factors,
+        arma::cov(factors, returns),
+        arma::cov(returns),
+        arma::mean(returns).t(),
+        penalty_parameters,
+        weighting_type,
+        one_stddev_rule,
+        n_folds,
+        relaxed,
+        include_standard_errors,
+        hac_prewhite
+      );
+    case 'r':
+      return OracleTFRPRVCpp(
+        returns,
+        factors,
+        arma::cov(factors, returns),
+        arma::cov(returns),
+        arma::mean(returns).t(),
+        penalty_parameters,
+        weighting_type,
+        one_stddev_rule,
+        n_train_observations,
+        n_test_observations,
+        roll_shift,
+        relaxed,
+        include_standard_errors,
+        hac_prewhite
+      );
+    default:
+      Rcpp::stop("Invalid tuning type");
+    }
+  }();
+
+  // Return output list.
+  return output;
+
+}
+
 ////////////////////////////////////
 ///// OracleTFRPGCVCpp ////
 

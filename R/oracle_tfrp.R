@@ -178,76 +178,29 @@ OracleTFRP = function(
 
   # Compute the oracle TFRP estimate and, eventually, their standard errors
   # depending on the chosen tuning scheme.
-  output = switch(
+  output = .Call(`_intrinsicFRP_OracleTFRPCpp`,
+    returns,
+    factors,
+    penalty_parameters,
+    weighting_type,
     tuning_type,
-    # GCV tuning
-    'g' = {
-
-      .Call(`_intrinsicFRP_OracleTFRPGCVCpp`,
-        returns,
-        factors,
-        stats::cov(factors, returns),
-        stats::cov(returns),
-        colMeans(returns),
-        penalty_parameters,
-        weighting_type,
-        one_stddev_rule,
-        gcv_scaling_n_assets,
-        gcv_identification_check,
-        target_level_kp2006_rank_test,
-        relaxed,
-        include_standard_errors,
-        hac_prewhite
-      )
-
-    },
-    # CV tuning
-    'c' = {
-
-      .Call(`_intrinsicFRP_OracleTFRPCVCpp`,
-        returns,
-        factors,
-        stats::cov(factors, returns),
-        stats::cov(returns),
-        colMeans(returns),
-        penalty_parameters,
-        weighting_type,
-        one_stddev_rule,
-        n_folds,
-        relaxed,
-        include_standard_errors,
-        hac_prewhite
-      )
-
-    },
-    # RV tuning
-    'r' = {
-
-      .Call(`_intrinsicFRP_OracleTFRPRVCpp`,
-        returns,
-        factors,
-        stats::cov(factors, returns),
-        stats::cov(returns),
-        colMeans(returns),
-        penalty_parameters,
-        weighting_type,
-        one_stddev_rule,
-        n_train_observations,
-        n_test_observations,
-        roll_shift,
-        relaxed,
-        include_standard_errors,
-        hac_prewhite
-      )
-
-    },
-    stop("Invalid `tuning_type` value")
+    one_stddev_rule,
+    gcv_scaling_n_assets,
+    gcv_identification_check,
+    target_level_kp2006_rank_test,
+    n_folds,
+    n_train_observations,
+    n_test_observations,
+    roll_shift,
+    relaxed,
+    include_standard_errors,
+    hac_prewhite
   )
 
   # Eventually plot the tuning criterium vs the tuning parameter values.
   if (plot_score) {PlotOracleTFRPModelScore(output, penalty_parameters)}
 
-  # Return the ourput.
+  # Return the output.
   return(output)
 
 }
