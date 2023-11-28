@@ -138,7 +138,7 @@ covariance matrix of the model's pricing errors $\varepsilon_t$.
 
 To cite `intrinsicFRP` in publications, please use:
 
-> Quaini, A. (2023). `intrinsicFRP`: An R Package for Factor Model Asset Pricing. `R` package version 1.0.0. URL: https://CRAN.R-project.org/package=intrinsicFRP.
+> Quaini, A. (2023). `intrinsicFRP`: An R Package for Factor Model Asset Pricing. `R` package version 2.0.0. URL: https://CRAN.R-project.org/package=intrinsicFRP.
 
 ## Installation
 

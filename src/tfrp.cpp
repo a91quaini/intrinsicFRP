@@ -2,6 +2,7 @@
 
 #include "tfrp.h"
 #include "hac_covariance.h"
+#include "utils.h"
 
 //////////////////
 ///// TFRPCpp ////
@@ -61,10 +62,9 @@ arma::vec TFRPCpp(
 ) {
 
   // Return the risk premia computed using the formula Cov(F, R) * Var(R)^(-1) * E(R)
-  return covariance_factors_returns * arma::solve(
+  return covariance_factors_returns * SolveSympd(
     variance_returns,
-    mean_returns,
-    arma::solve_opts::likely_sympd
+    mean_returns
   );
 
 }
@@ -82,7 +82,7 @@ arma::vec StandardErrorsTFRPCpp(
 ) {
 
   // Compute the inverse of variance returns applied to two different matrices
-  const arma::mat var_ret_inv = arma::inv_sympd(variance_returns);
+  const arma::mat var_ret_inv = InvSympd(variance_returns);
   const arma::mat var_ret_inv_cov_ret_fac = var_ret_inv *
     covariance_factors_returns.t();
 

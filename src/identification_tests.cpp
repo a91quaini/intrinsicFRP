@@ -1,6 +1,7 @@
 // Author: Alberto Quaini
 
 #include "identification_tests.h"
+#include "utils.h"
 
 ///////////////////////////////////////
 ///// ChenFang2019BetaRankTestCpp /////
@@ -144,15 +145,13 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
   const arma::mat sqrt_V22 = arma::sqrtmat_sympd(V22 * V22.t());
 
   // Compute the A_qperp and B_qperp matrices according to equation (12) in the KP 2006 paper
-  const arma::mat A_qperp = U.tail_cols(n_factors - q) * arma::solve(
+  const arma::mat A_qperp = U.tail_cols(n_factors - q) * SolveSympd(
     U22,
-    sqrt_U22,
-    arma::solve_opts::likely_sympd
+    sqrt_U22
   );
-  const arma::mat B_qperp = sqrt_V22 * arma::solve(
+  const arma::mat B_qperp = sqrt_V22 * SolveSympd(
     V22.t(),
-    V.tail_cols(n_returns - q).t(),
-    arma::solve_opts::likely_sympd
+    V.tail_cols(n_returns - q).t()
   );
 
   // Compute the Kronecker product of B_qperp and A_qperp transposed
@@ -167,10 +166,9 @@ arma::vec2 KleibergenPaap2006BetaRankTestStatisticAndPvalueCpp(
 
   // Calculate the test statistic, which does not require multiplication by n_observations
   // This is based on the quadratic form of lambda_q and Omega_q
-  const double statistic = arma::dot(lambda_q, arma::solve(
+  const double statistic = arma::dot(lambda_q, SolveSympd(
     Omega_q,
-    lambda_q,
-    arma::solve_opts::likely_sympd
+    lambda_q
   ));
 
   // Calculate the p-value using the Chi-squared distribution with degrees of freedom

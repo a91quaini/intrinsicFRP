@@ -1,6 +1,7 @@
 // Author: Alberto Quaini
 
 #include "adaptive_weights.h"
+#include "utils.h"
 
 ///////////////////////////////
 ///// AdaptiveWeightsCpp //////
@@ -21,18 +22,16 @@ arma::vec AdaptiveWeightsCpp(
   case 'a' :
     // Type 'a': Compute weights based on the first-step intrinsic factor risk premia estimates
     return AdaptiveWeightsFromVectorCpp(
-      arma::cov(factors, returns) * arma::solve(
+      arma::cov(factors, returns) * SolveSympd(
         arma::cov(returns),
-        arma::mean(returns).t(),
-        arma::solve_opts::likely_sympd
+        arma::mean(returns).t()
     ));
 
   case 'b' :
     // Type 'b': Compute weights based on the matrix of factors regression coefficients on test asset excess returns
-    return AdaptiveWeightsFromMatrixCpp(arma::solve(
+    return AdaptiveWeightsFromMatrixCpp(SolveSympd(
       arma::cov(factors),
-      arma::cov(factors, returns),
-      arma::solve_opts::likely_sympd
+      arma::cov(factors, returns)
     ));
 
   default :

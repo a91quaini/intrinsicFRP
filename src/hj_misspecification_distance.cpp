@@ -2,6 +2,7 @@
 
 #include "hj_misspecification_distance.h"
 #include "hac_covariance.h"
+#include "utils.h"
 
 ///////////////////////////////////////
 //// HJMisspecificationDistanceCpp ////
@@ -38,26 +39,23 @@ Rcpp::List HJMisspecificationDistanceCpp(
 ) {
 
   // Compute the inverse variance of returns.
-  const arma::mat inv_var_ret = arma::inv_sympd(variance_returns);
+  const arma::mat inv_var_ret = InvSympd(variance_returns);
 
   // Calculate required vectors and matrices to compure the KRS SDF coefficients.
-  const arma::vec var_ret_inv_mean_ret = arma::solve(
+  const arma::vec var_ret_inv_mean_ret = SolveSympd(
     variance_returns,
-    mean_returns,
-    arma::solve_opts::likely_sympd
+    mean_returns
   );
   const arma::mat covariance_factors_returns = arma::cov(factors, returns);
-  const arma::mat var_ret_inv_cov_ret_fac = arma::solve(
+  const arma::mat var_ret_inv_cov_ret_fac = SolveSympd(
     variance_returns,
-    covariance_factors_returns.t(),
-    arma::solve_opts::likely_sympd
+    covariance_factors_returns.t()
   );
 
   // Compute the KRS SDF coefficients.
-  const arma::vec krs_sdf_coefficients = arma::solve(
+  const arma::vec krs_sdf_coefficients = SolveSympd(
     covariance_factors_returns * var_ret_inv_cov_ret_fac,
-    covariance_factors_returns,
-    arma::solve_opts::likely_sympd
+    covariance_factors_returns
   ) * var_ret_inv_mean_ret;
 
   // Calculate the squared Hansen-Jagannathan (HJ) distance.

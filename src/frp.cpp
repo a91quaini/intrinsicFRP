@@ -3,6 +3,7 @@
 #include "frp.h"
 #include "hac_covariance.h"
 #include "gkr_factor_screening.h"
+#include "utils.h"
 
 /////////////////
 ///// FRPCpp ////
@@ -88,10 +89,9 @@ Rcpp::List ReturnFRPCpp(
     const arma::vec mean_returns = arma::mean(returns).t();
 
     // Solve for beta coefficients
-    const arma::mat beta = arma::solve(
+    const arma::mat beta = SolveSympd(
       arma::cov(factors),
-      covariance_factors_returns,
-      arma::solve_opts::likely_sympd
+      covariance_factors_returns
     ).t();
 
     // Compute risk premia based on whether misspecification is robust or not
@@ -154,10 +154,9 @@ Rcpp::List ReturnFRPCpp(
   } else {
 
     // Solve for beta coefficients when standard errors are not included
-    const arma::mat beta = arma::solve(
+    const arma::mat beta = SolveSympd(
       arma::cov(factors),
-      arma::cov(factors, returns),
-      arma::solve_opts::likely_sympd
+      arma::cov(factors, returns)
     ).t();
 
     // Return risk premia only in a list
@@ -187,10 +186,7 @@ arma::vec FMFRPCpp(
 ) {
 
   // Solve for risk premia using Fama-MacBeth method
-  return arma::solve(
-    beta.t() * beta,
-    beta.t(),
-    arma::solve_opts::likely_sympd) * mean_returns;
+  return SolveSympd(beta.t() * beta, beta.t()) * mean_returns;
 
 }
 
@@ -204,17 +200,15 @@ arma::vec KRSFRPCpp(
 ) {
 
   // Solve for beta coefficients with the weighting matrix
-  const arma::mat beta_t_wei_mat_inv = arma::solve(
+  const arma::mat beta_t_wei_mat_inv = SolveSympd(
     weighting_matrix,
-    beta,
-    arma::solve_opts::likely_sympd
+    beta
   ).t();
 
   // Compute risk premia using Kan-Robotti-Shanken method
-  return arma::solve(
+  return SolveSympd(
     beta_t_wei_mat_inv * beta,
-    beta_t_wei_mat_inv,
-    arma::solve_opts::likely_sympd
+    beta_t_wei_mat_inv
   ) * mean_returns;
 
 }
@@ -234,7 +228,7 @@ arma::vec StandardErrorsFRPCpp(
 ) {
 
   // Compute the matrix H as the inverse of beta' * beta
-  const arma::mat h_matrix  = arma::inv_sympd(beta.t() * beta);
+  const arma::mat h_matrix  = InvSympd(beta.t() * beta);
 
   // Compute matrix A used in the standard error calculation
   const arma::mat a_matrix = h_matrix * beta.t();
@@ -252,10 +246,9 @@ arma::vec StandardErrorsFRPCpp(
 
   // Compute variance of factors and solve for fac_centred_var_fac_inv
   const arma::mat variance_factors = arma::cov(factors);
-  const arma::mat fac_centred_var_fac_inv = arma::solve(
+  const arma::mat fac_centred_var_fac_inv = SolveSympd(
     variance_factors,
-    factors_centred.t(),
-    arma::solve_opts::likely_sympd
+    factors_centred.t()
   ).t();
 
   // Compute matrix Z used in standard error calculation
@@ -267,10 +260,9 @@ arma::vec StandardErrorsFRPCpp(
     // mean term
     (gamma.each_row() - (a_matrix * mean_returns).t()) -
     // beta term
-    phi_centred.each_col() % (factors_centred * arma::solve(
+    phi_centred.each_col() % (factors_centred * SolveSympd(
         variance_factors,
-        gamma_true,
-        arma::solve_opts::likely_sympd
+        gamma_true
     )) +
     // error term
     (fac_centred_var_fac_inv.each_col() % (
@@ -298,15 +290,14 @@ arma::vec StandardErrorsKRSFRPCpp(
 ) {
 
   // Compute the inverse of variance_returns and useful matrices that use it
-  const arma::mat var_ret_inv = arma::inv_sympd(variance_returns);
+  const arma::mat var_ret_inv = InvSympd(variance_returns);
   const arma::mat var_ret_inv_beta = var_ret_inv * beta;
   const arma::vec var_ret_inv_mean_ret = var_ret_inv * mean_returns;
 
   // Compute matrix A used in the standard error calculation
-  const arma::mat a_matrix = arma::solve(
+  const arma::mat a_matrix = SolveSympd(
     beta.t() * var_ret_inv_beta,
-    var_ret_inv_beta.t(),
-    arma::solve_opts::likely_sympd
+    var_ret_inv_beta.t()
   );
 
   // Center returns and factors
@@ -316,11 +307,10 @@ arma::vec StandardErrorsKRSFRPCpp(
   // Compute intermediate terms for standard error calculation
   const arma::vec var_ret_inv_err_krs = var_ret_inv_mean_ret -
     var_ret_inv_beta * krs_frp;
-  const arma::mat var_fac_inv = arma::inv_sympd(arma::cov(factors));
-  const arma::mat hkrs_var_fac_inv = arma::solve(
+  const arma::mat var_fac_inv = InvSympd(arma::cov(factors));
+  const arma::mat hkrs_var_fac_inv = SolveSympd(
     beta.t() * var_ret_inv_beta,
-    var_fac_inv,
-    arma::solve_opts::likely_sympd
+    var_fac_inv
   );
 
   // Compute terms used in the standard error calculation

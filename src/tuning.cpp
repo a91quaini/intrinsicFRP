@@ -5,6 +5,7 @@
 #include "oracle_tfrp.h"
 #include "adaptive_weights.h"
 #include "identification_tests.h"
+#include "utils.h"
 
 /////////////////////////////////
 ///// GCVTuningOracleTFRPCpp /////
@@ -287,17 +288,15 @@ double ComputePredictionErrorCpp(
   const arma::mat cov_selected_fac_ret = covariance_factor_returns_train.rows(idx_selected);
 
   // Compute the inverse covariance of returns and covariance of returns with selected factors
-  const arma::mat var_ret_inv_cov_ret_selected_fac = arma::solve(
+  const arma::mat var_ret_inv_cov_ret_selected_fac = SolveSympd(
     variance_returns_train,
-    cov_selected_fac_ret.t(),
-    arma::solve_opts::likely_sympd
+    cov_selected_fac_ret.t()
   );
 
   // Solve for beta coefficients for the selected factors
-  const arma::mat beta_selected = arma::solve(
+  const arma::mat beta_selected = SolveSympd(
     cov_selected_fac_ret * var_ret_inv_cov_ret_selected_fac,
-    cov_selected_fac_ret,
-    arma::solve_opts::likely_sympd
+    cov_selected_fac_ret
   ).t();
 
   // Calculate pricing error for the test data
@@ -323,29 +322,15 @@ double ComputeGCVScoreCpp(
   // Compute covariance of selected factors with returns
   const arma::mat cov_selected_fac_ret = covariance_factors_returns.rows(idx_selected);
 
-  // Compute the inverse covariance of returns and covariance of returns with selected factors
-  // arma::mat var_ret_inv_cov_ret_selected_fac;
-  // try {
-  //   var_ret_inv_cov_ret_selected_fac = arma::solve(
-  //     variance_returns,
-  //     cov_selected_fac_ret.t(),
-  //     arma::solve_opts::likely_sympd
-  //   );
-  // } catch (std::exception &ex) {
-  //   var_ret_inv_cov_ret_selected_fac = arma::pinv(variance_returns) *
-  //     cov_selected_fac_ret.t();
-  // }
-  const arma::mat var_ret_inv_cov_ret_selected_fac = arma::solve(
+  const arma::mat var_ret_inv_cov_ret_selected_fac = SolveSympd(
     variance_returns,
-    cov_selected_fac_ret.t(),
-    arma::solve_opts::likely_sympd
+    cov_selected_fac_ret.t()
   );
 
   // Solve for beta coefficients for the selected factors
-  const arma::mat beta_selected = arma::solve(
+  const arma::mat beta_selected = SolveSympd(
     cov_selected_fac_ret * var_ret_inv_cov_ret_selected_fac,
-    cov_selected_fac_ret,
-    arma::solve_opts::likely_sympd
+    cov_selected_fac_ret
   ).t();
 
   // Calculate pricing errors

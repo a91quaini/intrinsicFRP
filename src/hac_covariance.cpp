@@ -244,11 +244,20 @@ void HACRevertPrewhiteningCpp(
   const unsigned int n_variables = coefficients.n_rows;
 
   // Compute the inverse of the identity -  coefficients.t()
-  const arma::mat inv_temp = arma::inv(
-    arma::eye(n_variables, n_variables) - coefficients.t()
-  );
+  arma::mat inv_temp;
+  try {
+    // Try arma::inv_sympd
+    inv_temp = arma::inv(arma::eye(n_variables, n_variables) - coefficients.t(), arma::inv_opts::no_ugly);
 
-  // Adjust the HAC covariance matrix using the inverse of the prewhitening transformation
+  } catch (const std::runtime_error&) {
+    // Fallback to generalized inverse
+    inv_temp = pinv(
+      arma::eye(n_variables, n_variables) - coefficients.t()
+    );
+
+  }
+
+  // Adjust the HAC covariance matrix using the inverse of the pre-whitening transformation
   hac_covariance = inv_temp * hac_covariance * inv_temp.t();
 
 }

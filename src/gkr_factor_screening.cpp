@@ -3,6 +3,7 @@
 #include "gkr_factor_screening.h"
 #include "hac_covariance.h"
 #include "frp.h"
+#include "utils.h"
 
 ////////////////////////////////
 ///// GKRFactorScreeningCpp ////
@@ -145,17 +146,15 @@ arma::vec GKRSDFCoefficientsCpp(
 ) {
 
   // Solve for `V[R]^{-1} * Cov[R, F]
-  const arma::mat var_ret_inv_cov_ret_fac = arma::solve(
+  const arma::mat var_ret_inv_cov_ret_fac = SolveSympd(
     variance_returns,
-    covariance_returns_factors,
-    arma::solve_opts::likely_sympd
+    covariance_returns_factors
   );
 
   // Compute sdf coefficients using the GKR method
-  return arma::solve(
+  return SolveSympd(
     var_ret_inv_cov_ret_fac.t() * covariance_returns_factors,
-    var_ret_inv_cov_ret_fac.t(),
-    arma::solve_opts::likely_sympd
+    var_ret_inv_cov_ret_fac.t()
   ) * mean_returns;
 
 }
@@ -174,12 +173,12 @@ arma::vec StandardErrorsGKRSDFCoefficientsCpp(
 ) {
 
   // Compute the inverse of variance_returns and useful matrices that use it
-  const arma::mat var_ret_inv = arma::inv_sympd(variance_returns);
+  const arma::mat var_ret_inv = InvSympd(variance_returns);
   const arma::mat var_ret_inv_cov_ret_fac = var_ret_inv * covariance_returns_factors;
   const arma::vec var_ret_inv_mean_ret = var_ret_inv * mean_returns;
 
   // Compute matrix H used in the standard error calculation
-  const arma::mat h_matrix = arma::inv_sympd(
+  const arma::mat h_matrix = InvSympd(
     covariance_returns_factors.t() * var_ret_inv_cov_ret_fac
   );
 
