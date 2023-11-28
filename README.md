@@ -527,7 +527,7 @@ To optimize computational performance, all methods implemented in package `intri
 ## Issues, bug reports, contributions, further help
 
 You can raise issues, report bugs, seek for further help, or submit your contribution to the R package `intrinsicFRP` at the
-github repository [github.com/a91quaini/intrinsicFRP](github.com/a91quaini/intrinsicFRP). 
+github repository [a91quaini/intrinsicFRP](https://github.com/a91quaini/intrinsicFRP). 
 
 For bug reports, you are kindly asked to make a small and self-contained program which exposes the bug.
 

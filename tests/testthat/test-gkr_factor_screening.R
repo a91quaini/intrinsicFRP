@@ -11,6 +11,12 @@ test_that("Test GKRFactorScreening", {
 
   # Test basic functionality without errors
   expect_no_error(GKRFactorScreening(returns, factors, target_level, hac_prewhite))
+  expect_no_error(GKRFactorScreening(
+    returns,
+    matrix(stats::rnorm(nrow(factors) * n_factors), nrow(factors), n_factors),
+    target_level,
+    hac_prewhite
+  ))
 
   # Test with prewhitening
   expect_no_error(GKRFactorScreening(returns, factors, target_level, TRUE))
