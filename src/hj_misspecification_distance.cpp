@@ -41,16 +41,11 @@ Rcpp::List HJMisspecificationDistanceCpp(
   // Compute the inverse variance of returns.
   const arma::mat inv_var_ret = InvSympd(variance_returns);
 
-  // Calculate required vectors and matrices to compure the KRS SDF coefficients.
-  const arma::vec var_ret_inv_mean_ret = SolveSympd(
-    variance_returns,
-    mean_returns
-  );
+  // Calculate required vectors and matrices to compute the KRS SDF coefficients.
+  const arma::vec var_ret_inv_mean_ret = inv_var_ret * mean_returns;
   const arma::mat covariance_factors_returns = arma::cov(factors, returns);
-  const arma::mat var_ret_inv_cov_ret_fac = SolveSympd(
-    variance_returns,
-    covariance_factors_returns.t()
-  );
+  const arma::mat var_ret_inv_cov_ret_fac = inv_var_ret *
+    covariance_factors_returns.t();
 
   // Compute the KRS SDF coefficients.
   const arma::vec krs_sdf_coefficients = SolveSympd(
