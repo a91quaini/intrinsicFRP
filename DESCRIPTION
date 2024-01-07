@@ -1,7 +1,7 @@
 Package: intrinsicFRP
 Title: An R Package for Factor Model Asset Pricing
-Version: 2.0.0
-Date: 2023-11-28
+Version: 2.0.1
+Date: 2024-01-07
 Maintainer: Alberto Quaini <alberto91quaini@gmail.com>
 Authors@R: 
     person(given = "Alberto", family = "Quaini", 
@@ -45,7 +45,7 @@ Imports:
     graphics,
     Rcpp
 Depends: 
-    R (>= 2.10)
+    R (>= 4.3.0)
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
