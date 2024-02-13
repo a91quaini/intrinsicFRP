@@ -42,7 +42,8 @@
 #'
 #' @return A list containing the `n_new_factors`-dimensional vector of SDF
 #' coefficients in `"sdf_coefficients"` and corresponding standard errors in
-#' `"standard_errors"`.
+#' `"standard_errors"`; it also returns the index of control factors that are
+#' selected by the two-step selection procedure.
 #'
 #' @examples
 #' # import package data on 6 risk factors and 42 test asset excess returns
@@ -170,8 +171,8 @@ FGXFactorsTest = function(
 
   # return a list containing the new factors' SDF coefficients and corresponding
   # standard errors
-  output = list(sdf_coefficients[1:ncol(new_factors)], standard_errors)
-  names(output) = c("sdf_coefficients", "standard_errors")
+  output = list(sdf_coefficients[1:ncol(new_factors)], standard_errors, idx_selected)
+  names(output) = c("sdf_coefficients", "standard_errors", "controls_selected")
 
   return(output)
 

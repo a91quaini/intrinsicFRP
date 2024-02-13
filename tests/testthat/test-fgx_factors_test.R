@@ -7,9 +7,9 @@ test_that("Test FGXFactorsTest", {
   output <- FGXFactorsTest(returns, factors[, 2:4], factors[, 5:7])
   expect_type(output, "list")
 
-  # Function returns a list with two elements
+  # Function returns a list with three elements
   output <- FGXFactorsTest(returns, factors[, 2:4], factors[, 5:7])
-  expect_length(output, 2)
+  expect_length(output, 3)
 
   # SDF coefficients are numeric
   output <- FGXFactorsTest(returns, factors[, 2:4], factors[, 5:7])
@@ -47,3 +47,4 @@ test_that("Test FGXFactorsTest", {
   expect_error(FGXFactorsTest(returns, factors[, 2:4], cbind(factors[, 5:7], NA), check_arguments = FALSE))
 
 })
+

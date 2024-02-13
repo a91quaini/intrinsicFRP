@@ -31,7 +31,8 @@ arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
 \value{
 A list containing the \code{n_new_factors}-dimensional vector of SDF
 coefficients in \code{"sdf_coefficients"} and corresponding standard errors in
-\code{"standard_errors"}.
+\code{"standard_errors"}; it also returns the index of control factors that are
+selected by the two-step selection procedure.
 }
 \description{
 Computes the three-pass procedure of Feng Giglio and Xiu (2020)
