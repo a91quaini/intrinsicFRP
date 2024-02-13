@@ -67,7 +67,7 @@ PlotOracleTFRPModelScore = function(
 CheckData = function(returns, factors) {
 
   stopifnot("`returns` must contain numeric values" = is.numeric(returns))
-  stopifnot("`factors` must contain numeric values" = is.numeric(returns))
+  stopifnot("`factors` must contain numeric values" = is.numeric(factors))
   stopifnot("`returns` and `factors` must have the same number of rows" = nrow(returns) == nrow(factors))
   stopifnot("`returns` contains more assets (columns) than observations (rows)" = nrow(returns) > ncol(returns))
   stopifnot("`factors` contains more variables (columns) than observations (rows)" = nrow(factors) > ncol(factors))

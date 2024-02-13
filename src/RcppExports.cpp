@@ -11,6 +11,21 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// FGXThreePassCovarianceCpp
+arma::mat FGXThreePassCovarianceCpp(const arma::mat& returns, const arma::mat& control_factors, const arma::mat& new_factors, const arma::vec& sdf_coefficients, const arma::uvec& idx_selected);
+RcppExport SEXP _intrinsicFRP_FGXThreePassCovarianceCpp(SEXP returnsSEXP, SEXP control_factorsSEXP, SEXP new_factorsSEXP, SEXP sdf_coefficientsSEXP, SEXP idx_selectedSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type control_factors(control_factorsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type new_factors(new_factorsSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sdf_coefficients(sdf_coefficientsSEXP);
+    Rcpp::traits::input_parameter< const arma::uvec& >::type idx_selected(idx_selectedSEXP);
+    rcpp_result_gen = Rcpp::wrap(FGXThreePassCovarianceCpp(returns, control_factors, new_factors, sdf_coefficients, idx_selected));
+    return rcpp_result_gen;
+END_RCPP
+}
 // FRPCpp
 Rcpp::List FRPCpp(const arma::mat& returns, const arma::mat& factors, const bool misspecification_robust, const bool include_standard_errors, const bool hac_prewhite, const double target_level_gkr2014_screening);
 RcppExport SEXP _intrinsicFRP_FRPCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP misspecification_robustSEXP, SEXP include_standard_errorsSEXP, SEXP hac_prewhiteSEXP, SEXP target_level_gkr2014_screeningSEXP) {
@@ -148,6 +163,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_intrinsicFRP_FGXThreePassCovarianceCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceCpp, 5},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 6},
     {"_intrinsicFRP_GKRFactorScreeningCpp", (DL_FUNC) &_intrinsicFRP_GKRFactorScreeningCpp, 4},
     {"_intrinsicFRP_HACCovarianceMatrixCpp", (DL_FUNC) &_intrinsicFRP_HACCovarianceMatrixCpp, 2},
