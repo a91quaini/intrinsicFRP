@@ -69,36 +69,4 @@ Rcpp::List GKRFactorScreeningCpp(
   const bool hac_prewhite = false
 );
 
-// Function for internal use
-// Computes the misspecification-robust SDF coefficients of
-// Gospodinov-Kan-Robotti (2014) <doi:10.2139/ssrn.2579821>
-// from moments computed on data comprising risk factors and test asset
-// excess returns.
-arma::vec GKRSDFCoefficientsCpp(
-  const arma::mat& covariance_returns_factors,
-  const arma::mat& variance_returns,
-  const arma::vec& mean_returns
-);
-
-// Function for internal use
-// Compute the standard errors of the Gospodinov-Kan-Robotti (2014) <doi:10.2139/ssrn.2579821>
-// misspecification-robust SDF coefficients !multiplied by sqrt(n_observations)!
-// from moments computed on data comprising
-// risk factors and test asset excess returns. It uses the heteroskedasticity and
-// autocorrelation robust standard errors using the Newey-West (1994)
-// <doi:10.2307/2297912> plug-in procedure to select the number of relevant lags,
-// i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
-// If the series needs prewhitening by
-// fitting an AR(1) in the internal heteroskedasticity and autocorrelation
-// The function allows to internally prewhiten the series by fitting a VAR(1).
-arma::vec StandardErrorsGKRSDFCoefficientsCpp(
-  const arma::vec& gkr_sdf_coefficients,
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const arma::mat& covariance_returns_factors,
-  const arma::mat& variance_returns,
-  const arma::vec& mean_returns,
-  const bool hac_prewhite = false
-);
-
 #endif

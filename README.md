@@ -16,7 +16,9 @@ Author: Alberto Quaini
 
 ## Description
 
-The `intrinsicFRP` library implements **functions designed for comprehensive evaluation and testing of linear asset pricing models**, focusing on the estimation and assessment of factor risk premia, selection of "useful" risk factors (those displaying non-zero population correlation with test asset returns), examination of model misspecification, validation of model identification, and heteroskedasticity and autocorrelation robust covariance matrix estimation.
+The `intrinsicFRP` library implements **functions designed for comprehensive evaluation and testing of linear asset pricing models**, focusing on the estimation and assessment of factor risk premia, 
+factor SDF coefficients,
+selection of "useful" risk factors (those displaying non-zero population correlation with test asset returns), examination of model misspecification, validation of model identification, and heteroskedasticity and autocorrelation robust covariance matrix estimation.
 
 Given $T$ observations on $N$ test asset excess returns collected in matrix 
 $R\in\mathbb R^{TxN}$,
@@ -48,6 +50,21 @@ $$\lambda=Cov[R_t,F_t]Var[R_t]^{-1}E[R_t].$$
 Details on the motivations and properties of these notions of factor risk premia
 are found in the aforementioned references.
 
+### Factor SDF coefficients
+
+If the law of one price holds, then there is a Stochastic Discount Factor (SDF)
+$M$ pricing all excess returns, i.e., $E[M_tR_t]=0$.
+A (linear) factor model for the SDF is of the form $M_t=1-\gamma'(F_t-E[F_t])$,
+where the mean is normalized to one since we work with excess returns.
+This package implements estimators of the approach in 
+[@gospodinov2014misspecification], which propose to find the candidate factor SDF
+that minimizes the pricing errors, under a weighted 
+$L_2-$distance:
+$$\gamma=\arg\min_{g\in\mathbb R^K}E[R_tM_t]'Var[R]^{-1}E[R_tM_t],$$
+which is given by:
+$$\gamma=(Cov[R_t,F_t]'Var[R_t]^{-1}Cov[R_t,F_t])^{-1}Cov[R_t,F_t]'Var[R_t]^{-1}E[R_t].$$
+
+
 ### Factor selection
 
 Many problems arise when some factors are useless or weak, that is, when their
@@ -62,15 +79,9 @@ For **selecting the set of useful risk factors**, our toolkit implements the
 iterative factor screening procedure of [@gospodinov2014misspecification]
 and the one-step Oracle selection procedure of [@quaini2023tradable].
 
-Consider a linear SDF in the factors:
-$$M_t=1-\gamma'(F_t-E[F_t])$$
-where 
-$\gamma=(Cov[F_t,R_t]Var[R_t]^{-1}Cov[R_t,F_t])^{-1}Cov[F_t,R_t]Var[R_t]^{-1}E[R_t]$
-are the SDF coefficients minimizing following quadratic form in the SDF pricing errors
-$E[R_tM_t]$:
 $$\gamma=\arg\min_{g\in\mathbb R^K}E[R_tM_t]'Var[R]^{-1}E[R_tM_t].$$
 The screening procedure of [@gospodinov2014misspecification] is based on the result
-that the asymptotic distribution of misspecification-robust t-statistics of the SDF coefficients are $\chi^2(1)$, Chi-squared with one degree of freedom,
+that the asymptotic distribution of misspecification-robust t-statistics of the factor SDF coefficients are $\chi^2(1)$, Chi-squared with one degree of freedom,
 for the coefficients of useless factors, and they are stochastically dominated by
 a $\chi^2(1)$ for the useful factors. With this motivation, they suggest a sequential removal of factors associated with the smallest insignificant t-statistics of a nonzero misspecification-robust SDF coefficient. Note that this procedure 
 gives rise to a conservative factor selection, it
@@ -222,6 +233,17 @@ from data on
  pre-whiten the series by fitting a VAR(1),
  i.e., a vector autoregressive model of order 1.
  All details are found in [@quaini2023tradable].
+- `SDFCoefficients`: Computes the misspecification-robust SDF coefficients of
+ Gospodinov-Kan-Robotti (2014) <https:#'doi.org/10.1093/rfs/hht135>:
+ `GKRSDFcoefficients = (C' * V[R]^{-1} * C)^{-1} * C' * V[R]^{-1} * E[R]`
+ from data on factors `F` and test
+ asset excess returns `R`.
+ These notions of SDF coefficients minimize pricing errors:
+ `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`. 
+ Optionally computes the corresponding
+ heteroskedasticity and autocorrelation robust standard errors using the
+ Newey-West (1994) <doi:10.2307/2297912> plug-in procedure to select the
+ number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. 
 - `ChenFang2019BetaRankTest()`: Tests the null hypothesis of reduced rank in the matrix of regression
  loadings for test asset excess returns on risk factors using the [@chen2019improved]
  beta rank test. The test applies the [@kleibergen2006generalized]

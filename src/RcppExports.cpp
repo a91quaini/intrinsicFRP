@@ -147,6 +147,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SDFCoefficientsCpp
+Rcpp::List SDFCoefficientsCpp(const arma::mat& returns, const arma::mat& factors, const bool include_standard_errors, const bool hac_prewhite);
+RcppExport SEXP _intrinsicFRP_SDFCoefficientsCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP include_standard_errorsSEXP, SEXP hac_prewhiteSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const bool >::type include_standard_errors(include_standard_errorsSEXP);
+    Rcpp::traits::input_parameter< const bool >::type hac_prewhite(hac_prewhiteSEXP);
+    rcpp_result_gen = Rcpp::wrap(SDFCoefficientsCpp(returns, factors, include_standard_errors, hac_prewhite));
+    return rcpp_result_gen;
+END_RCPP
+}
 // TFRPCpp
 Rcpp::List TFRPCpp(const arma::mat& returns, const arma::mat& factors, const bool include_standard_errors, const bool hac_prewhite);
 RcppExport SEXP _intrinsicFRP_TFRPCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP include_standard_errorsSEXP, SEXP hac_prewhiteSEXP) {
@@ -172,6 +186,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_ChenFang2019BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_ChenFang2019BetaRankTestCpp, 4},
     {"_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp", (DL_FUNC) &_intrinsicFRP_IterativeKleibergenPaap2006BetaRankTestCpp, 3},
     {"_intrinsicFRP_OracleTFRPCpp", (DL_FUNC) &_intrinsicFRP_OracleTFRPCpp, 16},
+    {"_intrinsicFRP_SDFCoefficientsCpp", (DL_FUNC) &_intrinsicFRP_SDFCoefficientsCpp, 4},
     {"_intrinsicFRP_TFRPCpp", (DL_FUNC) &_intrinsicFRP_TFRPCpp, 4},
     {NULL, NULL, 0}
 };
