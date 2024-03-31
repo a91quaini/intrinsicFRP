@@ -37,8 +37,8 @@ OracleTFRPCpp <- function(returns, factors, penalty_parameters, weighting_type, 
     .Call(`_intrinsicFRP_OracleTFRPCpp`, returns, factors, penalty_parameters, weighting_type, tuning_type, one_stddev_rule, gcv_scaling_n_assets, gcv_identification_check, target_level_kp2006_rank_test, n_folds, n_train_observations, n_test_observations, roll_shift, relaxed, include_standard_errors, hac_prewhite)
 }
 
-SDFCoefficientsCpp <- function(returns, factors, include_standard_errors = FALSE, hac_prewhite = FALSE) {
-    .Call(`_intrinsicFRP_SDFCoefficientsCpp`, returns, factors, include_standard_errors, hac_prewhite)
+SDFCoefficientsCpp <- function(returns, factors, misspecification_robust = TRUE, include_standard_errors = FALSE, hac_prewhite = FALSE, target_level_gkr2014_screening = 0.) {
+    .Call(`_intrinsicFRP_SDFCoefficientsCpp`, returns, factors, misspecification_robust, include_standard_errors, hac_prewhite, target_level_gkr2014_screening)
 }
 
 TFRPCpp <- function(returns, factors, include_standard_errors, hac_prewhite = FALSE) {

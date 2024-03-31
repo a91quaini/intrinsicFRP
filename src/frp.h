@@ -56,8 +56,6 @@
 // `target_level_gkr2014_screening / n_factors`, where n_factors indicate the
 // number of factors in the model at the current iteration. Default is `0.`, i.e.,
 // no factor screening.
-// @param check_arguments A boolean: `TRUE` for internal check of all function
-// arguments; `FALSE` otherwise. Default is `TRUE`.
 //
 // @return A list containing `n_factors`-dimensional vector of factor
 // risk premia in `"risk_premia"`; if `include_standard_errors = TRUE`, then
@@ -83,8 +81,7 @@ Rcpp::List ReturnFRPCpp(
   const arma::mat& factors,
   const bool misspecification_robust,
   const bool include_standard_errors,
-  const bool hac_prewhite,
-  const arma::uvec selected_factor_indices = arma::uvec()
+  const bool hac_prewhite
 );
 
 // Function for internal use

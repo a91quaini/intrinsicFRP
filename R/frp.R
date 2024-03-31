@@ -25,7 +25,8 @@
 #' `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`,
 #' respectively.
 #' Optionally computes the corresponding
-#' heteroskedasticity and autocorrelation robust standard errors using the
+#' heteroskedasticity and autocorrelation robust standard errors (accounting
+#' for a potential model misspecification) using the
 #' Newey-West (1994) <doi:10.2307/2297912> plug-in procedure to select the
 #' number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 #' For the standard error computations, the function allows to internally

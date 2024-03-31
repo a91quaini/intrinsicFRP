@@ -7,8 +7,10 @@
 SDFCoefficients(
   returns,
   factors,
+  misspecification_robust = TRUE,
   include_standard_errors = FALSE,
   hac_prewhite = FALSE,
+  target_level_gkr2014_screening = 0,
   check_arguments = TRUE
 )
 }
@@ -18,6 +20,11 @@ excess returns.}
 
 \item{factors}{A \verb{n_observations x n_factors}-dimensional matrix of factors.}
 
+\item{misspecification_robust}{A boolean: \code{TRUE} for the
+"misspecification-robust" Kan-Robotti-Shanken (2013) GLS approach using the
+inverse covariance matrix of returns; \code{FALSE} for standard Fama-MacBeth
+risk premia. Default is \code{TRUE}.}
+
 \item{include_standard_errors}{A boolean: \code{TRUE} if you want to compute the
 SDF coefficients' HAC standard errors; \code{FALSE} otherwise.
 Default is \code{FALSE}.}
@@ -25,6 +32,16 @@ Default is \code{FALSE}.}
 \item{hac_prewhite}{A boolean indicating if the series needs pre-whitening by
 fitting an AR(1) in the internal heteroskedasticity and autocorrelation
 robust covariance (HAC) estimation. Default is \code{false}.}
+
+\item{target_level_gkr2014_screening}{A number indicating the target level of
+the tests underlying the factor screening procedure in Gospodinov-Kan-Robotti
+(2014). If it is zero, then no factor screening procedure is
+implemented. Otherwise, it implements an iterative screening procedure
+based on the sequential removal of factors associated with the smallest insignificant
+t-test of a nonzero SDF coefficient. The threshold for the absolute t-test is
+\code{target_level_gkr2014_screening / n_factors}, where n_factors indicate the
+number of factors in the model at the current iteration. Default is \code{0.}, i.e.,
+no factor screening.}
 
 \item{check_arguments}{A boolean: \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
@@ -36,15 +53,18 @@ it further includes \code{n_factors}-dimensional vector of SDF coefficients'
 standard errors in \code{"standard_errors"};
 }
 \description{
-Computes the misspecification-robust SDF coefficients of
+Computes the SDF coefficients of Fama-MachBeth (1973) \url{doi:10.1086/260061}
+\verb{FMSDFcoefficients = (C' * C)^\{-1\} * C' * E[R]}
+or the misspecification-robust SDF coefficients of
 Gospodinov-Kan-Robotti (2014) \url{https:#'doi.org/10.1093/rfs/hht135}:
 \verb{GKRSDFcoefficients = (C' * V[R]^\{-1\} * C)^\{-1\} * C' * V[R]^\{-1\} * E[R]}
-from data on factors \code{F} and test
-asset excess returns \code{R}.
+from data on factors \code{F} and test asset excess returns \code{R}.
 These notions of SDF coefficients minimize pricing errors:
-\verb{argmin_\{d\} (E[R] - Cov[R,F] * d)' * V[R]^\{-1\} * (E[R] - Cov[R,F] * d)}.
+\verb{argmin_\{d\} (E[R] - Cov[R,F] * d)' * W * (E[R] - Cov[R,F] * d)},
+with \code{W=I}, i.e., the identity, and \code{W=V[R]^{-1}}, respectively.
 Optionally computes the corresponding
-heteroskedasticity and autocorrelation robust standard errors using the
+heteroskedasticity and autocorrelation robust standard errors (accounting
+for a potential model misspecification) using the
 Newey-West (1994) \url{doi:10.2307/2297912} plug-in procedure to select the
 number of relevant lags, i.e., \code{n_lags = 4 * (n_observations/100)^(2/9)}.
 }
