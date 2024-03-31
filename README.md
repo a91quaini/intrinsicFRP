@@ -56,7 +56,12 @@ If the law of one price holds, then there is a Stochastic Discount Factor (SDF)
 $M$ pricing all excess returns, i.e., $E[M_tR_t]=0$.
 A (linear) factor model for the SDF is of the form $M_t=1-\gamma'(F_t-E[F_t])$,
 where the mean is normalized to one since we work with excess returns.
-This package implements estimators of the approach in 
+This package implements the estimators in 
+[@fama1973risk], which propose to find the candidate factor SDF such that
+$$\gamma=\arg\min_{g\in\mathbb R^K}E[R_tM_t]'E[R_tM_t],$$
+which is given by:
+$$\gamma=(Cov[R_t,F_t]'Cov[R_t,F_t])^{-1}Cov[R_t,F_t]'E[R_t].$$
+Furthermore, it implements the estimators in 
 [@gospodinov2014misspecification], which propose to find the candidate factor SDF
 that minimizes the pricing errors, under a weighted 
 $L_2-$distance:
@@ -187,7 +192,8 @@ Windows](https://cran.r-project.org/bin/windows/Rtools/).
 
 R package `intrinsicFRP` implements the following functions:
 
-- `FRP()`: Computes the [@fama1973risk] factor risk premia: `FMFRP = (beta' * beta)^{-1} * beta' * E[R]` where `beta = Cov[R, F] * V[F]^{-1}` or the misspecification-robust factor risk premia of [@kan2013pricing]: `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]`, from data on factors `F` and test asset excess returns `R`. These notions of factor risk premia are by construction the negative covariance of factors `F` with candidate SDF `M = 1 - d' * (F - E[F])`, where SDF coefficients `d` are obtained by minimizing pricing errors: `argmin_{d} (E[R] - Cov[R,F] * d)' * (E[R] - Cov[R,F] * d)` and `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`, respectively. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All the details can be found in [@kan2013pricing].
+- `FRP()`: Computes the [@fama1973risk] factor risk premia: `FMFRP = (beta' * beta)^{-1} * beta' * E[R]` where `beta = Cov[R, F] * V[F]^{-1}` or the misspecification-robust factor risk premia of [@kan2013pricing]: `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]`, from data on factors `F` and test asset excess returns `R`. These notions of factor risk premia are by construction the negative covariance of factors `F` with candidate SDF `M = 1 - d' * (F - E[F])`, where SDF coefficients `d` are obtained by minimizing pricing errors: `argmin_{d} (E[R] - Cov[R,F] * d)' * (E[R] - Cov[R,F] * d)` and `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`, respectively. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors (accounting
+  for a potential model misspecification) using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All the details can be found in [@kan2013pricing].
 - `TFRP()`: Computes tradable factor risk premia from data on factors `F` and test asset excess returns `R`: `TFRP = Cov[F, R] * Var[R]^{-1} * E[R]`; which are by construction the negative covariance of factors `F` with the SDF projection on asset returns, i.e., the minimum variance SDF. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All details are found in [@quaini2023tradable].
 - `OracleTFRP()`: Computes Oracle tradable factor risk premia of [@quaini2023tradable] 
 from data on
@@ -233,17 +239,20 @@ from data on
  pre-whiten the series by fitting a VAR(1),
  i.e., a vector autoregressive model of order 1.
  All details are found in [@quaini2023tradable].
-- `SDFCoefficients`: Computes the misspecification-robust SDF coefficients of
- Gospodinov-Kan-Robotti (2014) <https:#'doi.org/10.1093/rfs/hht135>:
- `GKRSDFcoefficients = (C' * V[R]^{-1} * C)^{-1} * C' * V[R]^{-1} * E[R]`
- from data on factors `F` and test
- asset excess returns `R`.
- These notions of SDF coefficients minimize pricing errors:
- `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`. 
- Optionally computes the corresponding
- heteroskedasticity and autocorrelation robust standard errors using the
- Newey-West (1994) <doi:10.2307/2297912> plug-in procedure to select the
- number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. 
+- `SDFCoefficients`: Computes the SDF coefficients of [@fama1973risk]:
+  `FMSDFcoefficients = (C' * C)^{-1} * C' * E[R]`,
+  or the misspecification-robust SDF coefficients of
+  [@gospodinov2014misspecification]:
+  `GKRSDFcoefficients = (C' * V[R]^{-1} * C)^{-1} * C' * V[R]^{-1} * E[R]`
+  from data on factors `F` and test asset excess returns `R`.
+  These notions of SDF coefficients minimize pricing errors:
+  `argmin_{d} (E[R] - Cov[R,F] * d)' * W * (E[R] - Cov[R,F] * d)`,
+  with `W=I`, i.e., the identity, and `W=V[R]^{-1}`, respectively.
+  Optionally computes the corresponding
+  heteroskedasticity and autocorrelation robust standard errors (accounting
+  for a potential model misspecification) using the
+  [@newey1994automatic] plug-in procedure to select the
+  number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
 - `ChenFang2019BetaRankTest()`: Tests the null hypothesis of reduced rank in the matrix of regression
  loadings for test asset excess returns on risk factors using the [@chen2019improved]
  beta rank test. The test applies the [@kleibergen2006generalized]
