@@ -35,11 +35,21 @@ test_that("Test FRP", {
 
   # Testing FRP without misspecification robustness but including standard errors.
   expect_no_error(FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE))
+  expect_no_error(FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE, target_level_gkr2014_screening = 0.05))
+  expect_no_error(FRP(returns, factors, misspecification_robust = FALSE, include_standard_errors = TRUE, target_level_gkr2014_screening = 0.95))
+
 
   # Testing GKR factor screening with misspecification_robust
   expect_no_error(FRP(returns, factors, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.05))
   expect_no_error(FRP(returns, factors, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.95))
   expect_no_error(FRP(returns, factors, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.05))
+
+  # Testing GKR factor screening with misspecification_robust on simulated factors
+  factors_usl = matrix(stats::rnorm(nrow(returns) * 2), nrow(returns), 2)
+  expect_no_error(FRP(returns, factors_usl, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.05))
+  expect_no_error(FRP(returns, factors_usl, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.95))
+  expect_no_error(FRP(returns, factors_usl, misspecification_robust = TRUE, target_level_gkr2014_screening = 0.05))
+
 
   # Testing error handling for incorrect dimensions (transposed matrices).
   expect_error(FRP(t(returns), factors, include_standard_errors = TRUE))
