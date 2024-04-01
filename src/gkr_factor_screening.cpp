@@ -131,7 +131,7 @@ Rcpp::List GKRFactorScreeningCpp(
   return Rcpp::List::create(
     Rcpp::Named("sdf_coefficients") = arma::vec(),
     Rcpp::Named("standard_errors") = arma::vec(),
-    Rcpp::Named("t_stat") = arma::vec(),
+    Rcpp::Named("t_statistics") = arma::vec(),
     Rcpp::Named("selected_factor_indices") = arma::uvec()
   );
 

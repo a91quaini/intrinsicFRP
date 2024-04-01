@@ -71,7 +71,7 @@ Rcpp::List ReturnSDFCoefficientsCpp(
   const arma::mat& factors,
   const bool misspecification_robust,
   const bool include_standard_errors,
-  const bool hac_prewhite
+  const bool hac_prewhite = false
 );
 
 // Function for internal use
@@ -98,13 +98,14 @@ arma::vec GKRSDFCoefficientsCpp(
 // autocorrelation robust standard errors using the Newey-West (1994)
 // <doi:10.2307/2297912> plug-in procedure to select the number of relevant lags,
 // i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+// Formulas adapted for working with excess returns are own derived.
 arma::vec StandardErrorsFMSDFCoefficientsCpp(
   const arma::vec& fm_sdf_coefficients,
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& covariance_returns_factors,
   const arma::vec& mean_returns,
-  const bool hac_prewhite
+  const bool hac_prewhite = false
 );
 
 // Function for internal use
@@ -113,6 +114,8 @@ arma::vec StandardErrorsFMSDFCoefficientsCpp(
 // autocorrelation robust standard errors using the Newey-West (1994)
 // <doi:10.2307/2297912> plug-in procedure to select the number of relevant lags,
 // i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+// Formula adapted for using excess returns are given in Kan Robotti (2008)
+// <https://doi.org/10.1016/j.jempfin.2008.03.003>
 arma::vec StandardErrorsGKRSDFCoefficientsCpp(
   const arma::vec& gkr_sdf_coefficients,
   const arma::mat& returns,
@@ -120,7 +123,7 @@ arma::vec StandardErrorsGKRSDFCoefficientsCpp(
   const arma::mat& covariance_returns_factors,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
-  const bool hac_prewhite
+  const bool hac_prewhite = false
 );
 
 #endif

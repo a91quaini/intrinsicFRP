@@ -52,11 +52,16 @@ Rcpp::List FRPCpp(
     );
 
     // Return the output list with additionally the selected factor indices
-    return Rcpp::List::create(
-      Rcpp::Named("risk_premia") = output["risk_premia"],
-      Rcpp::Named("standard_errors") = output["standard_errors"],
-      Rcpp::Named("selected_factor_indices") = selected_factor_indices
-    );
+    return include_standard_errors ?
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = output["risk_premia"],
+        Rcpp::Named("standard_errors") = output["standard_errors"],
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
+      ) :
+      Rcpp::List::create(
+        Rcpp::Named("risk_premia") = output["risk_premia"],
+        Rcpp::Named("selected_factor_indices") = selected_factor_indices
+      );
 
   }
 

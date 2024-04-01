@@ -22,8 +22,16 @@ ff6 = 1:6         # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom"
 # model comprising the Fama-French 6 factors and the simulated useless factor
 ff6usl = 1:7      # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom" "Useless"
 
+fm_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], misspecification_robust = FALSE, include_standard_errors = TRUE)
+gkr_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], include_standard_errors = TRUE)
+gkr_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], include_standard_errors = TRUE, target_level_gkr2014_screening = 0.05)
+
+
 # compute tradable factor risk premia and their standard errors
 tfrp = intrinsicFRP::TFRP(returns, factors[,ff6usl], include_standard_errors = TRUE)
+
+# compute the Fama-MacBeth factor risk premia and their standard errors
+fm_frp = intrinsicFRP::FRP(returns, factors[,ff6usl], include_standard_errors = TRUE, misspecification_robust = FALSE)
 
 # compute the GLS factor risk premia of Kan Robotti and Shanken (2013) and their
 # standard errors
@@ -45,16 +53,16 @@ oracle_tfrp = intrinsicFRP::OracleTFRP(
 # create dataframe
 df <- data.frame(
   Factor = factor(
-    rep(colnames(factors[,ff6usl]), 3),
+    rep(colnames(factors[,ff6usl]), 4),
     levels = colnames(factors[,ff6usl])
   ),
   Estimator = factor(
-    rep(c("KRS-FRP", "TFRP", "O-TFRP"), each=ncol(factors[,ff6usl])),
-    levels = c("KRS-FRP", "TFRP", "O-TFRP")
+    rep(c("FM-FRP", "KRS-FRP", "TFRP", "O-TFRP"), each=ncol(factors[,ff6usl])),
+    levels = c("FM-FRP", "KRS-FRP", "TFRP", "O-TFRP")
   ),
-  risk_premia = c(krs_frp$risk_premia, tfrp$risk_premia, oracle_tfrp$risk_premia),
+  risk_premia = c(fm_frp$risk_premia, krs_frp$risk_premia, tfrp$risk_premia, oracle_tfrp$risk_premia),
   standard_errors = c(
-    krs_frp$standard_errors, tfrp$standard_errors, oracle_tfrp$standard_errors
+    fm_frp$standard_errors, krs_frp$standard_errors, tfrp$standard_errors, oracle_tfrp$standard_errors
   )
 )
 
@@ -82,6 +90,9 @@ which(oracle_tfrp$risk_premia != 0)
 
 # compute the GKR factor screening procedure
 intrinsicFRP::GKRFactorScreening(returns, factors[,ff6])
+
+# compute the FGX factor screening procedure
+intrinsicFRP::FGXFactorsTest(returns, factors[,ff3], factors[,4:7])
 
 # compute the HJ misspecification distance of the Fama-French 3 and 6 factor models
 intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff3])
