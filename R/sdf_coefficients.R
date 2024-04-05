@@ -85,13 +85,20 @@ SDFCoefficients = function(
   }
 
   # compute the FRP estimate and, eventually, their standard errors
-  return(.Call(`_intrinsicFRP_SDFCoefficientsCpp`,
+  output = .Call(`_intrinsicFRP_SDFCoefficientsCpp`,
     returns,
     factors,
     misspecification_robust,
     include_standard_errors,
     hac_prewhite,
     target_level_gkr2014_screening
-  ))
+  )
+
+  if (target_level_gkr2014_screening > 0) {
+    # Transform c++ indices (starting at 0) into R indices (starting at 1).
+    output$selected_factor_indices = output$selected_factor_indices + 1
+  }
+
+  return(output)
 
 }

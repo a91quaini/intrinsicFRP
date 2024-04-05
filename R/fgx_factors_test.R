@@ -29,8 +29,8 @@
 #' pre-whiten the series by fitting a VAR(1),
 #' i.e., a vector autoregressive model of order 1.
 #'
-#' @param returns A `n_observations x n_returns`-dimensional matrix of test asset
-#' excess returns.
+#' @param gross_returns A `n_observations x n_returns`-dimensional matrix of test asset
+#' gross returns.
 #' @param control_factors A `n_observations x n_control_factors`-dimensional
 #' matrix of control or benchmark factors.
 #' @param new_factors A `n_observations x n_new_factors`-dimensional
@@ -50,16 +50,19 @@
 #' control_factors = intrinsicFRP::factors[,2:4]
 #' new_factors = intrinsicFRP::factors[,5:7]
 #' returns = intrinsicFRP::returns[,-1]
+#' RF = intrinsicFRP::risk_free[,-1]
+#'
+#' gross_returns = returns + 1 + RF
 #'
 #' output = FGXFactorsTest(
-#'   returns,
+#'   gross_returns,
 #'   control_factors,
 #'   new_factors
 #' )
 #'
 #' @export
 FGXFactorsTest = function(
-  returns,
+  gross_returns,
   control_factors,
   new_factors,
   n_folds = 5,
@@ -69,7 +72,7 @@ FGXFactorsTest = function(
   # check function arguments
   if (check_arguments) {
 
-    CheckData(returns, control_factors)
+    CheckData(gross_returns, control_factors)
     stopifnot("`new_factors` must contain numeric values" = is.numeric(new_factors))
     stopifnot("`new_factors` contains more variables (columns) than observations (rows)" = nrow(new_factors) > ncol(new_factors))
     stopifnot("`new_factors` must not contain missing values (NA/NaN)" = !anyNA(new_factors))
@@ -77,10 +80,13 @@ FGXFactorsTest = function(
 
   }
 
+  # set number of new factors
+  n_new = ncol(new_factors)
+
   # compute moments of data
-  avg_returns = colMeans(returns)
-  cov_returns_control_factors = stats::cov(returns, control_factors)
-  cov_returns_new_factors = stats::cov(returns, new_factors)
+  avg_returns = colMeans(gross_returns)
+  cov_returns_control_factors = stats::cov(gross_returns, control_factors)
+  cov_returns_new_factors = stats::cov(gross_returns, new_factors)
 
   # first lasso selection:
   # lasso regression of average returns on the covariances between returns
@@ -98,7 +104,7 @@ FGXFactorsTest = function(
   # lasso regression of each covariance between new factors and returns on
   # covariances between control factors and returns
   # take the union of the first and all second step selections
-  for (ii in 1:ncol(new_factors)) {
+  for (ii in 1:n_new) {
 
     second_lasso = glmnet::cv.glmnet(
       x = cov_returns_control_factors,
@@ -118,7 +124,8 @@ FGXFactorsTest = function(
   # OLS regression of average returns on covariances between new factors and returns
   # and on the covariances between the selected control factors and returns.
   # the selected control factors are the union of the first and all second step selections.
-  covariances = cbind(
+  predictors = cbind(
+    matrix(1, ncol(gross_returns), 1),
     cov_returns_new_factors,
     cov_returns_control_factors[, idx_selected, drop=FALSE]
   )
@@ -126,8 +133,8 @@ FGXFactorsTest = function(
   # cross_sectional_fit = stats::lm(avg_returns ~ covariances)
   # compute the SDF coefficients
   sdf_coefficients = solve(
-    t(covariances) %*% covariances,
-    t(covariances) %*% avg_returns
+    t(predictors) %*% predictors,
+    t(predictors) %*% avg_returns
   )
 
   ## Estimate the Newey-West type covariance estimator of the new factors'
@@ -138,7 +145,7 @@ FGXFactorsTest = function(
   control_factors = control_factors[,idx_selected]
   cov_selected = c()
 
-  for (ii in 1:ncol(new_factors)) {
+  for (ii in 1:n_new) {
 
     lasso_fit = glmnet::cv.glmnet(
       x = control_factors,
@@ -159,19 +166,19 @@ FGXFactorsTest = function(
 
   # compute the Newey-West type covariance estimator
   covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
-    returns,
+    gross_returns,
     control_factors,
     new_factors,
-    sdf_coefficients,
+    sdf_coefficients[-1],
     cov_selected
   )
 
   # extract the standard errors
-  standard_errors = sqrt(diag(covariance)) / sqrt(nrow(returns))
+  standard_errors = sqrt(diag(covariance)) / sqrt(nrow(gross_returns))
 
   # return a list containing the new factors' SDF coefficients and corresponding
   # standard errors
-  output = list(sdf_coefficients[1:ncol(new_factors)], standard_errors, idx_selected)
+  output = list(sdf_coefficients[1 + 1:n_new], standard_errors, idx_selected)
   names(output) = c("sdf_coefficients", "standard_errors", "controls_selected")
 
   return(output)

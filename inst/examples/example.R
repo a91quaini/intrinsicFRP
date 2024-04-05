@@ -1,10 +1,12 @@
-# if you already have package `stats` installed, you can skip the next line
-install.packages("stats")
+# if you already have package `stats` and `ggplot2` installed
+# you can skip the next line
+install.packages(c("stats", "ggplot2"))
 
 # import package data on 6 risk factors and 42 test asset excess returns
 # remove the first column containing the date
 factors = intrinsicFRP::factors[,-1]
 returns = intrinsicFRP::returns[,-1]
+RF = intrinsicFRP::risk_free[,-1]
 
 # simulate a useless factor and add it to the matrix of factors
 set.seed(23)
@@ -22,9 +24,49 @@ ff6 = 1:6         # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom"
 # model comprising the Fama-French 6 factors and the simulated useless factor
 ff6usl = 1:7      # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom" "Useless"
 
-fm_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], misspecification_robust = FALSE, include_standard_errors = TRUE)
-gkr_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], include_standard_errors = TRUE)
-gkr_sdf_coeff = intrinsicFRP::SDFCoefficients(returns, factors[,ff6usl], include_standard_errors = TRUE, target_level_gkr2014_screening = 0.05)
+fm_sdf = intrinsicFRP::SDFCoefficients(
+  returns,
+  factors[,ff6usl],
+  misspecification_robust = FALSE,
+  include_standard_errors = TRUE
+)
+gkr_sdf = intrinsicFRP::SDFCoefficients(
+  returns, factors[,ff6usl],
+  include_standard_errors = TRUE
+)
+
+# create dataframe
+df = data.frame(
+  Factor = factor(
+    rep(colnames(factors[,ff6usl]), 2),
+    levels = colnames(factors[,ff6usl])
+  ),
+  Estimator = factor(
+    rep(c("FM", "GKR"), each=ncol(factors[,ff6usl])),
+    levels = c("FM", "GKR")
+  ),
+  sdf_coefficients = c(fm_sdf$sdf_coefficients, gkr_sdf$sdf_coefficients),
+  standard_errors = c(fm_sdf$standard_errors, gkr_sdf$standard_errors)
+)
+
+# Create the plot
+ggplot2::ggplot(df, ggplot2::aes(
+  x = as.factor(.data$Factor), y = .data$sdf_coefficients, fill = .data$Estimator)) +
+  ggplot2::theme(text=ggplot2::element_text(size=16)) +
+  ggplot2::geom_bar(stat = "identity", position = "dodge", width=0.5, color="black") +
+  ggplot2::labs(x = "Factor", y = "SDF coefficient") +
+  ggplot2::geom_errorbar(ggplot2::aes(
+    x=as.factor(Factor),
+    ymin=sdf_coefficients - stats::qnorm(0.975) * standard_errors,
+    ymax=sdf_coefficients + stats::qnorm(0.975) * standard_errors),
+    linewidth=.8, position = ggplot2::position_dodge(0.5), width = 0.25)
+
+ggplot2::ggsave(
+  "inst/examples/sdf_coefficients.png",
+  width = 7,
+  height = 5,
+  dpi=600
+)
 
 
 # compute tradable factor risk premia and their standard errors
@@ -51,14 +93,14 @@ oracle_tfrp = intrinsicFRP::OracleTFRP(
 )
 
 # create dataframe
-df <- data.frame(
+df = data.frame(
   Factor = factor(
     rep(colnames(factors[,ff6usl]), 4),
     levels = colnames(factors[,ff6usl])
   ),
   Estimator = factor(
-    rep(c("FM-FRP", "KRS-FRP", "TFRP", "O-TFRP"), each=ncol(factors[,ff6usl])),
-    levels = c("FM-FRP", "KRS-FRP", "TFRP", "O-TFRP")
+    rep(c("FM", "KRS", "TFRP", "O-TFRP"), each=ncol(factors[,ff6usl])),
+    levels = c("FM", "KRS", "TFRP", "O-TFRP")
   ),
   risk_premia = c(fm_frp$risk_premia, krs_frp$risk_premia, tfrp$risk_premia, oracle_tfrp$risk_premia),
   standard_errors = c(
@@ -92,7 +134,14 @@ which(oracle_tfrp$risk_premia != 0)
 intrinsicFRP::GKRFactorScreening(returns, factors[,ff6])
 
 # compute the FGX factor screening procedure
-intrinsicFRP::FGXFactorsTest(returns, factors[,ff3], factors[,4:7])
+gross_returns = returns + 1 + RF
+fgx_output = intrinsicFRP::FGXFactorsTest(gross_returns, factors[,ff3], factors[,4:7])
+
+alpha = 0.05
+quantile = stats::qnorm(1 - alpha / 2)
+lows = fgx_output$sdf_coefficients - fgx_output$standard_errors * quantile
+highs = fgx_output$sdf_coefficients + fgx_output$standard_errors * quantile
+fgx_new_selected = which(lows * highs > 0)
 
 # compute the HJ misspecification distance of the Fama-French 3 and 6 factor models
 intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff3])

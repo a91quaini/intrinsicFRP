@@ -1,7 +1,7 @@
-#' Test Asset Excess Returns - monthly observations from `01/1970` to `12/2021`
+#' Test Asset Excess Returns - monthly observations from `07/1963` to `02/2024`
 #'
 #' Monthly excess returns on the `25` Size/Book-to-Market double sorted portfolios
-#' and the `17` industry portfolios from `01/1970` to `12/2021`.
+#' and the `17` industry portfolios from `07/1963` to `02/2024`.
 #'
 #' @format ## `returns`
 #' A data frame with `624` rows and `43` columns:
@@ -12,9 +12,9 @@
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "returns"
 
-#' Factors - monthly observations from `01/1970` to `12/2021`
+#' Factors - monthly observations from `07/1963` to `02/2024`
 #'
-#' Monthly observations from `01/1970` to `12/2021` of
+#' Monthly observations from `07/1963` to `02/2024` of
 #' the Fama-French `5` factors and the momentum factor.
 #'
 #' @format ## `factors`
@@ -25,3 +25,17 @@
 #' }
 #' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
 "factors"
+
+#' Risk free - monthly observations from `07/1963` to `02/2024`
+#'
+#' Monthly observations from `07/1963` to `02/2024` of
+#' the US risk free asset.
+#'
+#' @format ## `risk_free`
+#' A data frame with `624` rows and `2` columns:
+#' \describe{
+#'   \item{Date}{Date in yyyymm format}
+#'   \item{...}{risk free observations}
+#' }
+#' @source <https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html>
+"risk_free"

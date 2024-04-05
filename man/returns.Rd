@@ -3,7 +3,7 @@
 \docType{data}
 \name{returns}
 \alias{returns}
-\title{Test Asset Excess Returns - monthly observations from \code{01/1970} to \code{12/2021}}
+\title{Test Asset Excess Returns - monthly observations from \code{07/1963} to \code{02/2024}}
 \format{
 \subsection{\code{returns}}{
 
@@ -22,6 +22,6 @@ returns
 }
 \description{
 Monthly excess returns on the \code{25} Size/Book-to-Market double sorted portfolios
-and the \code{17} industry portfolios from \code{01/1970} to \code{12/2021}.
+and the \code{17} industry portfolios from \code{07/1963} to \code{02/2024}.
 }
 \keyword{datasets}

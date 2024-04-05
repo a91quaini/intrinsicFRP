@@ -5,7 +5,7 @@
 \title{Testing for the pricing contribution of new factors.}
 \usage{
 FGXFactorsTest(
-  returns,
+  gross_returns,
   control_factors,
   new_factors,
   n_folds = 5,
@@ -13,8 +13,8 @@ FGXFactorsTest(
 )
 }
 \arguments{
-\item{returns}{A \verb{n_observations x n_returns}-dimensional matrix of test asset
-excess returns.}
+\item{gross_returns}{A \verb{n_observations x n_returns}-dimensional matrix of test asset
+gross returns.}
 
 \item{control_factors}{A \verb{n_observations x n_control_factors}-dimensional
 matrix of control or benchmark factors.}
@@ -62,9 +62,12 @@ i.e., a vector autoregressive model of order 1.
 control_factors = intrinsicFRP::factors[,2:4]
 new_factors = intrinsicFRP::factors[,5:7]
 returns = intrinsicFRP::returns[,-1]
+RF = intrinsicFRP::risk_free[,-1]
+
+gross_returns = returns + 1 + RF
 
 output = FGXFactorsTest(
-  returns,
+  gross_returns,
   control_factors,
   new_factors
 )
