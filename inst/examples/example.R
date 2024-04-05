@@ -24,12 +24,15 @@ ff6 = 1:6         # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom"
 # model comprising the Fama-French 6 factors and the simulated useless factor
 ff6usl = 1:7      # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom" "Useless"
 
+# compute the factor SDF coefficients and their standard errors
+# for the Fama-MacBeth two-pass procedure
 fm_sdf = intrinsicFRP::SDFCoefficients(
   returns,
   factors[,ff6usl],
   misspecification_robust = FALSE,
   include_standard_errors = TRUE
 )
+# and for the misspecification-robust procedure of Gospodinov Kan and Robottu
 gkr_sdf = intrinsicFRP::SDFCoefficients(
   returns, factors[,ff6usl],
   include_standard_errors = TRUE
@@ -141,7 +144,8 @@ alpha = 0.05
 quantile = stats::qnorm(1 - alpha / 2)
 lows = fgx_output$sdf_coefficients - fgx_output$standard_errors * quantile
 highs = fgx_output$sdf_coefficients + fgx_output$standard_errors * quantile
-fgx_new_selected = which(lows * highs > 0)
+# recover the indices of the factors selected by the FGX procedure
+which(lows * highs > 0)
 
 # compute the HJ misspecification distance of the Fama-French 3 and 6 factor models
 intrinsicFRP::HJMisspecificationDistance(returns, factors[,ff3])

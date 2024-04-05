@@ -20,6 +20,8 @@ The `intrinsicFRP` library implements **functions designed for comprehensive eva
 factor SDF coefficients,
 selection of "useful" risk factors (those displaying non-zero population correlation with test asset returns), examination of model misspecification, validation of model identification, and heteroskedasticity and autocorrelation robust covariance matrix estimation.
 
+### Linear Asset Pricing Models
+
 Given $T$ observations on $N$ test asset excess returns collected in matrix 
 $R\in\mathbb R^{TxN}$,
 and $T$ observations on $K$ risk factors in $F\in\mathbb R^{TxK}$, 
@@ -81,8 +83,7 @@ This lack of identification has serious repercussions in its estimation and infe
 It is therefore important to filter out the problematic factors from the model.
 
 For **selecting the set of useful risk factors**, our toolkit implements the 
-iterative factor screening procedure of [@gospodinov2014misspecification]
-and the one-step Oracle selection procedure of [@quaini2023tradable].
+iterative factor screening procedure of [@gospodinov2014misspecification], the one-step Oracle selection procedure of [@quaini2023tradable], and the three-step procedure of [@feng2020taming].
 
 $$\gamma=\arg\min_{g\in\mathbb R^K}E[R_tM_t]'Var[R]^{-1}E[R_tM_t].$$
 The screening procedure of [@gospodinov2014misspecification] is based on the result
@@ -107,6 +108,8 @@ this procedure achieves the so-called "Oracle" variable selection property,
 i.e., it consistently selects the useful factors. More precisely, the
 probability that the factors selected by the estimator are indeed useful factors
 tends to 1 as the sample size tends to infinity.
+
+[@feng2020taming] propose a three-steps testing procedure that evaluates the contribution to cross-sectional pricing of any new factors on top of a set of control factors. The third step is a OLS regression of average returns on the covariances between asset returns and the new factors, as well as the control factors selected in either one of the first two steps. The first stwo steps consists in (i) a Lasso regression of average returns on the ovariances between asset returns and all control factors and (ii) a Lasso regression of the covariances between asset returns and the new factors on the ovariances between asset returns and all control factors. The second selection aims at correcting for potential omitted variables in the first selection.
 
 ### Model misspecification distance
 
@@ -253,6 +256,7 @@ from data on
   for a potential model misspecification) using the
   [@newey1994automatic] plug-in procedure to select the
   number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`.
+- `FGXFactorsTest()`: Computes the three-pass procedure of [@feng2020taming], which evaluates the contribution to cross-sectional pricing of any new factors on top of a set of control factors. The third step is a OLS regression of average returns on the covariances between asset returns and the new factors, as well as the control factors selected in either one of the first two steps. The first stwo steps consists in (i) a Lasso regression of average returns on the ovariances between asset returns and all control factors and (ii) a Lasso regression of the covariances between asset returns and the new factors on the ovariances between asset returns and all control factors. The second selection aims at correcting for potential omitted variables in the first selection. Tuning of the penalty parameters in the Lasso regressions is performed via Cross Validation (CV). Standard errors are computed following Feng Giglio and Xiu (2020) using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1.
 - `ChenFang2019BetaRankTest()`: Tests the null hypothesis of reduced rank in the matrix of regression
  loadings for test asset excess returns on risk factors using the [@chen2019improved]
  beta rank test. The test applies the [@kleibergen2006generalized]
@@ -284,8 +288,9 @@ The `intrinsicFRP` R package includes a dataset comprising following
 test asset excess returns and risk factors frequently used 
 in the asset pricing literature:
 
-- `returns`: Monthly observations from January 1970 to December 2021, containing excess returns data for 25 Size/Book-to-Market portfolios and 17 industry portfolios.
-- `factors`: Monthly observations from January 1970 to December 2021, containing data for the Fama-French 5 factors and the momentum factor.
+- `returns`: Monthly observations from July 1963 to February 2024, containing excess returns data for 25 Size/Book-to-Market portfolios and 17 industry portfolios.
+- `factors`: Monthly observations from July 1963 to February 2024, containing data for the Fama-French 5 factors and the momentum factor.
+- `risk_free`: Monthly observations from July 1963 to February 2024, containing returns data for the US T-bill, used as proxy for the risk free asset.
 
 This dataset was sourced from the [Kenneth French data library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html)
 and processed so that the observations on the test assets and the factors are not
@@ -299,10 +304,14 @@ of the risk-free rate.
 Let us ompute various factor risk premia estimates and corresponding 95% confidence intervals for the Fama-French 6 factors and a (simulated) "useless" factor.
 
 ```R
+# if you already have package `stats` installed you can skip the next line
+install.packages("stats")
+
 # import package data on 6 risk factors and 42 test asset excess returns
 # remove the first column containing the date
 factors = intrinsicFRP::factors[,-1]
 returns = intrinsicFRP::returns[,-1]
+RF = intrinsicFRP::risk_free[,-1]
 
 # simulate a useless factor and add it to the matrix of factors
 set.seed(23)
@@ -320,6 +329,63 @@ ff6 = 1:6         # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom"
 # model comprising the Fama-French 6 factors and the simulated useless factor
 ff6usl = 1:7      # "Mkt-RF" "SMB" "HML" "RMW" "CMA" "Mom" "Useless"
 
+# compute the factor SDF coefficients and their standard errors
+# for the Fama-MacBeth two-pass procedure
+fm_sdf = intrinsicFRP::SDFCoefficients(
+  returns,
+  factors[,ff6usl],
+  misspecification_robust = FALSE,
+  include_standard_errors = TRUE
+)
+# and for the misspecification-robust procedure of Gospodinov Kan and Robottu 
+gkr_sdf = intrinsicFRP::SDFCoefficients(
+  returns, factors[,ff6usl],
+  include_standard_errors = TRUE
+)
+```
+
+<!--```R
+# create dataframe
+df = data.frame(
+  Factor = factor(
+    rep(colnames(factors[,ff6usl]), 2),
+    levels = colnames(factors[,ff6usl])
+  ),
+  Estimator = factor(
+    rep(c("FM", "GKR"), each=ncol(factors[,ff6usl])),
+    levels = c("FM", "GKR")
+  ),
+  sdf_coefficients = c(fm_sdf$sdf_coefficients, gkr_sdf$sdf_coefficients),
+  standard_errors = c(fm_sdf$standard_errors, gkr_sdf$standard_errors)
+)
+
+# Create the plot
+ggplot2::ggplot(df, ggplot2::aes(
+  x = as.factor(.data$Factor), y = .data$sdf_coefficients, fill = .data$Estimator)) +
+  ggplot2::theme(text=ggplot2::element_text(size=16)) +
+  ggplot2::geom_bar(stat = "identity", position = "dodge", width=0.5, color="black") +
+  ggplot2::labs(x = "Factor", y = "SDF coefficient") +
+  ggplot2::geom_errorbar(ggplot2::aes(
+    x=as.factor(Factor),
+    ymin=sdf_coefficients - stats::qnorm(0.975) * standard_errors,
+    ymax=sdf_coefficients + stats::qnorm(0.975) * standard_errors),
+    linewidth=.8, position = ggplot2::position_dodge(0.5), width = 0.25)
+
+ggplot2::ggsave(
+  "inst/examples/sdf_coefficients.png",
+  width = 7,
+  height = 5,
+  dpi=600
+)
+```-->
+
+Visualization of the Fama MacBeth (FM) and the misspecification-robust (GKR) factor SDF coefficients estimators:
+
+<p float="left">
+<img src="inst/examples/sdf_coefficients.png" width="600" />
+</p>
+
+```R
 # compute tradable factor risk premia and their standard errors
 tfrp = intrinsicFRP::TFRP(returns, factors[,ff6usl], include_standard_errors = TRUE)
 
@@ -383,7 +449,7 @@ Tuning model score of the Oracle TFRP estimator:
 <img src="inst/examples/model_score.png" width="600" />
 </p>
 
-Visualization of the misspecification-robust factor risk premia (KRS-FRP), tradable factor risk premia (TFRP) and Oracle TFRP (O-TFRP) estimates:
+Visualization of the Fama MacBeth (FM), misspecification-robust (KRS), tradable (TFRP) and Oracle TFRP (O-TFRP) factor risk premia estimates:
 
 <p float="left">
 <img src="inst/examples/risk_premia.png" width="600" />
@@ -421,20 +487,28 @@ The results are:
 
 # results of the GKR factor screening procedure
 $sdf_coefficients
-         [,1]
-[1,] 3.136834
+          [,1]
+[1,]  6.401245
+[2,]  8.597950
+[3,] 12.483170
 
 $standard_errors
-        [,1]
-[1,] 1.13246
+         [,1]
+[1,] 1.600189
+[2,] 2.657617
+[3,] 4.173861
 
 $t_statistics
          [,1]
-[1,] 2.769929
+[1,] 4.000306
+[2,] 3.235211
+[3,] 2.990797
 
 $selected_factor_indices
      [,1]
 [1,]    1
+[2,]    3
+[3,]    6
 ```
 While the Oracle TFRP only removes the simulated useless factor, the
 procedure by [@gospodinov2014misspecification] only retains the market factor.
