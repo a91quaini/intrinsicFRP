@@ -12,17 +12,29 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // FGXThreePassCovarianceCpp
-arma::mat FGXThreePassCovarianceCpp(const arma::mat& returns, const arma::mat& control_factors, const arma::mat& new_factors, const arma::vec& sdf_coefficients, const arma::uvec& idx_selected);
-RcppExport SEXP _intrinsicFRP_FGXThreePassCovarianceCpp(SEXP returnsSEXP, SEXP control_factorsSEXP, SEXP new_factorsSEXP, SEXP sdf_coefficientsSEXP, SEXP idx_selectedSEXP) {
+arma::mat FGXThreePassCovarianceCpp(const arma::mat& returns, const arma::mat& selected_controls, const arma::mat& new_factors, const arma::vec& sdf_coefficients);
+RcppExport SEXP _intrinsicFRP_FGXThreePassCovarianceCpp(SEXP returnsSEXP, SEXP selected_controlsSEXP, SEXP new_factorsSEXP, SEXP sdf_coefficientsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
-    Rcpp::traits::input_parameter< const arma::mat& >::type control_factors(control_factorsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type selected_controls(selected_controlsSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type new_factors(new_factorsSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type sdf_coefficients(sdf_coefficientsSEXP);
-    Rcpp::traits::input_parameter< const arma::uvec& >::type idx_selected(idx_selectedSEXP);
-    rcpp_result_gen = Rcpp::wrap(FGXThreePassCovarianceCpp(returns, control_factors, new_factors, sdf_coefficients, idx_selected));
+    rcpp_result_gen = Rcpp::wrap(FGXThreePassCovarianceCpp(returns, selected_controls, new_factors, sdf_coefficients));
+    return rcpp_result_gen;
+END_RCPP
+}
+// FGXThreePassCovarianceNoControlsCpp
+arma::mat FGXThreePassCovarianceNoControlsCpp(const arma::mat& returns, const arma::mat& new_factors, const arma::vec& sdf_coefficients);
+RcppExport SEXP _intrinsicFRP_FGXThreePassCovarianceNoControlsCpp(SEXP returnsSEXP, SEXP new_factorsSEXP, SEXP sdf_coefficientsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type new_factors(new_factorsSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type sdf_coefficients(sdf_coefficientsSEXP);
+    rcpp_result_gen = Rcpp::wrap(FGXThreePassCovarianceNoControlsCpp(returns, new_factors, sdf_coefficients));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -179,7 +191,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_intrinsicFRP_FGXThreePassCovarianceCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceCpp, 5},
+    {"_intrinsicFRP_FGXThreePassCovarianceCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceCpp, 4},
+    {"_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 6},
     {"_intrinsicFRP_GKRFactorScreeningCpp", (DL_FUNC) &_intrinsicFRP_GKRFactorScreeningCpp, 4},
     {"_intrinsicFRP_HACCovarianceMatrixCpp", (DL_FUNC) &_intrinsicFRP_HACCovarianceMatrixCpp, 2},

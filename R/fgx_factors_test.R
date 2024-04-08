@@ -108,7 +108,7 @@ FGXFactorsTest = function(
 
     second_lasso = glmnet::cv.glmnet(
       x = cov_returns_control_factors,
-      y = cov_returns_new_factors[, ii, drop=FALSE],
+      y = cov_returns_new_factors[, ii],
       n_folds = n_folds
     )
 
@@ -140,38 +140,59 @@ FGXFactorsTest = function(
   ## Estimate the Newey-West type covariance estimator of the new factors'
   ## SDF coefficients
 
-  # lasso selection:
-  # lasso regression of each new factors on the control factors.
-  control_factors = control_factors[,idx_selected]
-  cov_selected = c()
+  # if no control factor was selected
+  if (length(idx_selected) == 0) {
 
-  for (ii in 1:n_new) {
-
-    lasso_fit = glmnet::cv.glmnet(
-      x = control_factors,
-      y = new_factors[, ii, drop=FALSE],
-      n_folds = n_folds
+    # compute the Newey-West type covariance estimator
+    covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp`,
+      gross_returns,
+      new_factors,
+      sdf_coefficients[-1]
     )
 
-    lasso_fit_coeffs = stats::coef(lasso_fit, s = "lambda.min")[-1]
-    cov_selected = union(
-      cov_selected,
-      which(lasso_fit_coeffs != 0, arr.ind = T)
+  # if once control factor was selected
+  } else if (length(idx_selected) == 1) {
+
+    # compute the Newey-West type covariance estimator
+    covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
+      gross_returns,
+      control_factors[, idx_selected, drop = FALSE],
+      new_factors,
+      sdf_coefficients[-1]
+    )
+
+  } else {
+
+    # lasso selection:
+    # lasso regression of each new factors on the control factors.
+    control_factors = control_factors[,idx_selected]
+    cov_selected = c()
+
+    for (ii in 1:n_new) {
+
+      lasso_fit = glmnet::cv.glmnet(
+        x = control_factors,
+        y = new_factors[, ii],
+        n_folds = n_folds
+      )
+
+      lasso_fit_coeffs = stats::coef(lasso_fit, s = "lambda.min")[-1]
+      cov_selected = union(
+        cov_selected,
+        which(lasso_fit_coeffs != 0, arr.ind = T)
+      )
+
+    }
+
+    # compute the Newey-West type covariance estimator
+    covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
+      gross_returns,
+      control_factors[, cov_selected, drop = FALSE],
+      new_factors,
+      sdf_coefficients[-1]
     )
 
   }
-
-  # turn R indexing into cpp indexing
-  cov_selected = cov_selected - 1
-
-  # compute the Newey-West type covariance estimator
-  covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
-    gross_returns,
-    control_factors,
-    new_factors,
-    sdf_coefficients[-1],
-    cov_selected
-  )
 
   # extract the standard errors
   standard_errors = sqrt(diag(covariance)) / sqrt(nrow(gross_returns))
