@@ -115,7 +115,6 @@ Rcpp::List ReturnFRPCpp(
             returns,
             factors,
             beta,
-            covariance_factors_returns,
             variance_returns,
             mean_returns,
             hac_prewhite
@@ -125,7 +124,6 @@ Rcpp::List ReturnFRPCpp(
             returns,
             factors,
             beta,
-            covariance_factors_returns,
             variance_returns,
             mean_returns,
             hac_prewhite
@@ -195,7 +193,6 @@ arma::vec StandardErrorsFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,
-  const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool hac_prewhite
@@ -204,44 +201,32 @@ arma::vec StandardErrorsFRPCpp(
   // Compute the matrix H as the inverse of beta' * beta
   const arma::mat h_matrix  = InvSympd(beta.t() * beta);
 
-  // Compute matrix A used in the standard error calculation
-  const arma::mat a_matrix = h_matrix * beta.t();
-
   // Center the returns and factors
   const arma::mat returns_centred = returns.each_row() - mean_returns.t();
-  const arma::vec mean_factors = arma::mean(factors).t();
-  const arma::mat factors_centred = factors.each_row() - mean_factors.t();
+  const arma::mat factors_centred = factors.each_row() - arma::mean(factors);
 
-  // Intermediate matrices for standard error calculation
-  const arma::mat gamma = returns_centred * a_matrix.t();
-  const arma::vec gamma_true = a_matrix * mean_returns;
-  const arma::mat phi = gamma - factors;
-  const arma::mat phi_centred = phi.each_row() - (gamma_true - mean_factors).t();
+  // term1: mean returns
+  const arma::mat term1 = returns_centred * beta * h_matrix;
 
-  // Compute variance of factors and solve for fac_centred_var_fac_inv
-  const arma::mat variance_factors = arma::cov(factors);
-  const arma::mat fac_centred_var_fac_inv = SolveSympd(
-    variance_factors,
+  // term2: beta
+  const arma::mat phi_centred = term1 - factors_centred;
+  const arma::mat fac_cen_var_fac_inv = SolveSympd(
+    arma::cov(factors),
     factors_centred.t()
   ).t();
 
-  // Compute matrix Z used in standard error calculation
-  const arma::mat z = fac_centred_var_fac_inv.each_col() % (
+  // term3: misspecification
+  const arma::mat z = fac_cen_var_fac_inv.each_col() % (
     returns_centred * (mean_returns - beta * frp)
   );
 
   arma::mat series =
     // mean term
-    (gamma.each_row() - (a_matrix * mean_returns).t()) -
+    term1 -
     // beta term
-    phi_centred.each_col() % (factors_centred * SolveSympd(
-        variance_factors,
-        gamma_true
-    )) +
-    // error term
-    (fac_centred_var_fac_inv.each_col() % (
-        returns_centred * (mean_returns - beta * frp)
-    )) * h_matrix;
+    phi_centred.each_col() % (fac_cen_var_fac_inv * frp) +
+    // misspecification term
+    z * h_matrix;
 
   // Return the HAC standard errors of the estimator
   return HACStandardErrorsCpp(series, hac_prewhite) /
@@ -257,7 +242,6 @@ arma::vec StandardErrorsKRSFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,
-  const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool hac_prewhite

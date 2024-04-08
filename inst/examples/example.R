@@ -125,7 +125,7 @@ ggplot2::ggplot(df, ggplot2::aes(
 
 ggplot2::ggsave(
   "inst/examples/risk_premia.png",
-  width = 7,
+  width = 9,
   height = 5,
   dpi=600
 )

@@ -112,7 +112,6 @@ arma::vec StandardErrorsFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,
-  const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool hac_prewhite = false
@@ -129,7 +128,6 @@ arma::vec StandardErrorsKRSFRPCpp(
   const arma::mat& returns,
   const arma::mat& factors,
   const arma::mat& beta,
-  const arma::mat& covariance_factors_returns,
   const arma::mat& variance_returns,
   const arma::vec& mean_returns,
   const bool hac_prewhite = false
