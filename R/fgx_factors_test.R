@@ -184,13 +184,29 @@ FGXFactorsTest = function(
 
     }
 
-    # compute the Newey-West type covariance estimator
-    covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
-      gross_returns,
-      control_factors[, cov_selected, drop = FALSE],
-      new_factors,
-      sdf_coefficients[-1]
-    )
+    if (length(cov_selected) == 0) {
+
+      # compute the Newey-West type covariance estimator
+      covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp`,
+        gross_returns,
+        new_factors,
+        sdf_coefficients[1 + 1:n_new]
+      )
+
+    } else {
+
+      # index selected sdf_coefficients
+      idx_sdf_coeff = 1 + c(1:n_new, cov_selected + n_new)
+
+      # compute the Newey-West type covariance estimator
+      covariance = .Call(`_intrinsicFRP_FGXThreePassCovarianceCpp`,
+        gross_returns,
+        control_factors[, cov_selected, drop = FALSE],
+        new_factors,
+        sdf_coefficients[idx_sdf_coeff]
+      )
+
+    }
 
   }
 
