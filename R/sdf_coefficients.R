@@ -10,7 +10,7 @@
 #' @description Computes the SDF coefficients of Fama-MachBeth (1973) <doi:10.1086/260061>
 #' `FMSDFcoefficients = (C' * C)^{-1} * C' * E[R]`
 #' or the misspecification-robust SDF coefficients of
-#' Gospodinov-Kan-Robotti (2014) <https:#'doi.org/10.1093/rfs/hht135>:
+#' Gospodinov-Kan-Robotti (2014) <doi:org/10.1093/rfs/hht135>:
 #' `GKRSDFcoefficients = (C' * V[R]^{-1} * C)^{-1} * C' * V[R]^{-1} * E[R]`
 #' from data on factors `F` and test asset excess returns `R`.
 #' These notions of SDF coefficients minimize pricing errors:

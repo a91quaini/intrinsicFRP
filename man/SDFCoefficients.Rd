@@ -56,7 +56,7 @@ standard errors in \code{"standard_errors"};
 Computes the SDF coefficients of Fama-MachBeth (1973) \url{doi:10.1086/260061}
 \verb{FMSDFcoefficients = (C' * C)^\{-1\} * C' * E[R]}
 or the misspecification-robust SDF coefficients of
-Gospodinov-Kan-Robotti (2014) \url{https:#'doi.org/10.1093/rfs/hht135}:
+Gospodinov-Kan-Robotti (2014) \url{doi:org/10.1093/rfs/hht135}:
 \verb{GKRSDFcoefficients = (C' * V[R]^\{-1\} * C)^\{-1\} * C' * V[R]^\{-1\} * E[R]}
 from data on factors \code{F} and test asset excess returns \code{R}.
 These notions of SDF coefficients minimize pricing errors:
