@@ -21,3 +21,8 @@
 * Function `GKRFactorScreening` added.
 * Function `HACcovariance` added.
 * Function `HJMisspecificationTest` extended and renamed `HJMisspecificationDistance`.
+
+# intrinsicFRP 2.1.0
+
+* Function `SDFCoefficients` added.
+* Function `FGXFactorsTest` added.
