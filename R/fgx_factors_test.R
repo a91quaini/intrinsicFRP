@@ -8,7 +8,7 @@
 #'
 #' @name FGXFactorsTest
 #' @description Computes the three-pass procedure of Feng Giglio and Xiu (2020)
-#' <doi:https://doi.org/10.1111/jofi.12883>, which evaluates the contribution
+#' <doi:org/10.1111/jofi.12883>, which evaluates the contribution
 #' to cross-sectional pricing of any new factors on top of a set of control
 #' factors.
 #' The third step is a OLS regression of average returns on the covariances between
