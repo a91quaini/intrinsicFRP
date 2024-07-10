@@ -313,7 +313,7 @@ Rcpp::List GiglioXiu2021RiskPremiaCpp(
   arma::vec e_vals;
   arma::mat U;
   arma::mat V;
-  arma::svd(U, e_vals, V, centered_returns.t() / (n_assets * n_observations));
+  arma::svd(U, e_vals, V, centered_returns.t() / std::sqrt(n_assets * n_observations));
   e_vals = arma::square(e_vals);
 
 
