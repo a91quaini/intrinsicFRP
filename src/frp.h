@@ -133,4 +133,12 @@ arma::vec StandardErrorsKRSFRPCpp(
   const bool hac_prewhite = false
 );
 
+// Compute the factor risk premia estimates of Giglio Xiu 2021.
+// [[Rcpp::export]]
+Rcpp::List GiglioXiu2021RiskPremiaCpp(
+  const arma::mat& returns,
+  const arma::mat& factors,
+  const int which_n_pca = 0
+);
+
 #endif

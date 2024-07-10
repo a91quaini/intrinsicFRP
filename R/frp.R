@@ -109,3 +109,65 @@ FRP = function(
   ))
 
 }
+
+#' @title Compute Factor Risk Premia using Giglio and Xiu (2021) Method
+#'
+#' @description Computes the factor risk premia using the 3-step procedure of
+#' Giglio and Xiu (2021) <doi:10.1086/714090>. The procedure consists in
+#' 1) extracting p PCA from returns, where p is a consistent estimator of the
+#' number of strong latent factors, 2) compute a cross-sectional regression of
+#' average returns on the estimated betas of the p latent factors, and 3) compute
+#' a time-series regression of observed factors on the p latent factors to obtain
+#' their mimicking portfolio risk premia.
+#'
+#' @param returns A `n_observations x n_returns` matrix of asset returns.
+#' @param factors A `n_observations x n_factors` matrix of risk factors.
+#' @param which_n_pca Method to determine the number of PCA components:
+#' `0` for Giglio Xiu (2021) <doi:10.1086/714090>,
+#' `-1` for Ahn Horenstein (2013) <doi:10.3982/ECTA8968>,
+#' or any positive integer for a specific number of PCs.
+#' @param check_arguments A boolean: `TRUE` for internal check of all function
+#' arguments; `FALSE` otherwise. Default is `TRUE`.
+#'
+#' @return A list containing:
+#' \describe{
+#'   \item{risk_premia}{A matrix of factor risk premia.}
+#'   \item{n_pca}{The number of principal components used.}
+#' }
+#' @examples
+#' \dontrun{
+#' returns <- matrix(rnorm(200), nrow=20, ncol=10)
+#' factors <- matrix(rnorm(60), nrow=20, ncol=3)
+#' which_n_pca <- 0
+#' result <- GiglioXiu2021RiskPremia(returns, factors, which_n_pca)
+#' print(result)
+#' }
+#' @export
+GiglioXiu2021RiskPremia = function(
+  returns,
+  factors,
+  which_n_pca = 0,
+  check_arguments = TRUE
+) {
+
+  # check function arguments
+  if (check_arguments) {
+
+    stopifnot("`returns` must contain numeric values" = is.numeric(returns))
+    stopifnot("`factors` must contain numeric values" = is.numeric(factors))
+    stopifnot("`returns` and `factors` must have the same number of rows" = nrow(returns) == nrow(factors))
+    stopifnot("`returns` must not contain missing values (NA/NaN)" = !anyNA(returns))
+    stopifnot("`factors` must not contain missing values (NA/NaN)" = !anyNA(factors))
+
+    stopifnot("`which_n_pca` must be numeric" = is.numeric(which_n_pca))
+
+  }
+
+  # Ensure the function is defined in the C++ file and compiled
+  return(.Call(`_intrinsicFRP_GiglioXiu2021RiskPremiaCpp`,
+    returns,
+    factors,
+    which_n_pca
+  ))
+
+}

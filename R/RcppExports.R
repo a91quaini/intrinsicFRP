@@ -13,6 +13,10 @@ FRPCpp <- function(returns, factors, misspecification_robust = TRUE, include_sta
     .Call(`_intrinsicFRP_FRPCpp`, returns, factors, misspecification_robust, include_standard_errors, hac_prewhite, target_level_gkr2014_screening)
 }
 
+GiglioXiu2021RiskPremiaCpp <- function(returns, factors, which_n_pca = 0L) {
+    .Call(`_intrinsicFRP_GiglioXiu2021RiskPremiaCpp`, returns, factors, which_n_pca)
+}
+
 GKRFactorScreeningCpp <- function(returns, factors, target_level = 0.05, hac_prewhite = FALSE) {
     .Call(`_intrinsicFRP_GKRFactorScreeningCpp`, returns, factors, target_level, hac_prewhite)
 }

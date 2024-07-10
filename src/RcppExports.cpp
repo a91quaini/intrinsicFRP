@@ -54,6 +54,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// GiglioXiu2021RiskPremiaCpp
+Rcpp::List GiglioXiu2021RiskPremiaCpp(const arma::mat& returns, const arma::mat& factors, const int which_n_pca);
+RcppExport SEXP _intrinsicFRP_GiglioXiu2021RiskPremiaCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP which_n_pcaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type returns(returnsSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type factors(factorsSEXP);
+    Rcpp::traits::input_parameter< const int >::type which_n_pca(which_n_pcaSEXP);
+    rcpp_result_gen = Rcpp::wrap(GiglioXiu2021RiskPremiaCpp(returns, factors, which_n_pca));
+    return rcpp_result_gen;
+END_RCPP
+}
 // GKRFactorScreeningCpp
 Rcpp::List GKRFactorScreeningCpp(const arma::mat& returns, const arma::mat& factors, const double target_level, const bool hac_prewhite);
 RcppExport SEXP _intrinsicFRP_GKRFactorScreeningCpp(SEXP returnsSEXP, SEXP factorsSEXP, SEXP target_levelSEXP, SEXP hac_prewhiteSEXP) {
@@ -194,6 +207,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_intrinsicFRP_FGXThreePassCovarianceCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceCpp, 4},
     {"_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp", (DL_FUNC) &_intrinsicFRP_FGXThreePassCovarianceNoControlsCpp, 3},
     {"_intrinsicFRP_FRPCpp", (DL_FUNC) &_intrinsicFRP_FRPCpp, 6},
+    {"_intrinsicFRP_GiglioXiu2021RiskPremiaCpp", (DL_FUNC) &_intrinsicFRP_GiglioXiu2021RiskPremiaCpp, 3},
     {"_intrinsicFRP_GKRFactorScreeningCpp", (DL_FUNC) &_intrinsicFRP_GKRFactorScreeningCpp, 4},
     {"_intrinsicFRP_HACCovarianceMatrixCpp", (DL_FUNC) &_intrinsicFRP_HACCovarianceMatrixCpp, 2},
     {"_intrinsicFRP_HACVarianceCpp", (DL_FUNC) &_intrinsicFRP_HACVarianceCpp, 2},
