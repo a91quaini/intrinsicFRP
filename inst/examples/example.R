@@ -8,6 +8,8 @@ factors = intrinsicFRP::factors[,-1]
 returns = intrinsicFRP::returns[,-1]
 RF = intrinsicFRP::risk_free[,-1]
 
+GiglioXiu2021RiskPremia(returns, factors, which_n_pca = 0)
+
 # simulate a useless factor and add it to the matrix of factors
 set.seed(23)
 factors = cbind(
