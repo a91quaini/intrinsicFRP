@@ -1,5 +1,6 @@
 // Author: Alberto Quaini
 
+#include "n_pca.h"
 #include "utils.h"
 
 ////////////////////////////////////////////
@@ -41,7 +42,7 @@ unsigned int NPCA_GiglioXiu2021Cpp(
 
 Rcpp::List NPCA_AhnHorenstein2013Cpp(
   const arma::vec& evals,
-  unsigned int n_max = 0
+  unsigned int n_max
 ) {
 
   // set the number of eigenvalues
