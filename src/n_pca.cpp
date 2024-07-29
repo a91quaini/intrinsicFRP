@@ -23,7 +23,7 @@ unsigned int NPCA_GiglioXiu2021Cpp(
 
   // compute the penalty term
   const double scaling = 0.5 * arma::median(evals.head(n_max));
-  const double penalty = scaling * (std::log(n_assets) + std::log(n_observations)) /
+  const double penalty = scaling * (std::log(n_assets) + std::log(n_observations)) *
     (std::pow(n_assets, -0.5) + std::pow(n_observations, -0.5));
 
   // compute the criterion for each index
