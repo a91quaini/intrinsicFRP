@@ -17,6 +17,8 @@ unsigned int NPCA_GiglioXiu2021Cpp(
 
 Rcpp::List NPCA_AhnHorenstein2013Cpp(
   const arma::vec& evals,
+  const unsigned int n_assets,
+  const unsigned int n_observations,
   unsigned int n_max = 0
 );
 

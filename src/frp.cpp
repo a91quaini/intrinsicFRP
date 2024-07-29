@@ -330,7 +330,7 @@ Rcpp::List GiglioXiu2021RiskPremiaCpp(
 
     // use the method in Ahn Horenstein 2013
     unsigned int n_max_pca = std::floor(2 * n_assets / 3);
-    n_pca = NPCA_AhnHorenstein2013Cpp(e_vals, n_max_pca)["er"];
+    n_pca = NPCA_AhnHorenstein2013Cpp(e_vals, n_assets, n_observations, n_max_pca)["er"];
 
   } else {
 
