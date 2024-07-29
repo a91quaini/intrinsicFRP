@@ -14,8 +14,8 @@ unsigned int NPCA_GiglioXiu2021Cpp(
 ) {
 
   // if n_max <= zero or >= n_assets, set it to n_assets - 1
-  if (n_max <= 0 || n_max >= evals.n_elem) {
-    n_max = evals.n_elem - 1;
+  if (n_max <= 0 || n_max >= n_assets) {
+    n_max = n_assets - 1;
   }
 
   // compute the penalty term
