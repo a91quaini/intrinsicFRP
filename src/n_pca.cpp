@@ -13,12 +13,9 @@ unsigned int NPCA_GiglioXiu2021Cpp(
   unsigned int n_max
 ) {
 
-  // minimum between n_assets and n_observations
-  const unsigned int min_NT = std::min(n_assets, n_observations);
-
   // if n_max <= zero or >= n_assets, set it to n_assets - 1
-  if (n_max <= 0 || n_max >= min_NT) {
-    n_max = min_NT - 1;
+  if (n_max <= 0 || n_max >= evals.n_elem) {
+    n_max = evals.n_elem - 1;
   }
 
   // compute the penalty term
