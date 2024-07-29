@@ -9,10 +9,10 @@
 // Implement the procedure to determine the number of PCA
 // that summarize the risk in returns of Giglio Xiu (2021).
 unsigned int NPCA_GiglioXiu2021Cpp(
-  const arma::vec& e_vals,
+  const arma::vec& evals,
   const unsigned int n_assets,
   const unsigned int n_observations,
-  unsigned int p_max
+  unsigned int n_max
 );
 
 Rcpp::List NPCA_AhnHorenstein2013Cpp(
