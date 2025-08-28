@@ -48,7 +48,7 @@ plug-in procedure to select the number of relevant lags, i.e.,
 For the standard error computations, the function allows to internally
 pre-whiten the series by fitting a VAR(1),
 i.e., a vector autoregressive model of order 1.
-All details are found in Quaini-Trojani-Yuan (2023) \url{doi:10.2139/ssrn.4574683}.
+All details are found in Bryzgalova-Quaini-Trojani-Yuan (2025) \url{doi:10.2139/ssrn.4574683}.
 }
 \examples{
 # import package data on 6 risk factors and 42 test asset excess returns

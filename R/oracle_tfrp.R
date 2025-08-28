@@ -8,7 +8,7 @@
 #'
 #' @name OracleTFRP
 #' @description Computes Oracle tradable factor risk premia of
-#' Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683> from data on
+#' Bryzgalova-Quaini-Trojani-Yuan (2025) <doi:10.2139/ssrn.4574683> from data on
 #' `K` factors `F = [F_1,...,F_K]'` and test asset excess returns `R`:
 #' `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|`,
 #' where `TFRP` is the tradable factor risk premia estimator, `tau > 0` is a
@@ -50,7 +50,7 @@
 #' For the standard error computations, the function allows to internally
 #' pre-whiten the series by fitting a VAR(1),
 #' i.e., a vector autoregressive model of order 1.
-#' All details are found in Quaini-Trojani-Yuan (2023) <doi:10.2139/ssrn.4574683>.
+#' All details are found in Bryzgalova-Quaini-Trojani-Yuan (2025) <doi:10.2139/ssrn.4574683>.
 #'
 #' @param returns A `n_observations x n_returns`-dimensional matrix of test asset
 #' excess returns.

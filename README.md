@@ -40,7 +40,7 @@ asset returns on regression coefficients:
 $$E[R_t] = \beta\lambda + \nu,$$
 where $\nu\in\mathbb R^N$ is the vector of model's pricing errors. 
 
-For **estimating and testing factor risk premia**, our toolkit incorporates the classic two-pass approach outlined by [@fama1973risk], the misspecification-robust methodology proposed by [@kan2013pricing], and the tradable and "Oracle" tradable approaches introduced by [@quaini2023tradable].
+For **estimating and testing factor risk premia**, our toolkit incorporates the classic two-pass approach outlined by [@fama1973risk], the misspecification-robust methodology proposed by [@kan2013pricing], and the tradable and "Oracle" tradable approaches introduced by [@bryzgalova2025tradable].
 
 The classic two-pass factor risk premia are given by:
 $$\lambda=(\beta'\beta)^{-1}\beta'E[R_t].$$
@@ -83,7 +83,7 @@ This lack of identification has serious repercussions in its estimation and infe
 It is therefore important to filter out the problematic factors from the model.
 
 For **selecting the set of useful risk factors**, our toolkit implements the 
-iterative factor screening procedure of [@gospodinov2014misspecification], the one-step Oracle selection procedure of [@quaini2023tradable], and the three-step procedure of [@feng2020taming].
+iterative factor screening procedure of [@gospodinov2014misspecification], the one-step Oracle selection procedure of [@bryzgalova2025tradable], and the three-step procedure of [@feng2020taming].
 
 $$\gamma=\arg\min_{g\in\mathbb R^K}E[R_tM_t]'Var[R]^{-1}E[R_tM_t].$$
 The screening procedure of [@gospodinov2014misspecification] is based on the result
@@ -96,7 +96,7 @@ presence of useless factors, and not to weak factors or more general linear depe
 structures in the population correlation matrix between test asset returns and
 risk factors.
 
-The screening methodology in [@quaini2023tradable] removes the factors associated to a zero Oracle tradable factor risk premia estimates, which arise from the one-step 
+The screening methodology in [@bryzgalova2025tradable] removes the factors associated to a zero Oracle tradable factor risk premia estimates, which arise from the one-step 
 closed-form estimator:
 $$\check{\lambda}_k = sign(\hat\lambda_k)\max\{|\hat{\lambda}_k|-\tau/||\rho_k||_2^2,0\},$$
 where $\hat{\lambda}=\widehat{Cov}[R_t,F_t]\widehat{Var}[R_t]^{-1}\widehat{E}[R_t]$ is the sample
@@ -197,8 +197,8 @@ R package `intrinsicFRP` implements the following functions:
 
 - `FRP()`: Computes the [@fama1973risk] factor risk premia: `FMFRP = (beta' * beta)^{-1} * beta' * E[R]` where `beta = Cov[R, F] * V[F]^{-1}` or the misspecification-robust factor risk premia of [@kan2013pricing]: `KRSFRP = (beta' * V[R]^{-1} * beta)^{-1} * beta' * V[R]^{-1} * E[R]`, from data on factors `F` and test asset excess returns `R`. These notions of factor risk premia are by construction the negative covariance of factors `F` with candidate SDF `M = 1 - d' * (F - E[F])`, where SDF coefficients `d` are obtained by minimizing pricing errors: `argmin_{d} (E[R] - Cov[R,F] * d)' * (E[R] - Cov[R,F] * d)` and `argmin_{d} (E[R] - Cov[R,F] * d)' * V[R]^{-1} * (E[R] - Cov[R,F] * d)`, respectively. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors (accounting
   for a potential model misspecification) using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All the details can be found in [@kan2013pricing].
-- `TFRP()`: Computes tradable factor risk premia from data on factors `F` and test asset excess returns `R`: `TFRP = Cov[F, R] * Var[R]^{-1} * E[R]`; which are by construction the negative covariance of factors `F` with the SDF projection on asset returns, i.e., the minimum variance SDF. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All details are found in [@quaini2023tradable].
-- `OracleTFRP()`: Computes Oracle tradable factor risk premia of [@quaini2023tradable] 
+- `TFRP()`: Computes tradable factor risk premia from data on factors `F` and test asset excess returns `R`: `TFRP = Cov[F, R] * Var[R]^{-1} * E[R]`; which are by construction the negative covariance of factors `F` with the SDF projection on asset returns, i.e., the minimum variance SDF. Optionally computes the corresponding heteroskedasticity and autocorrelation robust standard errors using the [@newey1994automatic] plug-in procedure to select the number of relevant lags, i.e., `n_lags = 4 * (n_observations/100)^(2/9)`. For the standard error computations, the function allows to internally pre-whiten the series by fitting a VAR(1), i.e., a vector autoregressive model of order 1. All details are found in [@bryzgalova2025tradable].
+- `OracleTFRP()`: Computes Oracle tradable factor risk premia of [@bryzgalova2025tradable] 
 from data on
  `K` factors `F = [F_1,...,F_K]'` and test asset excess returns `R`:
  `OTFRP = argmin_x ||TFRP - x||_2^2 + tau * sum_{k=1}^K w_k * |x_k|`,
@@ -241,7 +241,7 @@ from data on
  For the standard error computations, the function allows to internally
  pre-whiten the series by fitting a VAR(1),
  i.e., a vector autoregressive model of order 1.
- All details are found in [@quaini2023tradable].
+ All details are found in [@bryzgalova2025tradable].
 - `SDFCoefficients`: Computes the SDF coefficients of [@fama1973risk]:
   `FMSDFcoefficients = (C' * C)^{-1} * C' * E[R]`,
   or the misspecification-robust SDF coefficients of

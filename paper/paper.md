@@ -23,11 +23,11 @@ bibliography: paper.bib
 
 # Summary
 
-`intrinsicFRP` is a lightweight R package providing an efficient implementation of methods from [@quaini2023tradable] for estimating and testing asset pricing models based on tradable factor risk premia. These risk premia are given by the negative factor covariance with the Stochastic Discount Factor projected on returns. They are robust to model misspecification, asset repackaging and to the presence of factors that are weakly correlated with returns (called weak factors from here on).
+`intrinsicFRP` is a lightweight R package providing an efficient implementation of methods from [@bryzgalova2025tradable] for estimating and testing asset pricing models based on tradable factor risk premia. These risk premia are given by the negative factor covariance with the Stochastic Discount Factor projected on returns. They are robust to model misspecification, asset repackaging and to the presence of factors that are weakly correlated with returns (called weak factors from here on).
 
 A simple estimator for tradable factor risk premia, replacing population moments with empirical ones, remains consistent and asymptotically Gaussian, even for weak factors having correlations with returns that vanish at a rate of $1/T^\alpha$, where $T$ is the sample size (for $\alpha>1/2$). For slowly vanishing weak factors ($1/T^{1/2}$), the simple exhibits a bias term, but this doesn't affect other factor risk premia.
 
-[@quaini2023tradable] further introduces an Oracle estimator that enhances the simple one by using adaptively weighted lasso penalization to consistently remove problematic weak factors. It consistently removes the risk premium of any weak factor and possesses an efficient asymptotic Gaussian distribution for the remaining factors.
+[@bryzgalova2025tradable] further introduces an Oracle estimator that enhances the simple one by using adaptively weighted lasso penalization to consistently remove problematic weak factors. It consistently removes the risk premium of any weak factor and possesses an efficient asymptotic Gaussian distribution for the remaining factors.
 
 These properties of the simple and Oracle tradable factor risk premia estimators are noteworthy compared to commonly used estimators in the literature, like the Fama-MacBeth [@fama1973risk] and misspecification-robust [@kan2013pricing] estimators. These latter estimators, even in standard settings, may exhibit non-Gaussian asymptotic distributions and may not converge to zero for weak factors, as shown by in [@kan1999two], [@kleibergen2009tests], and [@gospodinov2014misspecification].
 
@@ -41,13 +41,13 @@ In Figure 1, the misspecification-robust risk premium on the useless factor has 
 
 The R package `intrinsicFRP` is helpful for researchers and practitioners in finance due to the following pressing issues:
 
-- Lack of Existing Code for Cutting-Edge Methods: The field of financial econometrics is rapidly advancing. However, one major challenge is the absence of readily available code, especially in R, to implement the state-of-the-art methods. The `intrinsicFRP` package directly addresses this gap by providing a comprehensive and efficient implementation of the novel techniques established in [@quaini2023tradable].
+- Lack of Existing Code for Cutting-Edge Methods: The field of financial econometrics is rapidly advancing. However, one major challenge is the absence of readily available code, especially in R, to implement the state-of-the-art methods. The `intrinsicFRP` package directly addresses this gap by providing a comprehensive and efficient implementation of the novel techniques established in [@bryzgalova2025tradable].
 
 - Dependency on Closed-Source Software: Historically, legacy code for factor models in finance has predominantly been written in proprietary programming languages like MATLAB. This dependence on closed-source software poses significant limitations, hindering accessibility, transparency, and collaboration within the research community. The `intrinsicFRP` R package is an open-source alternative that allows researchers to perform factor risk premia estimation and testing in a familiar, open environment.
 
 By addressing these two key issues, the `intrinsicFRP` R package empowers researchers and practitioners in finance to:
 
-- Readily apply the methods developed in [@quaini2023tradable] to their own research, facilitating the exploration of new avenues in asset pricing models and risk premia estimation. 
+- Readily apply the methods developed in [@bryzgalova2025tradable] to their own research, facilitating the exploration of new avenues in asset pricing models and risk premia estimation. 
 
 - Promote open-source science software and overcome MATLAB dependencies, thereby improving transparency and reproducibility of research in the Asset Pricing and related fields. By eliminating software constraints, we aim to facilitate access to advanced methods for finance researchers and practitioners, fostering collaboration among researchers and enabling the wider financial community to further develop and validate the suggested approaches.
 
