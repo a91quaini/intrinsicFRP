@@ -133,12 +133,17 @@ arma::vec StandardErrorsKRSFRPCpp(
   const bool hac_prewhite = false
 );
 
-// Compute the factor risk premia estimates of Giglio Xiu 2021.
+// Compute the factor risk premia estimates of Giglio Xiu (2021).
+// If which_n_pca == 0, use GX automatic selection (capped by n_max_pca).
+// If which_n_pca  <  0, use Ahn–Horenstein (2013) (capped by n_max_pca).
+// If which_n_pca  >  0, use that exact number (no capping).
+//
 // [[Rcpp::export]]
 Rcpp::List GiglioXiu2021RiskPremiaCpp(
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const int which_n_pca = 0
+    const arma::mat& returns,
+    const arma::mat& factors,
+    const int which_n_pca = 0,
+    const int n_max_pca   = 0
 );
 
 #endif

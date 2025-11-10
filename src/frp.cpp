@@ -295,53 +295,50 @@ arma::vec StandardErrorsKRSFRPCpp(
 ///// GiglioXiu2021RiskPremiaCpp ////
 
 Rcpp::List GiglioXiu2021RiskPremiaCpp(
-  const arma::mat& returns,
-  const arma::mat& factors,
-  const int which_n_pca
+    const arma::mat& returns,
+    const arma::mat& factors,
+    const int which_n_pca,
+    const int n_max_pca
 ) {
+  // dimensions
+  const unsigned int n_assets        = returns.n_cols;
+  const unsigned int n_observations  = returns.n_rows;
 
-  // parameters
-  const unsigned int n_assets = returns.n_cols;
-  const unsigned int n_observations = returns.n_rows;
+  // center returns and factors
+  const arma::rowvec mean_returns     = arma::mean(returns, 0);
+  const arma::mat centered_returns    = returns.each_row() - mean_returns;
+  const arma::mat centered_factors    = factors.each_row() - arma::mean(factors, 0);
 
-  // center returns
-  const arma::rowvec mean_returns = arma::mean(returns, 0);
-  const arma::mat centered_returns = returns.each_row() - mean_returns;
-  const arma::mat centered_factors = factors.each_row() - arma::mean(factors, 0);
-
-  // returns decomposition
+  // SVD of scaled returns' transpose (as in original code)
   arma::vec e_vals;
-  arma::mat U;
-  arma::mat V;
-  arma::svd(U, e_vals, V, centered_returns.t() / std::sqrt(n_assets * n_observations));
-  e_vals = arma::square(e_vals);
+  arma::mat U, V;
+  arma::svd(U, e_vals, V, centered_returns.t() / std::sqrt(double(n_assets) * double(n_observations)));
+  e_vals = arma::square(e_vals); // eigenvalues of covariance proxy
 
+  // effective cap for automatic PC selection
+  // if n_max_pca <= 0, set to floor(0.5 * min(n_assets, n_observations)), but at least 1
+  const unsigned int min_dim          = std::min(n_assets, n_observations);
+  const unsigned int n_max_pca_eff    =
+    (n_max_pca <= 0)
+    ? std::max<unsigned int>(1u, static_cast<unsigned int>(std::floor(0.5 * double(min_dim))))
+      : static_cast<unsigned int>(n_max_pca);
 
-  // compute the number of PCA
+  // choose number of PCs
   unsigned int n_pca;
-
   if (which_n_pca == 0) {
-
-    // use the method in Giglio Xiu 2021
-    unsigned int n_max_pca = std::floor(2 * n_assets / 3);
-    n_pca = NPCA_GiglioXiu2021Cpp(e_vals, n_assets, n_observations, n_max_pca);
-
+    // Giglio–Xiu (2021) automatic selection with cap n_max_pca_eff
+    n_pca = NPCA_GiglioXiu2021Cpp(e_vals, n_assets, n_observations, n_max_pca_eff);
   } else if (which_n_pca < 0) {
-
-    // use the method in Ahn Horenstein 2013
-    unsigned int n_max_pca = std::floor(2 * n_assets / 3);
-    n_pca = NPCA_AhnHorenstein2013Cpp(e_vals, n_assets, n_observations, n_max_pca)["er"];
-
+    // Ahn–Horenstein (2013) automatic selection with cap n_max_pca_eff
+    n_pca = NPCA_AhnHorenstein2013Cpp(e_vals, n_assets, n_observations, n_max_pca_eff)["er"];
   } else {
-
-    // set the number of PCA to the supplied value
-    n_pca = which_n_pca;
-
+    // user-specified fixed number (kept exactly as original behavior)
+    n_pca = static_cast<unsigned int>(which_n_pca);
   }
 
-  // latent factors and corresponding beta
-  const arma::mat pca_factors = std::sqrt(n_observations) * V.head_cols(n_pca);
-  const arma::mat beta_hat = centered_returns.t() * pca_factors / n_observations;
+  // latent factors and betas
+  const arma::mat pca_factors = std::sqrt(double(n_observations)) * V.head_cols(n_pca);
+  const arma::mat beta_hat    = centered_returns.t() * pca_factors / double(n_observations);
 
   // cross-sectional regression of average returns on estimated betas
   const arma::vec gamma = SolveSympd(
@@ -349,7 +346,7 @@ Rcpp::List GiglioXiu2021RiskPremiaCpp(
     beta_hat.t() * mean_returns.t()
   );
 
-  // time-series regression of factors on latent factors
+  // time-series regression of observed factors on latent factors
   const arma::mat eta = SolveSympd(
     pca_factors.t() * pca_factors,
     pca_factors.t() * centered_factors
@@ -358,10 +355,10 @@ Rcpp::List GiglioXiu2021RiskPremiaCpp(
   // factor risk premia
   const arma::vec risk_premia = eta * gamma;
 
-  // output list containing factor risk premia and the number of pca used
+  // return risk premia and number of PCs used (do NOT return n_max_pca)
   return Rcpp::List::create(
     Rcpp::Named("risk_premia") = risk_premia,
-    Rcpp::Named("n_pca") = n_pca
+    Rcpp::Named("n_pca")       = n_pca
   );
-
 }
+
