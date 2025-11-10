@@ -126,6 +126,10 @@ FRP = function(
 #' `0` for Giglio Xiu (2021) <doi:10.1086/714090>,
 #' `-1` for Ahn Horenstein (2013) <doi:10.3982/ECTA8968>,
 #' or any positive integer for a specific number of PCs.
+#' @param n_max_pca Maximum number of principal components allowed in automatic
+#' selection rules. If `n_max_pca <= 0` (default), it is internally set to
+#' `0.5 * min(n_assets, n_observations)` (rounded down to the nearest integer).
+#' This cap is used only when `which_n_pca <= 0`.
 #' @param check_arguments A boolean: `TRUE` for internal check of all function
 #' arguments; `FALSE` otherwise. Default is `TRUE`.
 #'
@@ -134,12 +138,14 @@ FRP = function(
 #'   \item{risk_premia}{A matrix of factor risk premia.}
 #'   \item{n_pca}{The number of principal components used.}
 #' }
+#'
 #' @examples
 #' \dontrun{
 #' returns <- matrix(rnorm(200), nrow=20, ncol=10)
 #' factors <- matrix(rnorm(60), nrow=20, ncol=3)
 #' which_n_pca <- 0
-#' result <- GiglioXiu2021RiskPremia(returns, factors, which_n_pca)
+#' n_max_pca <- 0
+#' result <- GiglioXiu2021RiskPremia(returns, factors, which_n_pca, n_max_pca)
 #' print(result)
 #' }
 #' @export
@@ -147,6 +153,7 @@ GiglioXiu2021RiskPremia = function(
   returns,
   factors,
   which_n_pca = 0,
+  n_max_pca = 0,
   check_arguments = TRUE
 ) {
 
@@ -155,19 +162,21 @@ GiglioXiu2021RiskPremia = function(
 
     stopifnot("`returns` must contain numeric values" = is.numeric(returns))
     stopifnot("`factors` must contain numeric values" = is.numeric(factors))
-    stopifnot("`returns` and `factors` must have the same number of rows" = nrow(returns) == nrow(factors))
+    stopifnot("`returns` and `factors` must have the same number of rows" =
+                nrow(returns) == nrow(factors))
     stopifnot("`returns` must not contain missing values (NA/NaN)" = !anyNA(returns))
     stopifnot("`factors` must not contain missing values (NA/NaN)" = !anyNA(factors))
 
     stopifnot("`which_n_pca` must be numeric" = is.numeric(which_n_pca))
+    stopifnot("`n_max_pca` must be numeric" = is.numeric(n_max_pca))
 
   }
 
-  # Ensure the function is defined in the C++ file and compiled
+  # Call C++ implementation
   return(.Call(`_intrinsicFRP_GiglioXiu2021RiskPremiaCpp`,
     returns,
     factors,
-    which_n_pca
+    which_n_pca,
+    n_max_pca
   ))
-
 }

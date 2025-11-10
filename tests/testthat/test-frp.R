@@ -167,4 +167,25 @@ test_that("Test FRP, GiglioXiu2021RiskPremia", {
   expect_true(is.matrix(result$risk_premia))
   expect_true(is.numeric(result$n_pca))
 
+  # Test functionality with a custom n_max_pca (e.g., 5)
+  result = GiglioXiu2021RiskPremia(returns, factors, which_n_pca = 0, n_max_pca = 5)
+  expect_no_error(result)
+  expect_true(is.list(result))
+  expect_true("risk_premia" %in% names(result))
+  expect_true("n_pca" %in% names(result))
+  expect_true(is.matrix(result$risk_premia))
+  expect_true(is.numeric(result$n_pca))
+  expect_true(result$n_pca <= 5)
+
+  # Test that when n_max_pca <= 0, the function still works (uses default 0.5 * min(N, T))
+  result = GiglioXiu2021RiskPremia(returns, factors, which_n_pca = 0, n_max_pca = 0)
+  expect_no_error(result)
+  expect_true(is.list(result))
+  expect_true("risk_premia" %in% names(result))
+  expect_true("n_pca" %in% names(result))
+  expect_true(is.matrix(result$risk_premia))
+  expect_true(is.numeric(result$n_pca))
+  expect_true(result$n_pca > 0)
+
+
 })

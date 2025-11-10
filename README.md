@@ -242,6 +242,7 @@ from data on
  pre-whiten the series by fitting a VAR(1),
  i.e., a vector autoregressive model of order 1.
  All details are found in [@bryzgalova2025tradable].
+ - `GiglioXiu2021RiskPremia()`: Computes factor risk premia using the three‑pass method of Giglio & Xiu (2021). The procedure: (i) extract `p` principal components (PCs) from demeaned returns, where `p` is chosen either by the GX data‑driven rule, the Ahn–Horenstein (2013) rule, or fixed by the user; (ii) run a cross‑sectional regression of average returns on the estimated betas of the `p` latent PCs to obtain `gamma`; (iii) regress observed factors on the `p` latent PCs to obtain the loading matrix `eta`, and set mimicking‑portfolio risk premia to `lambda_GX = eta * gamma`. Arguments: `returns` (T×N matrix of test‑asset excess returns), `factors` (T×K matrix of observed factors), `which_n_pca` (PC selection: `0` = GX rule; `-1` = Ahn–Horenstein ER rule; positive integer = fixed number of PCs), `n_max_pca` (optional hard cap for the maximum number of PCs used by the selection rules; if `n_max_pca <= 0`, it defaults to `0.5 * min(N, T)`), and `check_arguments` (perform input validation). Returns a list with `risk_premia` (K×1 vector) and `n_pca` (number of PCs used).
 - `SDFCoefficients`: Computes the SDF coefficients of [@fama1973risk]:
   `FMSDFcoefficients = (C' * C)^{-1} * C' * E[R]`,
   or the misspecification-robust SDF coefficients of

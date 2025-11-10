@@ -8,6 +8,7 @@ GiglioXiu2021RiskPremia(
   returns,
   factors,
   which_n_pca = 0,
+  n_max_pca = 0,
   check_arguments = TRUE
 )
 }
@@ -20,6 +21,11 @@ GiglioXiu2021RiskPremia(
 \code{0} for Giglio Xiu (2021) \url{doi:10.1086/714090},
 \code{-1} for Ahn Horenstein (2013) \url{doi:10.3982/ECTA8968},
 or any positive integer for a specific number of PCs.}
+
+\item{n_max_pca}{Maximum number of principal components allowed in automatic
+selection rules. If \code{n_max_pca <= 0} (default), it is internally set to
+\code{0.5 * min(n_assets, n_observations)} (rounded down to the nearest integer).
+This cap is used only when \code{which_n_pca <= 0}.}
 
 \item{check_arguments}{A boolean: \code{TRUE} for internal check of all function
 arguments; \code{FALSE} otherwise. Default is \code{TRUE}.}
@@ -47,7 +53,8 @@ their mimicking portfolio risk premia.
 returns <- matrix(rnorm(200), nrow=20, ncol=10)
 factors <- matrix(rnorm(60), nrow=20, ncol=3)
 which_n_pca <- 0
-result <- GiglioXiu2021RiskPremia(returns, factors, which_n_pca)
+n_max_pca <- 0
+result <- GiglioXiu2021RiskPremia(returns, factors, which_n_pca, n_max_pca)
 print(result)
 }
 }
